@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>F1 2026 Season Hub</title>
+    <link rel="preconnect" href="https://api.jolpi.ca">
+    <link rel="preconnect" href="https://api.allorigins.win">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="F1 2026 Season Hub">
+        <span class="brand-mark"></span>
+        <span>F1 2026</span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#schedule">Schedule</a>
+        <a href="#results">Results</a>
+        <a href="#standings">Standings</a>
+        <a href="#profiles">Profiles</a>
+        <a href="#news">News</a>
+      </nav>
+      <div class="status-pill" id="dataStatus">Connecting</div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="heroTitle">
+        <img class="hero-image" src="assets/f1-hero-2026.png" alt="Formula-style race car at speed on a floodlit circuit">
+        <div class="hero-shade"></div>
+        <div class="hero-content">
+          <p class="eyebrow">2026 season command center</p>
+          <h1 id="heroTitle">Race weekends, points, results, and driver news in one desktop hub.</h1>
+          <div class="hero-actions" aria-label="Season summary">
+            <a class="primary-action" href="#schedule">View calendar</a>
+            <a class="secondary-action" href="#standings">Check points</a>
+          </div>
+        </div>
+        <aside class="hero-panel" aria-label="Season live summary">
+          <div>
+            <span class="metric-label">Completed</span>
+            <strong id="completedCount">--</strong>
+          </div>
+          <div>
+            <span class="metric-label">Upcoming</span>
+            <strong id="upcomingCount">--</strong>
+          </div>
+          <div>
+            <span class="metric-label">Leader</span>
+            <strong id="driverLeader">Loading</strong>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section shell dashboard-grid" aria-label="Season overview">
+        <article class="summary-tile accent-red">
+          <span>Next race</span>
+          <strong id="nextRace">Loading schedule</strong>
+          <small id="nextRaceMeta">Live API lookup in progress</small>
+        </article>
+        <article class="summary-tile accent-blue">
+          <span>Latest winner</span>
+          <strong id="latestWinner">Pending results</strong>
+          <small id="latestWinnerMeta">Updates after completed race data lands</small>
+        </article>
+        <article class="summary-tile accent-green">
+          <span>Constructors</span>
+          <strong id="constructorLeader">Loading</strong>
+          <small id="constructorLeaderMeta">Team standings</small>
+        </article>
+        <article class="summary-tile accent-gold">
+          <span>News feed</span>
+          <strong id="newsCount">Connecting</strong>
+          <small>Motorsport headlines</small>
+        </article>
+      </section>
+
+      <section class="section shell split" id="schedule">
+        <div class="section-head">
+          <p class="eyebrow">Calendar</p>
+          <h2>Race schedule</h2>
+          <div class="segmented" role="group" aria-label="Race filter">
+            <button class="segment active" type="button" data-filter="all">All</button>
+            <button class="segment" type="button" data-filter="upcoming">Upcoming</button>
+            <button class="segment" type="button" data-filter="completed">Completed</button>
+          </div>
+        </div>
+        <div class="race-layout">
+          <div class="race-list" id="raceList" aria-live="polite"></div>
+          <aside class="race-focus" id="raceFocus" aria-label="Selected race details">
+            <p class="eyebrow">Race focus</p>
+            <h3>Select a race</h3>
+            <p>Choose a Grand Prix from the schedule to see weekend timing, status, winner, circuit, and location details.</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section shell" id="results">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Classified finishers</p>
+            <h2>Race results</h2>
+          </div>
+          <select id="resultRaceSelect" aria-label="Select race result"></select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Pos</th>
+                <th>Driver</th>
+                <th>Team</th>
+                <th>Grid</th>
+                <th>Laps</th>
+                <th>Status</th>
+                <th>Points</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section shell" id="standings">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Points tables</p>
+            <h2>Championship standings</h2>
+          </div>
+        </div>
+        <div class="standings-stack">
+          <div class="standings-grid">
+            <section class="standings-panel" aria-labelledby="driversStandingsTitle">
+              <h3 id="driversStandingsTitle">Drivers championship</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Driver</th>
+                      <th>Team</th>
+                      <th>Wins</th>
+                      <th>Points</th>
+                    </tr>
+                  </thead>
+                  <tbody id="driversStandingsBody"></tbody>
+                </table>
+              </div>
+            </section>
+            <aside class="leaderboard" id="leaderboard"></aside>
+          </div>
+          <section class="standings-panel" aria-labelledby="teamsStandingsTitle">
+            <h3 id="teamsStandingsTitle">Team standings</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Team</th>
+                    <th>Logo</th>
+                    <th>Wins</th>
+                    <th>Points</th>
+                  </tr>
+                </thead>
+                <tbody id="constructorStandingsBody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="section shell" id="profiles">
+        <div class="section-head">
+          <p class="eyebrow">Grid guide</p>
+          <h2>Driver and team profiles</h2>
+        </div>
+        <div class="profile-grid" id="profileGrid"></div>
+      </section>
+
+      <section class="section shell" id="news">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Latest headlines</p>
+            <h2>Driver news</h2>
+          </div>
+          <button class="refresh-button" id="refreshNews" type="button">Refresh</button>
+        </div>
+        <div class="news-grid" id="newsGrid"></div>
+      </section>
+    </main>
+
+    <footer class="footer shell">
+      <span>Data: Jolpica Ergast-compatible API and public motorsport RSS feeds.</span>
+      <span id="lastUpdated">Last updated: --</span>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

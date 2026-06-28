@@ -490,7 +490,7 @@ h3 {
   background:
     linear-gradient(90deg, rgba(17, 20, 26, 0.98) 0%, rgba(17, 20, 26, 0.9) 54%, rgba(17, 20, 26, 0.46) 100%),
     var(--focus-image, linear-gradient(transparent, transparent));
-  background-position: center right;
+  background-position: var(--quote-position, center right);
   background-size: cover;
 }
 

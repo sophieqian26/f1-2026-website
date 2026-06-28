@@ -156,7 +156,9 @@ const WISDOM_QUOTES = [
     context: 'Radio gold after water leaked into the cockpit.',
     source: 'The Sun',
     sourceUrl: 'https://www.thesun.co.uk/sport/34009377/lewis-hamilton-monaco-grand-prix-f1-charles-leclerc/',
-    wikiTitle: 'Charles_Leclerc'
+    wikiTitle: 'Charles_Leclerc',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3978_by_Stepro_%28cropped2%29.jpg/330px-2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3978_by_Stepro_%28cropped2%29.jpg',
+    imagePosition: '72% center'
   },
   {
     driver: 'Lando Norris',
@@ -166,7 +168,21 @@ const WISDOM_QUOTES = [
     context: 'A fan-favorite Lando weekend mood line.',
     source: 'Fan clip',
     sourceUrl: 'https://www.youtube.com/results?search_query=lando+norris+friday+then+saturday+sunday+what',
-    wikiTitle: 'Lando_Norris'
+    wikiTitle: 'Lando_Norris',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3968_by_Stepro_%28cropped2%29.jpg/330px-2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3968_by_Stepro_%28cropped2%29.jpg',
+    imagePosition: '74% center'
+  },
+  {
+    driver: 'George Russell',
+    driverId: 'russell',
+    teamColor: TEAM_COLORS.mercedes,
+    quote: 'Welcome to skibidi toilet Baku, my dudes.',
+    context: 'A deeply unserious George Russell internet-era quote.',
+    source: 'Fan clip',
+    sourceUrl: 'https://www.google.com/search?q=George+Russell+welcome+to+skibidi+toilet+Baku+my+dudes',
+    wikiTitle: 'George_Russell_(racing_driver)',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/KingsLeonSilverstne040724_%2828_of_112%29_%2853838006028%29_%28cropped%29.jpg/330px-KingsLeonSilverstne040724_%2828_of_112%29_%2853838006028%29_%28cropped%29.jpg',
+    imagePosition: '75% center'
   },
   {
     driver: 'Kimi Raikkonen',
@@ -176,7 +192,8 @@ const WISDOM_QUOTES = [
     source: 'Wikipedia',
     sourceUrl: 'https://en.wikipedia.org/wiki/Kimi_R%C3%A4ikk%C3%B6nen',
     wikiTitle: 'Kimi_Räikkönen',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/F12019_Schloss_Gabelhofen_%2822%29_%28cropped%29.jpg/330px-F12019_Schloss_Gabelhofen_%2822%29_%28cropped%29.jpg'
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/F12019_Schloss_Gabelhofen_%2822%29_%28cropped%29.jpg/330px-F12019_Schloss_Gabelhofen_%2822%29_%28cropped%29.jpg',
+    imagePosition: '75% center'
   },
   {
     driver: 'Fernando Alonso',
@@ -185,7 +202,9 @@ const WISDOM_QUOTES = [
     context: 'A brutally memorable Honda-era radio message.',
     source: 'Wikipedia',
     sourceUrl: 'https://en.wikipedia.org/wiki/Fernando_Alonso',
-    wikiTitle: 'Fernando_Alonso'
+    wikiTitle: 'Fernando_Alonso',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Alonso-68_%2824710447098%29.jpg/330px-Alonso-68_%2824710447098%29.jpg',
+    imagePosition: '76% center'
   },
   {
     driver: 'Charles Leclerc',
@@ -195,7 +214,9 @@ const WISDOM_QUOTES = [
     context: 'A very honest Baku qualifying self-review.',
     source: 'Wikipedia',
     sourceUrl: 'https://en.wikipedia.org/wiki/Charles_Leclerc',
-    wikiTitle: 'Charles_Leclerc'
+    wikiTitle: 'Charles_Leclerc',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3978_by_Stepro_%28cropped2%29.jpg/330px-2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3978_by_Stepro_%28cropped2%29.jpg',
+    imagePosition: '72% center'
   },
   {
     driver: 'Kimi Raikkonen',
@@ -205,7 +226,8 @@ const WISDOM_QUOTES = [
     source: 'Wikipedia',
     sourceUrl: 'https://en.wikipedia.org/wiki/Kimi_R%C3%A4ikk%C3%B6nen',
     wikiTitle: 'Kimi_Räikkönen',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/F12019_Schloss_Gabelhofen_%2822%29_%28cropped%29.jpg/330px-F12019_Schloss_Gabelhofen_%2822%29_%28cropped%29.jpg'
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/F12019_Schloss_Gabelhofen_%2822%29_%28cropped%29.jpg/330px-F12019_Schloss_Gabelhofen_%2822%29_%28cropped%29.jpg',
+    imagePosition: '75% center'
   },
   {
     driver: 'Lando Norris',
@@ -215,7 +237,9 @@ const WISDOM_QUOTES = [
     context: 'A cheeky nod after winning in Australia.',
     source: 'news.com.au',
     sourceUrl: 'https://www.news.com.au/sport/motorsport/formula-one/lando-norris-famous-words-come-back-to-haunt-max-verstappen-after-australian-grand-prix/news-story/2beac94a302aa47462d3e2a54b557d1c',
-    wikiTitle: 'Lando_Norris'
+    wikiTitle: 'Lando_Norris',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3968_by_Stepro_%28cropped2%29.jpg/330px-2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3968_by_Stepro_%28cropped2%29.jpg',
+    imagePosition: '74% center'
   }
 ];
 
@@ -1315,7 +1339,8 @@ function renderQuotes() {
   els.quoteGrid.innerHTML = WISDOM_QUOTES.map(item => {
     const image = (item.driverId && state.driverImages[item.driverId]) || state.quoteImages[item.driver];
     const imageStyle = image ? `--quote-image: url('${escapeHtml(image)}');` : '';
-    const cardStyle = `--quote-color: ${escapeHtml(item.teamColor || TEAM_COLORS.red_bull)}; ${imageStyle}`;
+    const positionStyle = item.imagePosition ? `--quote-position: ${escapeHtml(item.imagePosition)};` : '';
+    const cardStyle = `--quote-color: ${escapeHtml(item.teamColor || TEAM_COLORS.red_bull)}; ${imageStyle} ${positionStyle}`;
     return `
       <article class="quote-card" style="${cardStyle}">
         <div class="quote-copy">

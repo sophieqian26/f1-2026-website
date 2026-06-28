@@ -151,6 +151,7 @@ const WISDOM_QUOTES = [
   {
     driver: 'Charles Leclerc',
     driverId: 'leclerc',
+    teamColor: TEAM_COLORS.ferrari,
     quote: 'I have the seat full of water.',
     context: 'Radio gold after water leaked into the cockpit.',
     source: 'The Sun',
@@ -160,6 +161,7 @@ const WISDOM_QUOTES = [
   {
     driver: 'Lando Norris',
     driverId: 'norris',
+    teamColor: TEAM_COLORS.mclaren,
     quote: "It's Friday then, it's Saturday, Sunday, what?",
     context: 'A fan-favorite Lando weekend mood line.',
     source: 'Fan clip',
@@ -168,14 +170,17 @@ const WISDOM_QUOTES = [
   },
   {
     driver: 'Kimi Raikkonen',
+    teamColor: TEAM_COLORS.ferrari,
     quote: 'Just leave me alone, I know what to do.',
     context: 'Peak Kimi radio, delivered while leading in Abu Dhabi.',
     source: 'Wikipedia',
     sourceUrl: 'https://en.wikipedia.org/wiki/Kimi_R%C3%A4ikk%C3%B6nen',
-    wikiTitle: 'Kimi_R%C3%A4ikk%C3%B6nen'
+    wikiTitle: 'Kimi_Räikkönen',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/F12019_Schloss_Gabelhofen_%2822%29_%28cropped%29.jpg/330px-F12019_Schloss_Gabelhofen_%2822%29_%28cropped%29.jpg'
   },
   {
     driver: 'Fernando Alonso',
+    teamColor: TEAM_COLORS.mclaren,
     quote: 'GP2 engine! GP2!',
     context: 'A brutally memorable Honda-era radio message.',
     source: 'Wikipedia',
@@ -185,6 +190,7 @@ const WISDOM_QUOTES = [
   {
     driver: 'Charles Leclerc',
     driverId: 'leclerc',
+    teamColor: TEAM_COLORS.ferrari,
     quote: 'I am stupid. I am stupid.',
     context: 'A very honest Baku qualifying self-review.',
     source: 'Wikipedia',
@@ -193,15 +199,18 @@ const WISDOM_QUOTES = [
   },
   {
     driver: 'Kimi Raikkonen',
+    teamColor: TEAM_COLORS.ferrari,
     quote: 'I was having a shit.',
     context: 'The most direct explanation for missing a ceremony.',
     source: 'Wikipedia',
     sourceUrl: 'https://en.wikipedia.org/wiki/Kimi_R%C3%A4ikk%C3%B6nen',
-    wikiTitle: 'Kimi_R%C3%A4ikk%C3%B6nen'
+    wikiTitle: 'Kimi_Räikkönen',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/F12019_Schloss_Gabelhofen_%2822%29_%28cropped%29.jpg/330px-F12019_Schloss_Gabelhofen_%2822%29_%28cropped%29.jpg'
   },
   {
     driver: 'Lando Norris',
     driverId: 'norris',
+    teamColor: TEAM_COLORS.mclaren,
     quote: 'Simply lovely, huh?',
     context: 'A cheeky nod after winning in Australia.',
     source: 'news.com.au',
@@ -546,6 +555,10 @@ async function loadDriverImages() {
 
 async function loadQuoteImages() {
   await Promise.allSettled(WISDOM_QUOTES.map(async item => {
+    if (item.imageUrl) {
+      state.quoteImages[item.driver] = item.imageUrl;
+      return;
+    }
     if (item.driverId && state.driverImages[item.driverId]) {
       state.quoteImages[item.driver] = state.driverImages[item.driverId];
       return;
@@ -1301,18 +1314,15 @@ function renderNews() {
 function renderQuotes() {
   els.quoteGrid.innerHTML = WISDOM_QUOTES.map(item => {
     const image = (item.driverId && state.driverImages[item.driverId]) || state.quoteImages[item.driver];
-    const imageHtml = image
-      ? `<img class="quote-photo" src="${escapeHtml(image)}" alt="${escapeHtml(item.driver)}">`
-      : `<div class="quote-photo quote-photo-fallback" aria-hidden="true">${escapeHtml(item.driver.split(' ').map(part => part[0]).join('').slice(0, 2))}</div>`;
+    const imageStyle = image ? `--quote-image: url('${escapeHtml(image)}');` : '';
+    const cardStyle = `--quote-color: ${escapeHtml(item.teamColor || TEAM_COLORS.red_bull)}; ${imageStyle}`;
     return `
-      <article class="quote-card">
+      <article class="quote-card" style="${cardStyle}">
         <div class="quote-copy">
           <blockquote>${escapeHtml(item.quote)}</blockquote>
           <strong>${escapeHtml(item.driver)}</strong>
-          <p>${escapeHtml(item.context)}</p>
           <a href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(item.source)}</a>
         </div>
-        ${imageHtml}
       </article>
     `;
   }).join('');

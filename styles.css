@@ -1007,19 +1007,47 @@ tr:last-child td {
 }
 
 .quote-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 104px;
-  gap: 16px;
-  align-items: center;
+  position: relative;
+  display: flex;
+  align-items: end;
   min-height: 210px;
   padding: 20px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--surface);
+  background:
+    linear-gradient(90deg, rgba(17, 20, 26, 0.98) 0%, rgba(17, 20, 26, 0.9) 52%, rgba(17, 20, 26, 0.2) 100%),
+    var(--quote-image, linear-gradient(135deg, var(--surface), var(--surface-2)));
+  background-position: center right;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.quote-card::before {
+  content: "“";
+  position: absolute;
+  top: 4px;
+  left: 16px;
+  color: var(--quote-color, var(--red));
+  font-family: Georgia, serif;
+  font-size: 5.6rem;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+.quote-card::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: var(--quote-color, var(--red));
 }
 
 .quote-copy {
+  position: relative;
+  z-index: 1;
   min-width: 0;
+  max-width: 76%;
+  padding-top: 34px;
 }
 
 .quote-card blockquote {
@@ -1035,34 +1063,10 @@ tr:last-child td {
   margin-bottom: 8px;
 }
 
-.quote-card p {
-  margin-bottom: 12px;
-  color: var(--muted);
-}
-
 .quote-card a {
   color: #b9dcff;
   font-size: 0.9rem;
   font-weight: 760;
-}
-
-.quote-photo {
-  width: 104px;
-  height: 132px;
-  object-fit: cover;
-  object-position: center top;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 7px;
-  background: var(--surface-2);
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.24);
-}
-
-.quote-photo-fallback {
-  display: grid;
-  place-items: center;
-  color: var(--muted);
-  font-size: 1.35rem;
-  font-weight: 850;
 }
 
 .footer {

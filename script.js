@@ -147,6 +147,69 @@ const EXTERNAL_ODDS_PREVIEWS = {
   }
 };
 
+const WISDOM_QUOTES = [
+  {
+    driver: 'Charles Leclerc',
+    driverId: 'leclerc',
+    quote: 'I have the seat full of water.',
+    context: 'Radio gold after water leaked into the cockpit.',
+    source: 'The Sun',
+    sourceUrl: 'https://www.thesun.co.uk/sport/34009377/lewis-hamilton-monaco-grand-prix-f1-charles-leclerc/',
+    wikiTitle: 'Charles_Leclerc'
+  },
+  {
+    driver: 'Lando Norris',
+    driverId: 'norris',
+    quote: "It's Friday then, it's Saturday, Sunday, what?",
+    context: 'A fan-favorite Lando weekend mood line.',
+    source: 'Fan clip',
+    sourceUrl: 'https://www.youtube.com/results?search_query=lando+norris+friday+then+saturday+sunday+what',
+    wikiTitle: 'Lando_Norris'
+  },
+  {
+    driver: 'Kimi Raikkonen',
+    quote: 'Just leave me alone, I know what to do.',
+    context: 'Peak Kimi radio, delivered while leading in Abu Dhabi.',
+    source: 'Wikipedia',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Kimi_R%C3%A4ikk%C3%B6nen',
+    wikiTitle: 'Kimi_R%C3%A4ikk%C3%B6nen'
+  },
+  {
+    driver: 'Fernando Alonso',
+    quote: 'GP2 engine! GP2!',
+    context: 'A brutally memorable Honda-era radio message.',
+    source: 'Wikipedia',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Fernando_Alonso',
+    wikiTitle: 'Fernando_Alonso'
+  },
+  {
+    driver: 'Charles Leclerc',
+    driverId: 'leclerc',
+    quote: 'I am stupid. I am stupid.',
+    context: 'A very honest Baku qualifying self-review.',
+    source: 'Wikipedia',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Charles_Leclerc',
+    wikiTitle: 'Charles_Leclerc'
+  },
+  {
+    driver: 'Kimi Raikkonen',
+    quote: 'I was having a shit.',
+    context: 'The most direct explanation for missing a ceremony.',
+    source: 'Wikipedia',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Kimi_R%C3%A4ikk%C3%B6nen',
+    wikiTitle: 'Kimi_R%C3%A4ikk%C3%B6nen'
+  },
+  {
+    driver: 'Lando Norris',
+    driverId: 'norris',
+    quote: 'Simply lovely, huh?',
+    context: 'A cheeky nod after winning in Australia.',
+    source: 'news.com.au',
+    sourceUrl: 'https://www.news.com.au/sport/motorsport/formula-one/lando-norris-famous-words-come-back-to-haunt-max-verstappen-after-australian-grand-prix/news-story/2beac94a302aa47462d3e2a54b557d1c',
+    wikiTitle: 'Lando_Norris'
+  }
+];
+
 const FALLBACK_NEWS = [
   {
     title: 'Formula 1 2026 season coverage',
@@ -195,6 +258,7 @@ const state = {
   news: [],
   cityImages: {},
   driverImages: {},
+  quoteImages: {},
   driverCareer: {},
   odds: {
     status: 'loading',
@@ -239,6 +303,7 @@ const els = {
   constructorStandingsBody: document.querySelector('#constructorStandingsBody'),
   leaderboard: document.querySelector('#leaderboard'),
   profileGrid: document.querySelector('#profileGrid'),
+  quoteGrid: document.querySelector('#quoteGrid'),
   newsGrid: document.querySelector('#newsGrid'),
   refreshNews: document.querySelector('#refreshNews'),
   lastUpdated: document.querySelector('#lastUpdated')
@@ -409,6 +474,7 @@ async function loadSeasonData() {
   renderAll();
   loadCityImages();
   loadDriverImages();
+  loadQuoteImages();
   loadNextRaceOdds();
 }
 
@@ -476,6 +542,20 @@ async function loadDriverImages() {
 
   renderProfiles();
   renderRaceFocus(nextRace());
+}
+
+async function loadQuoteImages() {
+  await Promise.allSettled(WISDOM_QUOTES.map(async item => {
+    if (item.driverId && state.driverImages[item.driverId]) {
+      state.quoteImages[item.driver] = state.driverImages[item.driverId];
+      return;
+    }
+    if (state.quoteImages[item.driver] || !item.wikiTitle) return;
+    const summary = await fetchJson(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(item.wikiTitle)}`);
+    const image = summary.thumbnail?.source || summary.originalimage?.source;
+    if (image) state.quoteImages[item.driver] = image;
+  }));
+  renderQuotes();
 }
 
 function cleanWikiText(value = '') {
@@ -1218,12 +1298,33 @@ function renderNews() {
   `).join('');
 }
 
+function renderQuotes() {
+  els.quoteGrid.innerHTML = WISDOM_QUOTES.map(item => {
+    const image = (item.driverId && state.driverImages[item.driverId]) || state.quoteImages[item.driver];
+    const imageHtml = image
+      ? `<img class="quote-photo" src="${escapeHtml(image)}" alt="${escapeHtml(item.driver)}">`
+      : `<div class="quote-photo quote-photo-fallback" aria-hidden="true">${escapeHtml(item.driver.split(' ').map(part => part[0]).join('').slice(0, 2))}</div>`;
+    return `
+      <article class="quote-card">
+        <div class="quote-copy">
+          <blockquote>${escapeHtml(item.quote)}</blockquote>
+          <strong>${escapeHtml(item.driver)}</strong>
+          <p>${escapeHtml(item.context)}</p>
+          <a href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(item.source)}</a>
+        </div>
+        ${imageHtml}
+      </article>
+    `;
+  }).join('');
+}
+
 function renderAll() {
   renderSummary();
   renderSchedule();
   renderResultSelector();
   renderStandings();
   renderProfiles();
+  renderQuotes();
 }
 
 document.querySelectorAll('[data-filter]').forEach(button => {

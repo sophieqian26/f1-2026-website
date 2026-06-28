@@ -829,7 +829,8 @@ tr:last-child td {
 }
 
 .profile-grid,
-.news-grid {
+.news-grid,
+.quote-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
@@ -1003,6 +1004,65 @@ tr:last-child td {
 .news-card a {
   color: #b9dcff;
   font-weight: 720;
+}
+
+.quote-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 104px;
+  gap: 16px;
+  align-items: center;
+  min-height: 210px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.quote-copy {
+  min-width: 0;
+}
+
+.quote-card blockquote {
+  margin: 0 0 14px;
+  color: #f5f7fb;
+  font-size: 1.28rem;
+  font-weight: 840;
+  line-height: 1.12;
+}
+
+.quote-card strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.quote-card p {
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+
+.quote-card a {
+  color: #b9dcff;
+  font-size: 0.9rem;
+  font-weight: 760;
+}
+
+.quote-photo {
+  width: 104px;
+  height: 132px;
+  object-fit: cover;
+  object-position: center top;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 7px;
+  background: var(--surface-2);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.24);
+}
+
+.quote-photo-fallback {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 1.35rem;
+  font-weight: 850;
 }
 
 .footer {

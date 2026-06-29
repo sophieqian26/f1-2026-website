@@ -15,8 +15,8 @@ const VOTE_CATEGORIES = [
     id: 'pole_position',
     title: 'Pole position',
     shortTitle: 'Pole',
-    imageUrl: 'https://d3cm515ijfiu6w.cloudfront.net/wp-content/uploads/2019/11/21121102/Lewis-Hamilton-hand-on-heart-podium-PA.jpg',
-    imagePosition: 'center 22%'
+    imageUrl: 'assets/vote-drivers/lewis-hamilton.avif',
+    imagePosition: 'center 18%'
   },
   {
     id: 'race_winner',
@@ -36,8 +36,8 @@ const VOTE_CATEGORIES = [
     id: 'p3',
     title: 'P3',
     shortTitle: 'P3',
-    imageUrl: 'https://frontofficesports.com/wp-content/uploads/2024/02/2026-05-24T223530Z_1907465745_UP1EM5O1QR4J1_RTRMADP_3_MOTOR-F1-CANADA-scaled.jpg?quality=80&w=1024',
-    imagePosition: 'center 16%'
+    imageUrl: 'assets/vote-drivers/max-verstappen.jpg',
+    imagePosition: 'center 22%'
   },
   {
     id: 'world_champion',

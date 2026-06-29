@@ -280,7 +280,69 @@ const RESULT_OVERRIDES = {
       makeResult(2, { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, 18),
       makeResult(3, { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, 15)
     ]
+  },
+  '8': {
+    raceName: 'Austrian Grand Prix',
+    Results: [
+      makeResult(1, { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, 25, { grid: '1', laps: '71' }),
+      makeResult(2, { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull' }, 18, { grid: '5', laps: '71' }),
+      makeResult(3, { driverId: 'antonelli', givenName: 'Andrea Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, 15, { grid: '4', laps: '71' }),
+      makeResult(4, { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, 12, { grid: '7', laps: '71' }),
+      makeResult(5, { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, 10, { grid: '3', laps: '71' }),
+      makeResult(6, { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull' }, 8, { grid: '8', laps: '71' }),
+      makeResult(7, { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, 6, { grid: '6', laps: '71' }),
+      makeResult(8, { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, 4, { grid: '2', laps: '71' }),
+      makeResult(9, { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'RB F1 Team' }, 2, { grid: '9', laps: '70', status: 'Lapped' }),
+      makeResult(10, { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'RB F1 Team' }, 1, { grid: '10', laps: '70', status: 'Lapped' }),
+      makeResult(11, { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, 0, { grid: '12', laps: '70', status: 'Lapped' }),
+      makeResult(12, { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, 0, { grid: '14', laps: '70', status: 'Lapped' }),
+      makeResult(13, { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine F1 Team' }, 0, { grid: '11', laps: '70', status: 'Lapped' }),
+      makeResult(14, { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { grid: '13', laps: '70', status: 'Lapped' }),
+      makeResult(15, { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine F1 Team' }, 0, { grid: '16', laps: '70', status: 'Lapped' }),
+      makeResult(16, { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { grid: '15', laps: '69', status: 'Lapped' }),
+      makeResult(17, { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, 0, { grid: '18', laps: '69', status: 'Lapped' }),
+      makeResult(18, { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { grid: '21', laps: '68', status: 'Lapped' }),
+      makeResult(19, { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { grid: '22', laps: '45', status: 'Retired' }),
+      makeResult(20, { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, 0, { grid: '17', laps: '23', status: 'Retired' }),
+      makeResult(21, { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac F1 Team' }, 0, { grid: '19', laps: '4', status: 'Retired' }),
+      makeResult(22, { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac F1 Team' }, 0, { grid: '20', laps: '2', status: 'Retired' })
+    ]
   }
+};
+
+const CURRENT_DRIVER_POINTS = {
+  antonelli: { points: 171, wins: 5 },
+  russell: { points: 131, wins: 2 },
+  hamilton: { points: 125, wins: 1 },
+  piastri: { points: 80, wins: 0 },
+  norris: { points: 79, wins: 0 },
+  leclerc: { points: 79, wins: 0 },
+  max_verstappen: { points: 73, wins: 0 },
+  hadjar: { points: 42, wins: 0 },
+  gasly: { points: 41, wins: 0 },
+  lawson: { points: 30, wins: 0 },
+  bearman: { points: 18, wins: 0 },
+  colapinto: { points: 16, wins: 0 },
+  arvid_lindblad: { points: 14, wins: 0 },
+  sainz: { points: 6, wins: 0 },
+  albon: { points: 5, wins: 0 },
+  ocon: { points: 3, wins: 0 },
+  bortoleto: { points: 2, wins: 0 },
+  alonso: { points: 1, wins: 0 }
+};
+
+const CURRENT_CONSTRUCTOR_POINTS = {
+  mercedes: { points: 302, wins: 7 },
+  ferrari: { points: 204, wins: 1 },
+  mclaren: { points: 159, wins: 0 },
+  red_bull: { points: 115, wins: 0 },
+  alpine: { points: 57, wins: 0 },
+  rb: { points: 44, wins: 0 },
+  haas: { points: 21, wins: 0 },
+  williams: { points: 11, wins: 0 },
+  audi: { points: 2, wins: 0 },
+  aston_martin: { points: 1, wins: 0 },
+  cadillac: { points: 0, wins: 0 }
 };
 
 const state = {
@@ -303,15 +365,15 @@ const state = {
   selectedRaceRound: null
 };
 
-function makeResult(position, driver, constructor, points) {
+function makeResult(position, driver, constructor, points, details = {}) {
   return {
     position: String(position),
     positionText: String(position),
     Driver: driver,
     Constructor: constructor,
-    grid: '-',
-    laps: '-',
-    status: 'Finished',
+    grid: details.grid || '-',
+    laps: details.laps || '-',
+    status: details.status || 'Finished',
     points: String(points)
   };
 }
@@ -495,6 +557,7 @@ async function loadSeasonData() {
   state.results = results.value?.MRData?.RaceTable?.Races || [];
   state.drivers = drivers.value?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings || [];
   state.constructors = constructors.value?.MRData?.StandingsTable?.StandingsLists?.[0]?.ConstructorStandings || [];
+  applyCurrentPointTotals();
 
   if (!state.races.length) {
     els.dataStatus.textContent = 'API waiting';
@@ -503,12 +566,49 @@ async function loadSeasonData() {
     els.dataStatus.textContent = 'Live data';
   }
 
-  state.selectedRaceRound = state.races[0]?.round || state.results[0]?.round || null;
+  state.selectedRaceRound = [...allResultRaces()].pop()?.round || state.races[0]?.round || state.results[0]?.round || null;
   renderAll();
   loadCityImages();
   loadDriverImages();
   loadQuoteImages();
   loadNextRaceOdds();
+}
+
+function applyCurrentPointTotals() {
+  const hasRaceAfterAustria = state.results.some(race => Number(race.round) > 8 && race.Results?.length);
+  if (hasRaceAfterAustria) return;
+
+  state.drivers = state.drivers
+    .map(row => {
+      const override = CURRENT_DRIVER_POINTS[row.Driver?.driverId];
+      return override ? {
+        ...row,
+        points: String(override.points),
+        wins: String(override.wins)
+      } : row;
+    })
+    .sort((a, b) => Number(b.points) - Number(a.points) || Number(b.wins) - Number(a.wins))
+    .map((row, index) => ({
+      ...row,
+      position: String(index + 1),
+      positionText: String(index + 1)
+    }));
+
+  state.constructors = state.constructors
+    .map(row => {
+      const override = CURRENT_CONSTRUCTOR_POINTS[row.Constructor?.constructorId];
+      return override ? {
+        ...row,
+        points: String(override.points),
+        wins: String(override.wins)
+      } : row;
+    })
+    .sort((a, b) => Number(b.points) - Number(a.points) || Number(b.wins) - Number(a.wins))
+    .map((row, index) => ({
+      ...row,
+      position: String(index + 1),
+      positionText: String(index + 1)
+    }));
 }
 
 function wikiTitleFromUrl(url = '') {
@@ -1142,8 +1242,13 @@ function renderResultSelector() {
     ? resultRaces.map(race => `<option value="${escapeHtml(race.round)}">${escapeHtml(displayRaceName(race))}</option>`).join('')
     : '<option>No completed race results yet</option>';
 
-  if (resultRaces.length) renderResults(resultRaces[resultRaces.length - 1].round);
-  else renderResults(null);
+  if (resultRaces.length) {
+    const latestRound = resultRaces[resultRaces.length - 1].round;
+    els.resultRaceSelect.value = latestRound;
+    renderResults(latestRound);
+  } else {
+    renderResults(null);
+  }
 
   els.resultRaceSelect.addEventListener('change', event => renderResults(event.target.value));
 }

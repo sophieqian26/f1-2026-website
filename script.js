@@ -8,6 +8,45 @@ const RACE_FOCUS_IMAGE = 'assets/race-focus-antonelli.png';
 
 const POLYMARKET_EVENTS_API = 'https://gamma-api.polymarket.com/events';
 const KALSHI_MARKETS_API = 'https://api.elections.kalshi.com/trade-api/v2/markets';
+const VOTE_STORAGE_KEY = `f1-${SEASON}-race-votes`;
+
+const VOTE_CATEGORIES = [
+  {
+    id: 'pole_position',
+    title: 'Pole position',
+    shortTitle: 'Pole',
+    imageUrl: 'https://d3cm515ijfiu6w.cloudfront.net/wp-content/uploads/2019/11/21121102/Lewis-Hamilton-hand-on-heart-podium-PA.jpg',
+    imagePosition: 'center 22%'
+  },
+  {
+    id: 'race_winner',
+    title: 'Race winner',
+    shortTitle: 'Winner',
+    imageUrl: 'https://telegrafi.com/media-library/image.jpg?coordinates=24%2C0%2C24%2C0&height=700&id=61376729&quality=90&width=1245',
+    imagePosition: 'center 20%'
+  },
+  {
+    id: 'p2',
+    title: 'P2',
+    shortTitle: 'P2',
+    imageUrl: 'https://hips.hearstapps.com/hmg-prod/images/sebastian-vettel-of-germany-and-infiniti-red-bull-racing-news-photo-1672327385.jpg?crop=1.00xw%3A1.00xh%3B0%2C0&resize=640%3A%2A',
+    imagePosition: 'center 18%'
+  },
+  {
+    id: 'p3',
+    title: 'P3',
+    shortTitle: 'P3',
+    imageUrl: 'https://frontofficesports.com/wp-content/uploads/2024/02/2026-05-24T223530Z_1907465745_UP1EM5O1QR4J1_RTRMADP_3_MOTOR-F1-CANADA-scaled.jpg?quality=80&w=1024',
+    imagePosition: 'center 16%'
+  },
+  {
+    id: 'world_champion',
+    title: 'World champion',
+    shortTitle: 'Champion',
+    imageUrl: 'https://s.ndtvimg.com/images/content/2014/apr/806/ayrton-senna.jpg',
+    imagePosition: 'center 20%'
+  }
+];
 
 const TEAM_COLORS = {
   ferrari: '#ed1131',
@@ -362,7 +401,9 @@ const state = {
     sources: []
   },
   filter: 'all',
-  selectedRaceRound: null
+  selectedRaceRound: null,
+  activeVoteCategory: null,
+  pendingVoteDriverId: null
 };
 
 function makeResult(position, driver, constructor, points, details = {}) {
@@ -394,6 +435,10 @@ const els = {
   raceFocus: document.querySelector('#raceFocus'),
   resultRaceSelect: document.querySelector('#resultRaceSelect'),
   resultsBody: document.querySelector('#resultsBody'),
+  nextRaceVotePanel: document.querySelector('#nextRaceVotePanel'),
+  voteRaceName: document.querySelector('#voteRaceName'),
+  voteCategoryGrid: document.querySelector('#voteCategoryGrid'),
+  votePicker: document.querySelector('#votePicker'),
   driversStandingsBody: document.querySelector('#driversStandingsBody'),
   constructorStandingsBody: document.querySelector('#constructorStandingsBody'),
   leaderboard: document.querySelector('#leaderboard'),
@@ -530,6 +575,72 @@ function findDriverByMarketName(name = '') {
     const given = normalizeName(row.Driver?.givenName);
     return normalized.includes(full) || full.includes(normalized) || normalized.includes(family) || (family && given && normalized.includes(given) && normalized.includes(family));
   })?.Driver || null;
+}
+
+function readVoteStore() {
+  try {
+    return JSON.parse(localStorage.getItem(VOTE_STORAGE_KEY)) || {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function writeVoteStore(store) {
+  localStorage.setItem(VOTE_STORAGE_KEY, JSON.stringify(store));
+}
+
+function voteRaceKey() {
+  const race = nextRace();
+  return race ? `${SEASON}-round-${race.round}` : `${SEASON}-next-race`;
+}
+
+function emptyVoteCategory() {
+  return { totals: {}, userVote: null };
+}
+
+function getVoteCategory(categoryId) {
+  const store = readVoteStore();
+  const raceKey = voteRaceKey();
+  return store[raceKey]?.categories?.[categoryId] || emptyVoteCategory();
+}
+
+function saveVote(categoryId, driverId) {
+  const store = readVoteStore();
+  const raceKey = voteRaceKey();
+  store[raceKey] ||= { categories: {} };
+  store[raceKey].categories[categoryId] ||= emptyVoteCategory();
+  const category = store[raceKey].categories[categoryId];
+
+  if (category.userVote && category.totals[category.userVote]) {
+    category.totals[category.userVote] = Math.max(0, category.totals[category.userVote] - 1);
+    if (category.totals[category.userVote] === 0) delete category.totals[category.userVote];
+  }
+
+  category.userVote = driverId;
+  category.totals[driverId] = (category.totals[driverId] || 0) + 1;
+  writeVoteStore(store);
+}
+
+function voteDrivers() {
+  return [...state.drivers].sort((a, b) => driverName(a.Driver).localeCompare(driverName(b.Driver)));
+}
+
+function voteResults(categoryId) {
+  const category = getVoteCategory(categoryId);
+  const totalVotes = Object.values(category.totals).reduce((sum, value) => sum + Number(value || 0), 0);
+  const driverRows = voteDrivers();
+  return Object.entries(category.totals)
+    .map(([driverId, votes]) => {
+      const row = driverRows.find(item => item.Driver?.driverId === driverId);
+      return row ? {
+        driver: row.Driver,
+        team: row.Constructors?.[0],
+        votes,
+        percent: totalVotes ? Math.round((votes / totalVotes) * 100) : 0
+      } : null;
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.votes - a.votes || driverName(a.driver).localeCompare(driverName(b.driver)));
 }
 
 async function fetchJson(url) {
@@ -1272,6 +1383,100 @@ function renderResults(round) {
   `).join('');
 }
 
+function voteCategoryCard(category) {
+  const data = getVoteCategory(category.id);
+  const results = voteResults(category.id);
+  const userDriver = data.userVote
+    ? state.drivers.find(row => row.Driver?.driverId === data.userVote)?.Driver
+    : null;
+  const topResults = results.slice(0, 4);
+  const imageStyle = category.imageUrl
+    ? `--vote-image: url('${escapeHtml(category.imageUrl)}'); --vote-position: ${escapeHtml(category.imagePosition || 'center')};`
+    : '';
+  const resultHtml = data.userVote
+    ? `
+      <div class="vote-results">
+        ${topResults.length ? topResults.map(result => `
+          <div class="vote-result-row">
+            <span>${driverFlag(result.driver)} ${escapeHtml(driverName(result.driver))}</span>
+            <strong>${escapeHtml(result.percent)}%</strong>
+            <i style="--vote-percent: ${escapeHtml(result.percent)}%; --team-color: ${teamColor(result.team?.constructorId)}"></i>
+          </div>
+        `).join('') : '<span class="vote-empty">No totals yet</span>'}
+      </div>
+      <span class="vote-current">Your pick: ${userDriver ? `${driverFlag(userDriver)} ${escapeHtml(driverName(userDriver))}` : 'Saved'}</span>
+    `
+    : '<div class="vote-empty-space" aria-hidden="true"></div>';
+
+  return `
+    <article class="vote-card ${state.activeVoteCategory === category.id ? 'is-active' : ''}" style="${imageStyle}">
+      <div>
+        <span class="vote-card-kicker">${escapeHtml(category.shortTitle)}</span>
+        <h4>${escapeHtml(category.title)}</h4>
+      </div>
+      ${resultHtml}
+      <button class="vote-open" type="button" data-vote-category="${escapeHtml(category.id)}">${data.userVote ? 'Change vote' : 'Vote'}</button>
+    </article>
+  `;
+}
+
+function renderVotePicker() {
+  if (!state.activeVoteCategory) {
+    els.votePicker.hidden = true;
+    els.votePicker.innerHTML = '';
+    return;
+  }
+
+  const category = VOTE_CATEGORIES.find(item => item.id === state.activeVoteCategory);
+  const drivers = voteDrivers();
+  const currentVote = getVoteCategory(category.id).userVote;
+  const selectedDriverId = state.pendingVoteDriverId || currentVote;
+
+  els.votePicker.hidden = false;
+  els.votePicker.innerHTML = `
+    <div class="vote-picker-head">
+      <div>
+        <span class="vote-card-kicker">Choose driver</span>
+        <strong>${escapeHtml(category.title)}</strong>
+      </div>
+      <button class="vote-close" type="button" aria-label="Close vote picker">Close</button>
+    </div>
+    <div class="vote-driver-list" role="radiogroup" aria-label="${escapeHtml(category.title)} driver choices">
+      ${drivers.map(row => {
+        const driver = row.Driver;
+        const team = row.Constructors?.[0] || {};
+        const checked = driver.driverId === selectedDriverId;
+        return `
+          <label class="vote-driver-option ${checked ? 'is-selected' : ''}" style="--team-color: ${teamColor(team.constructorId)}">
+            <input type="radio" name="vote-driver" value="${escapeHtml(driver.driverId)}" ${checked ? 'checked' : ''}>
+            <span>${driverIdentityHtml(driver)}</span>
+            <small>${escapeHtml(constructorName(team))}</small>
+          </label>
+        `;
+      }).join('')}
+    </div>
+    <div class="vote-actions">
+      <button class="vote-submit" type="button" ${selectedDriverId ? '' : 'disabled'}>Submit vote</button>
+      <button class="vote-cancel" type="button">Cancel</button>
+    </div>
+  `;
+}
+
+function renderVotingPanel() {
+  const race = nextRace();
+  if (!els.nextRaceVotePanel) return;
+  if (!race || !state.drivers.length) {
+    els.voteRaceName.textContent = 'Waiting for next race';
+    els.voteCategoryGrid.innerHTML = '<div class="empty-state">Voting opens when the next race and driver list are loaded.</div>';
+    els.votePicker.hidden = true;
+    return;
+  }
+
+  els.voteRaceName.textContent = `${displayRaceName(race)} · Round ${race.round}`;
+  els.voteCategoryGrid.innerHTML = VOTE_CATEGORIES.map(voteCategoryCard).join('');
+  renderVotePicker();
+}
+
 function renderStandings() {
   els.driversStandingsBody.innerHTML = state.drivers.length ? state.drivers.map(row => `
     <tr>
@@ -1462,6 +1667,7 @@ function renderAll() {
   renderSummary();
   renderSchedule();
   renderResultSelector();
+  renderVotingPanel();
   renderStandings();
   renderProfiles();
   renderQuotes();
@@ -1477,6 +1683,37 @@ document.querySelectorAll('[data-filter]').forEach(button => {
 });
 
 els.refreshNews.addEventListener('click', loadNews);
+
+els.nextRaceVotePanel?.addEventListener('click', event => {
+  const openButton = event.target.closest('[data-vote-category]');
+  if (openButton) {
+    state.activeVoteCategory = openButton.dataset.voteCategory;
+    state.pendingVoteDriverId = getVoteCategory(state.activeVoteCategory).userVote;
+    renderVotingPanel();
+    return;
+  }
+
+  if (event.target.closest('.vote-close') || event.target.closest('.vote-cancel')) {
+    state.activeVoteCategory = null;
+    state.pendingVoteDriverId = null;
+    renderVotingPanel();
+    return;
+  }
+
+  if (event.target.closest('.vote-submit')) {
+    if (!state.activeVoteCategory || !state.pendingVoteDriverId) return;
+    saveVote(state.activeVoteCategory, state.pendingVoteDriverId);
+    state.activeVoteCategory = null;
+    state.pendingVoteDriverId = null;
+    renderVotingPanel();
+  }
+});
+
+els.nextRaceVotePanel?.addEventListener('change', event => {
+  if (event.target.name !== 'vote-driver') return;
+  state.pendingVoteDriverId = event.target.value;
+  renderVotePicker();
+});
 
 loadSeasonData().catch(error => {
   console.error(error);

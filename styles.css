@@ -741,6 +741,229 @@ tr:last-child td {
   white-space: nowrap;
 }
 
+.vote-panel {
+  margin-top: 18px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.vote-panel-head,
+.vote-picker-head,
+.vote-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.vote-panel-head {
+  margin-bottom: 16px;
+}
+
+.vote-panel-head h3 {
+  margin: 4px 0 0;
+}
+
+.vote-panel-head span,
+.vote-current,
+.vote-empty {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.vote-category-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.vote-card {
+  position: relative;
+  min-height: 230px;
+  display: grid;
+  align-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background-color: #0e1117;
+  background-image:
+    linear-gradient(180deg, rgba(8, 9, 12, 0.18) 0%, rgba(8, 9, 12, 0.72) 46%, rgba(8, 9, 12, 0.96) 100%),
+    var(--vote-image, linear-gradient(transparent, transparent));
+  background-position: center, var(--vote-position, center);
+  background-size: cover;
+  overflow: hidden;
+}
+
+.vote-card.is-active {
+  border-color: var(--red);
+}
+
+.vote-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.vote-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.08));
+  pointer-events: none;
+}
+
+.vote-card h4 {
+  margin: 4px 0 0;
+  font-size: 1.05rem;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.72);
+}
+
+.vote-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.vote-card-kicker {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vote-open,
+.vote-submit,
+.vote-cancel,
+.vote-close {
+  min-height: 38px;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-2);
+  cursor: pointer;
+}
+
+.vote-open,
+.vote-submit {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.vote-submit:disabled {
+  color: var(--muted);
+  background: var(--surface-2);
+  border-color: var(--line);
+  cursor: not-allowed;
+}
+
+.vote-results {
+  display: grid;
+  gap: 10px;
+}
+
+.vote-empty-space {
+  min-height: 92px;
+}
+
+.vote-result-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.36);
+  font-size: 0.82rem;
+}
+
+.vote-result-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vote-result-row i {
+  grid-column: 1 / -1;
+  height: 5px;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, var(--team-color, var(--red)) var(--vote-percent), rgba(255, 255, 255, 0.1) var(--vote-percent));
+}
+
+.vote-picker {
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #0c0f15;
+  overflow: hidden;
+}
+
+.vote-picker-head,
+.vote-actions {
+  padding: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.vote-actions {
+  justify-content: flex-end;
+  border-top: 1px solid var(--line);
+  border-bottom: 0;
+}
+
+.vote-actions button,
+.vote-close {
+  padding: 0 16px;
+}
+
+.vote-driver-list {
+  max-height: 380px;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 14px;
+}
+
+.vote-driver-option {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 66px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+}
+
+.vote-driver-option::before {
+  content: "";
+  width: 4px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--team-color, var(--red));
+}
+
+.vote-driver-option input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--red);
+}
+
+.vote-driver-option.is-selected {
+  border-color: var(--team-color, var(--red));
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.vote-driver-option small {
+  color: var(--muted);
+}
+
 .standings-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 380px;
@@ -1092,7 +1315,9 @@ tr:last-child td {
 
   .hero,
   .race-layout,
-  .standings-grid {
+  .standings-grid,
+  .vote-category-grid,
+  .vote-driver-list {
     grid-template-columns: 1fr;
   }
 

@@ -435,7 +435,7 @@ const els = {
   raceFocus: document.querySelector('#raceFocus'),
   resultRaceSelect: document.querySelector('#resultRaceSelect'),
   resultsBody: document.querySelector('#resultsBody'),
-  nextRaceVotePanel: document.querySelector('#nextRaceVotePanel'),
+  nextRaceVotePanel: document.querySelector('#prediction'),
   voteRaceName: document.querySelector('#voteRaceName'),
   voteCategoryGrid: document.querySelector('#voteCategoryGrid'),
   votePicker: document.querySelector('#votePicker'),

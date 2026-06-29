@@ -252,6 +252,15 @@ h3 {
   overflow: hidden;
 }
 
+.summary-tile.image-tile {
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(90deg, rgba(17, 20, 26, 0.96) 0%, rgba(17, 20, 26, 0.78) 52%, rgba(17, 20, 26, 0.48) 100%),
+    var(--summary-image);
+  background-position: center;
+  background-size: cover;
+}
+
 .summary-tile::before {
   content: "";
   position: absolute;
@@ -284,7 +293,15 @@ h3 {
 }
 
 .summary-tile small {
+  position: relative;
+  z-index: 1;
   color: var(--muted);
+}
+
+.summary-tile span,
+.summary-tile strong {
+  position: relative;
+  z-index: 1;
 }
 
 .section-head {
@@ -1222,6 +1239,19 @@ tr:last-child td {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
+}
+
+.news-image {
+  height: 142px;
+  margin: -1px -1px 16px;
+  border-bottom: 1px solid var(--line);
+  background-color: #0e1117;
+  background-image:
+    linear-gradient(180deg, rgba(8, 9, 12, 0) 0%, rgba(8, 9, 12, 0.28) 100%),
+    var(--news-image);
+  background-position: center;
+  background-size: cover;
 }
 
 .news-card a {

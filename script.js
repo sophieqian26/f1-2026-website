@@ -5,6 +5,7 @@ const NEWS_FEEDS = [
   'https://www.motorsport.com/rss/f1/news/'
 ];
 const RACE_FOCUS_IMAGE = 'assets/race-focus-antonelli.png';
+const SILVERSTONE_IMAGE = 'assets/feature-images/silverstone-circuit.jpg';
 
 const POLYMARKET_EVENTS_API = 'https://gamma-api.polymarket.com/events';
 const KALSHI_MARKETS_API = 'https://api.elections.kalshi.com/trade-api/v2/markets';
@@ -166,8 +167,17 @@ const GRAND_PRIX_TITLE_BY_COUNTRY = {
 };
 
 const CITY_IMAGE_FALLBACKS = {
-  'Spielberg|Austria': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/2021-09-01_Spielberg_Stadtplatz.jpg/640px-2021-09-01_Spielberg_Stadtplatz.jpg'
+  'Spielberg|Austria': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/2021-09-01_Spielberg_Stadtplatz.jpg/640px-2021-09-01_Spielberg_Stadtplatz.jpg',
+  'Silverstone|UK': SILVERSTONE_IMAGE
 };
+
+const NEWS_IMAGE_FALLBACKS = [
+  'assets/feature-images/george-russell.avif',
+  'assets/feature-images/mercedes-car.webp',
+  SILVERSTONE_IMAGE,
+  'assets/race-focus-antonelli.png',
+  'assets/f1-hero-2026.png'
+];
 
 const EXTERNAL_ODDS_PREVIEWS = {
   'Austria|2026': {
@@ -287,19 +297,22 @@ const FALLBACK_NEWS = [
     title: 'Formula 1 2026 season coverage',
     description: 'Live news feeds can be connected through public RSS proxies or a production news API.',
     link: 'https://www.formula1.com/en/latest',
-    source: 'Formula 1'
+    source: 'Formula 1',
+    imageUrl: 'assets/f1-hero-2026.png'
   },
   {
     title: 'Driver market and team updates',
     description: 'The news panel is ready for driver-focused headlines as feeds become available.',
     link: 'https://www.bbc.com/sport/formula1',
-    source: 'BBC Sport'
+    source: 'BBC Sport',
+    imageUrl: 'assets/feature-images/mercedes-car.webp'
   },
   {
     title: 'Race weekend reports',
     description: 'Headlines refresh independently from schedule, standings, and result data.',
     link: 'https://www.motorsport.com/f1/news/',
-    source: 'Motorsport.com'
+    source: 'Motorsport.com',
+    imageUrl: SILVERSTONE_IMAGE
   }
 ];
 
@@ -575,6 +588,17 @@ function findDriverByMarketName(name = '') {
     const given = normalizeName(row.Driver?.givenName);
     return normalized.includes(full) || full.includes(normalized) || normalized.includes(family) || (family && given && normalized.includes(given) && normalized.includes(family));
   })?.Driver || null;
+}
+
+function storyImageFromItem(item) {
+  const media = item.querySelector('media\\:content, content, media\\:thumbnail, thumbnail');
+  const enclosure = item.querySelector('enclosure');
+  const description = item.querySelector('description')?.textContent || '';
+  const htmlImage = description.match(/<img[^>]+src=["']([^"']+)["']/i)?.[1];
+  return media?.getAttribute('url')
+    || enclosure?.getAttribute('url')
+    || htmlImage
+    || '';
 }
 
 function readVoteStore() {
@@ -1155,7 +1179,8 @@ async function loadNews() {
           description: item.querySelector('description')?.textContent?.replace(/<[^>]+>/g, '') || '',
           link: item.querySelector('link')?.textContent || '#',
           source: doc.querySelector('channel > title')?.textContent || 'Motorsport news',
-          pubDate: item.querySelector('pubDate')?.textContent || ''
+          pubDate: item.querySelector('pubDate')?.textContent || '',
+          imageUrl: storyImageFromItem(item)
         });
       });
     } catch (error) {
@@ -1633,8 +1658,11 @@ function flipProfileCard(card) {
 
 function renderNews() {
   els.newsCount.textContent = state.news.length ? `${state.news.length} stories` : 'No stories';
-  els.newsGrid.innerHTML = state.news.map(story => `
-    <article class="news-card">
+  els.newsGrid.innerHTML = state.news.map((story, index) => {
+    const image = story.imageUrl || NEWS_IMAGE_FALLBACKS[index % NEWS_IMAGE_FALLBACKS.length];
+    return `
+    <article class="news-card" style="--news-image: url('${escapeHtml(image)}')">
+      <div class="news-image" aria-hidden="true"></div>
       <div>
         <span class="news-meta">${escapeHtml(story.source || 'Motorsport news')}</span>
         <strong>${escapeHtml(story.title)}</strong>
@@ -1642,7 +1670,8 @@ function renderNews() {
       </div>
       <a href="${escapeHtml(story.link)}" target="_blank" rel="noreferrer">Read story</a>
     </article>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function renderQuotes() {

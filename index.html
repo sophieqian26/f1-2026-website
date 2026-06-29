@@ -6,7 +6,7 @@
     <title>F1 2026 Season Hub</title>
     <link rel="preconnect" href="https://api.jolpi.ca">
     <link rel="preconnect" href="https://api.allorigins.win">
-    <link rel="stylesheet" href="styles.css?v=20260629-prediction-nav">
+    <link rel="stylesheet" href="styles.css?v=20260629-card-images">
   </head>
   <body>
     <header class="site-header">
@@ -55,17 +55,17 @@
       </section>
 
       <section class="section shell dashboard-grid" aria-label="Season overview">
-        <article class="summary-tile accent-red">
+        <article class="summary-tile accent-red image-tile" style="--summary-image: url('assets/feature-images/silverstone-circuit.jpg')">
           <span>Next race</span>
           <strong id="nextRace">Loading schedule</strong>
           <small id="nextRaceMeta">Live API lookup in progress</small>
         </article>
-        <article class="summary-tile accent-blue">
+        <article class="summary-tile accent-blue image-tile" style="--summary-image: url('assets/feature-images/george-russell.avif')">
           <span>Latest winner</span>
           <strong id="latestWinner">Pending results</strong>
           <small id="latestWinnerMeta">Updates after completed race data lands</small>
         </article>
-        <article class="summary-tile accent-green">
+        <article class="summary-tile accent-green image-tile" style="--summary-image: url('assets/feature-images/mercedes-car.webp')">
           <span>Constructors</span>
           <strong id="constructorLeader">Loading</strong>
           <small id="constructorLeaderMeta">Team standings</small>
@@ -215,6 +215,6 @@
       <span id="lastUpdated">Last updated: --</span>
     </footer>
 
-    <script src="script.js?v=20260629-prediction-nav"></script>
+    <script src="script.js?v=20260629-card-images"></script>
   </body>
 </html>

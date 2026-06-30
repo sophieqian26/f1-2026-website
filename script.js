@@ -10,6 +10,8 @@ const SILVERSTONE_IMAGE = 'assets/feature-images/silverstone-circuit.jpg';
 const POLYMARKET_EVENTS_API = 'https://gamma-api.polymarket.com/events';
 const KALSHI_MARKETS_API = 'https://api.elections.kalshi.com/trade-api/v2/markets';
 const VOTE_STORAGE_KEY = `f1-${SEASON}-race-votes`;
+const VOTE_USER_KEY = `f1-${SEASON}-vote-user-id`;
+const FIREBASE_SDK_VERSION = '10.12.5';
 
 const VOTE_CATEGORIES = [
   {
@@ -416,7 +418,12 @@ const state = {
   filter: 'all',
   selectedRaceRound: null,
   activeVoteCategory: null,
-  pendingVoteDriverId: null
+  pendingVoteDriverId: null,
+  firebaseVotes: {},
+  firebaseUserVotes: {},
+  voteMode: 'local',
+  votesReady: false,
+  firebaseUnsubscribers: []
 };
 
 function makeResult(position, driver, constructor, points, details = {}) {
@@ -613,6 +620,14 @@ function writeVoteStore(store) {
   localStorage.setItem(VOTE_STORAGE_KEY, JSON.stringify(store));
 }
 
+function voteUserId() {
+  const existing = localStorage.getItem(VOTE_USER_KEY);
+  if (existing) return existing;
+  const id = window.crypto?.randomUUID ? window.crypto.randomUUID() : `user-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  localStorage.setItem(VOTE_USER_KEY, id);
+  return id;
+}
+
 function voteRaceKey() {
   const race = nextRace();
   return race ? `${SEASON}-round-${race.round}` : `${SEASON}-next-race`;
@@ -623,12 +638,19 @@ function emptyVoteCategory() {
 }
 
 function getVoteCategory(categoryId) {
+  if (state.voteMode === 'firebase') {
+    return {
+      totals: state.firebaseVotes[categoryId] || {},
+      userVote: state.firebaseUserVotes[categoryId] || null
+    };
+  }
+
   const store = readVoteStore();
   const raceKey = voteRaceKey();
   return store[raceKey]?.categories?.[categoryId] || emptyVoteCategory();
 }
 
-function saveVote(categoryId, driverId) {
+function saveLocalVote(categoryId, driverId) {
   const store = readVoteStore();
   const raceKey = voteRaceKey();
   store[raceKey] ||= { categories: {} };
@@ -643,6 +665,14 @@ function saveVote(categoryId, driverId) {
   category.userVote = driverId;
   category.totals[driverId] = (category.totals[driverId] || 0) + 1;
   writeVoteStore(store);
+}
+
+async function saveVote(categoryId, driverId) {
+  if (state.voteMode === 'firebase' && window.F1FirebaseVotes?.saveVote) {
+    await window.F1FirebaseVotes.saveVote(voteRaceKey(), categoryId, driverId, voteUserId());
+    return;
+  }
+  saveLocalVote(categoryId, driverId);
 }
 
 function voteDrivers() {
@@ -665,6 +695,98 @@ function voteResults(categoryId) {
     })
     .filter(Boolean)
     .sort((a, b) => b.votes - a.votes || driverName(a.driver).localeCompare(driverName(b.driver)));
+}
+
+function firebaseConfigReady() {
+  const config = window.F1_FIREBASE_CONFIG;
+  return Boolean(config?.apiKey && config?.projectId && config?.appId);
+}
+
+async function initializeFirebaseVotes() {
+  if (!firebaseConfigReady()) {
+    state.voteMode = 'local';
+    state.votesReady = true;
+    renderVotingPanel();
+    return;
+  }
+
+  try {
+    const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-app.js`);
+    const {
+      getFirestore,
+      doc,
+      collection,
+      onSnapshot,
+      runTransaction,
+      setDoc,
+      serverTimestamp
+    } = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-firestore.js`);
+
+    const app = initializeApp(window.F1_FIREBASE_CONFIG);
+    const db = getFirestore(app);
+
+    window.F1FirebaseVotes = {
+      listen(raceKey) {
+        state.firebaseUnsubscribers.forEach(unsubscribe => unsubscribe());
+        state.firebaseUnsubscribers = [];
+        state.firebaseVotes = {};
+        state.firebaseUserVotes = {};
+
+        const totalsRef = collection(db, 'raceVotes', raceKey, 'categories');
+        const userRef = collection(db, 'raceVotes', raceKey, 'users', voteUserId(), 'categories');
+
+        state.firebaseUnsubscribers.push(onSnapshot(totalsRef, snapshot => {
+          snapshot.forEach(categoryDoc => {
+            state.firebaseVotes[categoryDoc.id] = categoryDoc.data()?.totals || {};
+          });
+          renderVotingPanel();
+        }));
+
+        state.firebaseUnsubscribers.push(onSnapshot(userRef, snapshot => {
+          snapshot.forEach(categoryDoc => {
+            state.firebaseUserVotes[categoryDoc.id] = categoryDoc.data()?.driverId || null;
+          });
+          renderVotingPanel();
+        }));
+      },
+
+      async saveVote(raceKey, categoryId, driverId, userId) {
+        const categoryRef = doc(db, 'raceVotes', raceKey, 'categories', categoryId);
+        const userVoteRef = doc(db, 'raceVotes', raceKey, 'users', userId, 'categories', categoryId);
+
+        await runTransaction(db, async transaction => {
+          const categorySnapshot = await transaction.get(categoryRef);
+          const userSnapshot = await transaction.get(userVoteRef);
+          const totals = categorySnapshot.exists() ? { ...(categorySnapshot.data().totals || {}) } : {};
+          const previousDriverId = userSnapshot.exists() ? userSnapshot.data().driverId : null;
+
+          if (previousDriverId && totals[previousDriverId]) {
+            totals[previousDriverId] = Math.max(0, Number(totals[previousDriverId]) - 1);
+            if (totals[previousDriverId] === 0) delete totals[previousDriverId];
+          }
+
+          totals[driverId] = (Number(totals[driverId]) || 0) + 1;
+          transaction.set(categoryRef, { totals, updatedAt: serverTimestamp() }, { merge: true });
+          transaction.set(userVoteRef, { driverId, updatedAt: serverTimestamp() }, { merge: true });
+        });
+
+        await setDoc(doc(db, 'raceVotes', raceKey), {
+          season: SEASON,
+          raceKey,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+      }
+    };
+
+    state.voteMode = 'firebase';
+    state.votesReady = true;
+    window.F1FirebaseVotes.listen(voteRaceKey());
+  } catch (error) {
+    console.warn('Firebase voting unavailable, falling back to local votes.', error);
+    state.voteMode = 'local';
+    state.votesReady = true;
+    renderVotingPanel();
+  }
 }
 
 async function fetchJson(url) {
@@ -1497,7 +1619,8 @@ function renderVotingPanel() {
     return;
   }
 
-  els.voteRaceName.textContent = `${displayRaceName(race)} · Round ${race.round}`;
+  const modeLabel = state.voteMode === 'firebase' ? 'Shared live voting' : 'Local preview voting';
+  els.voteRaceName.textContent = `${displayRaceName(race)} · Round ${race.round} · ${modeLabel}`;
   els.voteCategoryGrid.innerHTML = VOTE_CATEGORIES.map(voteCategoryCard).join('');
   renderVotePicker();
 }
@@ -1713,7 +1836,7 @@ document.querySelectorAll('[data-filter]').forEach(button => {
 
 els.refreshNews.addEventListener('click', loadNews);
 
-els.nextRaceVotePanel?.addEventListener('click', event => {
+els.nextRaceVotePanel?.addEventListener('click', async event => {
   const openButton = event.target.closest('[data-vote-category]');
   if (openButton) {
     state.activeVoteCategory = openButton.dataset.voteCategory;
@@ -1731,7 +1854,7 @@ els.nextRaceVotePanel?.addEventListener('click', event => {
 
   if (event.target.closest('.vote-submit')) {
     if (!state.activeVoteCategory || !state.pendingVoteDriverId) return;
-    saveVote(state.activeVoteCategory, state.pendingVoteDriverId);
+    await saveVote(state.activeVoteCategory, state.pendingVoteDriverId);
     state.activeVoteCategory = null;
     state.pendingVoteDriverId = null;
     renderVotingPanel();
@@ -1744,9 +1867,12 @@ els.nextRaceVotePanel?.addEventListener('change', event => {
   renderVotePicker();
 });
 
-loadSeasonData().catch(error => {
-  console.error(error);
-  els.dataStatus.textContent = 'Offline';
-  renderAll();
-});
+loadSeasonData()
+  .then(initializeFirebaseVotes)
+  .catch(error => {
+    console.error(error);
+    els.dataStatus.textContent = 'Offline';
+    renderAll();
+    initializeFirebaseVotes();
+  });
 loadNews();

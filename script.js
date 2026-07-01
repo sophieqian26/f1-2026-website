@@ -43,6 +43,13 @@ const VOTE_CATEGORIES = [
     imagePosition: 'center 22%'
   },
   {
+    id: 'sprint_winner',
+    title: 'Sprint race winner',
+    shortTitle: 'Sprint',
+    imageUrl: SILVERSTONE_IMAGE,
+    imagePosition: 'center'
+  },
+  {
     id: 'world_champion',
     title: 'World champion',
     shortTitle: 'Champion',
@@ -194,6 +201,20 @@ const EXTERNAL_ODDS_PREVIEWS = {
       { name: 'Franco Colapinto', percent: 6 },
       { name: 'Lando Norris', percent: 4 },
       { name: 'Charles Leclerc', percent: 3 }
+    ]
+  },
+  'UK|2026': {
+    source: '2026 form-based Silverstone prediction',
+    url: '#standings',
+    note: 'No reliable live 2026 Silverstone betting market was found, so these percentages use current championship form until Polymarket or Kalshi publish a matching market.',
+    rows: [
+      { name: 'George Russell', percent: 30 },
+      { name: 'Andrea Kimi Antonelli', percent: 26 },
+      { name: 'Lewis Hamilton', percent: 18 },
+      { name: 'Lando Norris', percent: 11 },
+      { name: 'Oscar Piastri', percent: 8 },
+      { name: 'Charles Leclerc', percent: 5 },
+      { name: 'Max Verstappen', percent: 2 }
     ]
   }
 };
@@ -1259,6 +1280,15 @@ async function loadExternalPreviewOdds(race, map) {
   preview.rows.forEach(row => addOddsRow(map, row.name, 'external', row.percent, preview.url));
 }
 
+function oddsSourceText(race) {
+  const key = `${race.Circuit?.Location?.country}|${SEASON}`;
+  const preview = EXTERNAL_ODDS_PREVIEWS[key];
+  if (preview) {
+    return `Odds source: ${preview.source}. ${preview.note} Prediction-market sync is checked in the background when matching markets are available.`;
+  }
+  return 'Odds source: Polymarket and Kalshi winner-market sync, when matching markets are available.';
+}
+
 async function loadNextRaceOdds() {
   const race = nextRace();
   if (!race) return;
@@ -1389,7 +1419,8 @@ function renderSchedule() {
     const location = race.Circuit?.Location || {};
     const city = location.locality || 'City TBC';
     const country = location.country || 'Country TBC';
-    const cityImage = state.cityImages[cityImageKey(location)] || CITY_IMAGE_FALLBACKS[cityImageKey(location)];
+    const imageKey = cityImageKey(location);
+    const cityImage = CITY_IMAGE_FALLBACKS[imageKey] || state.cityImages[imageKey];
     const imageStyle = cityImage ? ` style="--race-image: url('${escapeHtml(cityImage)}')"` : '';
     const podium = racePodium(race);
     const podiumHtml = podium.length
@@ -1437,9 +1468,11 @@ function renderRaceFocus(race) {
   const location = race.Circuit?.Location || {};
   const oddsRows = state.odds.raceRound === race.round ? state.odds.rows : [];
   const topPick = oddsRows[0];
-  const cityImage = state.cityImages[cityImageKey(location)] || CITY_IMAGE_FALLBACKS[cityImageKey(location)];
-  if (RACE_FOCUS_IMAGE || cityImage) {
-    els.raceFocus.style.setProperty('--focus-image', `url('${RACE_FOCUS_IMAGE || cityImage}')`);
+  const imageKey = cityImageKey(location);
+  const cityImage = CITY_IMAGE_FALLBACKS[imageKey] || state.cityImages[imageKey];
+  const focusImage = location.country === 'UK' ? SILVERSTONE_IMAGE : (RACE_FOCUS_IMAGE || cityImage);
+  if (focusImage) {
+    els.raceFocus.style.setProperty('--focus-image', `url('${focusImage}')`);
   } else {
     els.raceFocus.style.removeProperty('--focus-image');
   }
@@ -1490,7 +1523,7 @@ function renderRaceFocus(race) {
       <dt>Location</dt><dd>${escapeHtml([location.locality, location.country].filter(Boolean).join(', ') || 'TBC')}</dd>
     </dl>
     ${oddsHtml}
-    <p class="odds-source">Odds source: external Austrian Grand Prix betting preview, with prediction-market sync checked in the background when matching markets are available.</p>
+    <p class="odds-source">${escapeHtml(oddsSourceText(race))}</p>
   `;
 }
 

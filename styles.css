@@ -579,10 +579,10 @@ h3 {
 
 .grid-row {
   display: grid;
-  grid-template-columns: 5px 44px minmax(0, 1.15fr) minmax(130px, 0.65fr);
+  grid-template-columns: 5px 44px 58px minmax(0, 1.1fr) minmax(130px, 0.55fr);
   gap: 12px;
   align-items: center;
-  min-height: 58px;
+  min-height: 76px;
   padding: 10px 14px;
   border-bottom: 1px solid var(--line);
 }
@@ -601,7 +601,7 @@ h3 {
 
 .grid-position {
   grid-column: 2;
-  grid-row: 1;
+  grid-row: 1 / span 2;
   display: grid;
   width: 30px;
   height: 30px;
@@ -613,17 +613,42 @@ h3 {
   font-weight: 850;
 }
 
-.grid-driver {
+.grid-number {
   grid-column: 3;
+  grid-row: 1 / span 2;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 820;
+}
+
+.grid-driver {
+  grid-column: 4;
   min-width: 0;
 }
 
 .grid-row .team-chip {
-  grid-column: 4;
+  grid-column: 5;
+}
+
+.grid-times {
+  grid-column: 4 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(70px, 1fr));
+  gap: 8px;
+}
+
+.grid-times span {
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+.grid-times b {
+  color: var(--text);
+  font-size: 0.8rem;
 }
 
 .grid-note {
-  grid-column: 3 / -1;
+  grid-column: 4 / -1;
 }
 
 .starting-grid-source {

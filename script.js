@@ -222,31 +222,31 @@ const EXTERNAL_ODDS_PREVIEWS = {
 const STARTING_GRID_OVERRIDES = {
   '9': {
     raceName: 'British Grand Prix',
-    sourceUrl: 'https://www.formula1.com/en/results/2026/races/1289/great-britain/starting-grid',
-    note: 'Official F1 starting grid after qualifying and grid penalties.',
+    sourceUrl: 'https://www.formula1.com/en/results/2026/races/1289/great-britain/qualifying',
+    note: 'Official F1 qualifying results.',
     rows: [
-      makeGridResult(1, { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }),
-      makeGridResult(2, { driverId: 'antonelli', givenName: 'Andrea Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }),
-      makeGridResult(3, { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }),
-      makeGridResult(4, { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }),
-      makeGridResult(5, { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }),
-      makeGridResult(6, { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }),
-      makeGridResult(7, { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull' }),
-      makeGridResult(8, { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull' }),
-      makeGridResult(9, { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }),
-      makeGridResult(10, { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'RB F1 Team' }),
-      makeGridResult(11, { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }),
-      makeGridResult(12, { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'RB F1 Team' }),
-      makeGridResult(13, { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }),
-      makeGridResult(14, { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }),
-      makeGridResult(15, { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine F1 Team' }, '3-place grid penalty'),
-      makeGridResult(16, { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine F1 Team' }),
-      makeGridResult(17, { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }),
-      makeGridResult(18, { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }),
-      makeGridResult(19, { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }),
-      makeGridResult(20, { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }),
-      makeGridResult(21, { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac F1 Team' }),
-      makeGridResult(22, { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac F1 Team' })
+      makeGridResult(1, { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '12', q1: '1:29.719', q2: '1:28.493', q3: '1:28.111', laps: '19' }),
+      makeGridResult(2, { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '16', q1: '1:29.534', q2: '1:28.626', q3: '1:28.286', laps: '18' }),
+      makeGridResult(3, { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '44', q1: '1:29.644', q2: '1:28.864', q3: '1:28.458', laps: '17' }),
+      makeGridResult(4, { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '63', q1: '1:29.985', q2: '1:28.920', q3: '1:28.481', laps: '17' }),
+      makeGridResult(5, { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '6', q1: '1:29.276', q2: '1:29.069', q3: '1:28.746', laps: '18' }),
+      makeGridResult(6, { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '1', q1: '1:30.186', q2: '1:29.383', q3: '1:28.877', laps: '17' }),
+      makeGridResult(7, { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '3', q1: '1:29.549', q2: '1:29.113', q3: '1:28.893', laps: '18' }),
+      makeGridResult(8, { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '81', q1: '1:29.971', q2: '1:29.218', q3: '1:29.032', laps: '18' }),
+      makeGridResult(9, { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '41', q1: '1:29.661', q2: '1:29.324', q3: '1:29.305', laps: '17' }),
+      makeGridResult(10, { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '30', q1: '1:29.300', q2: '1:29.429', q3: '1:29.716', laps: '20' }),
+      makeGridResult(11, { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, { number: '5', q1: '1:30.269', q2: '1:29.461', laps: '10' }),
+      makeGridResult(12, { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '10', q1: '1:30.345', q2: '1:30.063', laps: '12' }),
+      makeGridResult(13, { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, { number: '27', q1: '1:29.539', q2: '1:30.076', laps: '15' }),
+      makeGridResult(14, { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '87', q1: '1:30.570', q2: '1:30.501', laps: '15' }),
+      makeGridResult(15, { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, { number: '55', q1: '1:30.562', q2: '1:30.623', laps: '15' }),
+      makeGridResult(16, { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, { number: '23', q1: '1:30.638', q2: '1:31.341', laps: '14' }),
+      makeGridResult(17, { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '31', q1: '1:30.680', laps: '9' }),
+      makeGridResult(18, { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '77', q1: '1:31.227', laps: '8' }),
+      makeGridResult(19, { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '43', q1: '1:31.321', laps: '5' }),
+      makeGridResult(20, { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '11', q1: '1:31.451', laps: '9' }),
+      makeGridResult(21, { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', q1: '1:32.863', laps: '9' }),
+      makeGridResult(22, { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '14', q1: '1:33.025', laps: '9' })
     ]
   }
 };
@@ -492,12 +492,17 @@ function makeResult(position, driver, constructor, points, details = {}) {
   };
 }
 
-function makeGridResult(position, driver, constructor, note = '') {
+function makeGridResult(position, driver, constructor, details = {}) {
   return {
     position: String(position),
     Driver: driver,
     Constructor: constructor,
-    note
+    number: details.number || '',
+    q1: details.q1 || '',
+    q2: details.q2 || '',
+    q3: details.q3 || '',
+    laps: details.laps || '',
+    note: details.note || ''
   };
 }
 
@@ -1470,8 +1475,15 @@ function renderStartingGrid() {
   els.startingGridList.innerHTML = grid.rows.map(row => `
     <div class="grid-row" style="--team-color: ${teamColor(row.Constructor?.constructorId)}">
       <span class="grid-position">${escapeHtml(row.position)}</span>
+      <span class="grid-number">No. ${escapeHtml(row.number)}</span>
       <span class="grid-driver">${driverIdentityHtml(row.Driver)}</span>
       <span class="team-chip" style="--team-color: ${teamColor(row.Constructor?.constructorId)}">${escapeHtml(constructorName(row.Constructor))}</span>
+      <span class="grid-times">
+        <span>Q1 <b>${escapeHtml(row.q1 || '-')}</b></span>
+        <span>Q2 <b>${escapeHtml(row.q2 || '-')}</b></span>
+        <span>Q3 <b>${escapeHtml(row.q3 || '-')}</b></span>
+        <span>Laps <b>${escapeHtml(row.laps || '-')}</b></span>
+      </span>
       ${row.note ? `<span class="grid-note">${escapeHtml(row.note)}</span>` : ''}
     </div>
   `).join('');

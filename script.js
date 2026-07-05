@@ -1472,21 +1472,29 @@ function renderStartingGrid() {
 
   els.startingGridMeta.textContent = `${displayRaceName(race)} · ${grid.note}`;
   els.startingGridSource.href = grid.sourceUrl;
-  els.startingGridList.innerHTML = grid.rows.map(row => `
+  els.startingGridList.innerHTML = `
+    <div class="grid-header">
+      <span>Pos</span>
+      <span>No.</span>
+      <span>Driver</span>
+      <span>Team</span>
+      <span>Q1</span>
+      <span>Q2</span>
+      <span>Q3</span>
+    </div>
+    ${grid.rows.map(row => `
     <div class="grid-row" style="--team-color: ${teamColor(row.Constructor?.constructorId)}">
       <span class="grid-position">${escapeHtml(row.position)}</span>
-      <span class="grid-number">No. ${escapeHtml(row.number)}</span>
+      <span class="grid-number">${escapeHtml(row.number)}</span>
       <span class="grid-driver">${driverIdentityHtml(row.Driver)}</span>
       <span class="team-chip" style="--team-color: ${teamColor(row.Constructor?.constructorId)}">${escapeHtml(constructorName(row.Constructor))}</span>
-      <span class="grid-times">
-        <span>Q1 <b>${escapeHtml(row.q1 || '-')}</b></span>
-        <span>Q2 <b>${escapeHtml(row.q2 || '-')}</b></span>
-        <span>Q3 <b>${escapeHtml(row.q3 || '-')}</b></span>
-        <span>Laps <b>${escapeHtml(row.laps || '-')}</b></span>
-      </span>
+      <span class="grid-time grid-q1">${escapeHtml(row.q1 || '-')}</span>
+      <span class="grid-time grid-q2">${escapeHtml(row.q2 || '-')}</span>
+      <span class="grid-time grid-q3">${escapeHtml(row.q3 || '-')}</span>
       ${row.note ? `<span class="grid-note">${escapeHtml(row.note)}</span>` : ''}
     </div>
-  `).join('');
+  `).join('')}
+  `;
 }
 
 function renderSchedule() {

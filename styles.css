@@ -340,8 +340,12 @@ h3 {
 }
 
 .race-layout {
+  display: block;
+}
+
+.next-race-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 420px;
+  grid-template-columns: minmax(360px, 420px) minmax(0, 1fr);
   gap: 18px;
 }
 
@@ -353,6 +357,7 @@ h3 {
 
 .race-card,
 .race-focus,
+.starting-grid-panel,
 .leaderboard,
 .profile-card,
 .news-card {
@@ -501,6 +506,10 @@ h3 {
   padding: 24px;
 }
 
+.next-race-layout .race-focus {
+  min-height: 100%;
+}
+
 .race-focus {
   position: sticky;
   overflow: hidden;
@@ -534,6 +543,93 @@ h3 {
 .race-focus dd {
   margin: 0;
   font-weight: 720;
+}
+
+.starting-grid-panel {
+  padding: 20px;
+}
+
+.starting-grid-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.starting-grid-head h3 {
+  margin: 4px 0 0;
+}
+
+.starting-grid-head span,
+.starting-grid-source,
+.grid-note {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.starting-grid-list {
+  display: grid;
+  max-height: 620px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.grid-row {
+  display: grid;
+  grid-template-columns: 5px 44px minmax(0, 1.15fr) minmax(130px, 0.65fr);
+  gap: 12px;
+  align-items: center;
+  min-height: 58px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.grid-row:last-child {
+  border-bottom: 0;
+}
+
+.grid-row::before {
+  content: "";
+  width: 5px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--team-color, var(--red));
+}
+
+.grid-position {
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  color: #fff;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #0e1117;
+  font-weight: 850;
+}
+
+.grid-driver {
+  grid-column: 3;
+  min-width: 0;
+}
+
+.grid-row .team-chip {
+  grid-column: 4;
+}
+
+.grid-note {
+  grid-column: 3 / -1;
+}
+
+.starting-grid-source {
+  display: inline-flex;
+  margin-top: 12px;
+  font-weight: 760;
 }
 
 .odds-chart-wrap {
@@ -1345,6 +1441,7 @@ tr:last-child td {
 
   .hero,
   .race-layout,
+  .next-race-layout,
   .standings-grid,
   .vote-category-grid,
   .vote-driver-list {

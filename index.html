@@ -6,7 +6,7 @@
     <title>F1 2026 Season Hub</title>
     <link rel="preconnect" href="https://api.jolpi.ca">
     <link rel="preconnect" href="https://api.allorigins.win">
-    <link rel="stylesheet" href="styles.css?v=20260701-silverstone">
+    <link rel="stylesheet" href="styles.css?v=20260705-grid">
   </head>
   <body>
     <header class="site-header">
@@ -15,6 +15,7 @@
         <span>F1 2026</span>
       </a>
       <nav class="nav" aria-label="Primary navigation">
+        <a href="#next-race">Next race</a>
         <a href="#schedule">Schedule</a>
         <a href="#results">Results</a>
         <a href="#prediction">Prediction</a>
@@ -77,6 +78,33 @@
         </article>
       </section>
 
+      <section class="section shell next-race-section" id="next-race">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Race weekend</p>
+            <h2>Next race</h2>
+          </div>
+        </div>
+        <div class="next-race-layout">
+          <aside class="race-focus" id="raceFocus" aria-label="Selected race details">
+            <p class="eyebrow">Race focus</p>
+            <h3>Select a race</h3>
+            <p>Choose a Grand Prix from the schedule to see weekend timing, status, winner, circuit, and location details.</p>
+          </aside>
+          <section class="starting-grid-panel" aria-labelledby="startingGridTitle">
+            <div class="starting-grid-head">
+              <div>
+                <p class="eyebrow">Qualifying results</p>
+                <h3 id="startingGridTitle">Starting grid</h3>
+              </div>
+              <span id="startingGridMeta">Official grid loading</span>
+            </div>
+            <div class="starting-grid-list" id="startingGridList" aria-live="polite"></div>
+            <a class="starting-grid-source" id="startingGridSource" href="https://www.formula1.com/en/results/2026/races/1289/great-britain/starting-grid" target="_blank" rel="noreferrer">Official F1 starting grid</a>
+          </section>
+        </div>
+      </section>
+
       <section class="section shell split" id="schedule">
         <div class="section-head">
           <p class="eyebrow">Calendar</p>
@@ -89,11 +117,6 @@
         </div>
         <div class="race-layout">
           <div class="race-list" id="raceList" aria-live="polite"></div>
-          <aside class="race-focus" id="raceFocus" aria-label="Selected race details">
-            <p class="eyebrow">Race focus</p>
-            <h3>Select a race</h3>
-            <p>Choose a Grand Prix from the schedule to see weekend timing, status, winner, circuit, and location details.</p>
-          </aside>
         </div>
       </section>
 
@@ -216,6 +239,6 @@
     </footer>
 
     <script src="firebase-config.js?v=20260630-firebase"></script>
-    <script src="script.js?v=20260701-silverstone"></script>
+    <script src="script.js?v=20260705-grid"></script>
   </body>
 </html>

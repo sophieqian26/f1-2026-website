@@ -219,6 +219,38 @@ const EXTERNAL_ODDS_PREVIEWS = {
   }
 };
 
+const STARTING_GRID_OVERRIDES = {
+  '9': {
+    raceName: 'British Grand Prix',
+    sourceUrl: 'https://www.formula1.com/en/results/2026/races/1289/great-britain/starting-grid',
+    note: 'Official F1 starting grid after qualifying and grid penalties.',
+    rows: [
+      makeGridResult(1, { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }),
+      makeGridResult(2, { driverId: 'antonelli', givenName: 'Andrea Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }),
+      makeGridResult(3, { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }),
+      makeGridResult(4, { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }),
+      makeGridResult(5, { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }),
+      makeGridResult(6, { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }),
+      makeGridResult(7, { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull' }),
+      makeGridResult(8, { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull' }),
+      makeGridResult(9, { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }),
+      makeGridResult(10, { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'RB F1 Team' }),
+      makeGridResult(11, { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }),
+      makeGridResult(12, { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'RB F1 Team' }),
+      makeGridResult(13, { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }),
+      makeGridResult(14, { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }),
+      makeGridResult(15, { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine F1 Team' }, '3-place grid penalty'),
+      makeGridResult(16, { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine F1 Team' }),
+      makeGridResult(17, { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }),
+      makeGridResult(18, { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }),
+      makeGridResult(19, { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }),
+      makeGridResult(20, { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }),
+      makeGridResult(21, { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac F1 Team' }),
+      makeGridResult(22, { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac F1 Team' })
+    ]
+  }
+};
+
 const WISDOM_QUOTES = [
   {
     driver: 'Charles Leclerc',
@@ -460,6 +492,15 @@ function makeResult(position, driver, constructor, points, details = {}) {
   };
 }
 
+function makeGridResult(position, driver, constructor, note = '') {
+  return {
+    position: String(position),
+    Driver: driver,
+    Constructor: constructor,
+    note
+  };
+}
+
 const els = {
   dataStatus: document.querySelector('#dataStatus'),
   completedCount: document.querySelector('#completedCount'),
@@ -474,6 +515,9 @@ const els = {
   newsCount: document.querySelector('#newsCount'),
   raceList: document.querySelector('#raceList'),
   raceFocus: document.querySelector('#raceFocus'),
+  startingGridMeta: document.querySelector('#startingGridMeta'),
+  startingGridList: document.querySelector('#startingGridList'),
+  startingGridSource: document.querySelector('#startingGridSource'),
   resultRaceSelect: document.querySelector('#resultRaceSelect'),
   resultsBody: document.querySelector('#resultsBody'),
   nextRaceVotePanel: document.querySelector('#prediction'),
@@ -1402,6 +1446,37 @@ function renderSummary() {
   els.lastUpdated.textContent = `Last updated: ${new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date())}`;
 }
 
+function renderStartingGrid() {
+  const race = nextRace();
+  const grid = race ? STARTING_GRID_OVERRIDES[race.round] : null;
+
+  if (!els.startingGridList) return;
+
+  if (!race) {
+    els.startingGridMeta.textContent = 'Next race loading';
+    els.startingGridList.innerHTML = '<div class="empty-state">Starting grid will appear once the next race is loaded.</div>';
+    return;
+  }
+
+  if (!grid?.rows?.length) {
+    els.startingGridMeta.textContent = `${displayRaceName(race)} · Grid pending`;
+    els.startingGridList.innerHTML = '<div class="empty-state">Official qualifying and starting-grid results are not available yet.</div>';
+    els.startingGridSource.href = 'https://www.formula1.com/en/results.html';
+    return;
+  }
+
+  els.startingGridMeta.textContent = `${displayRaceName(race)} · ${grid.note}`;
+  els.startingGridSource.href = grid.sourceUrl;
+  els.startingGridList.innerHTML = grid.rows.map(row => `
+    <div class="grid-row" style="--team-color: ${teamColor(row.Constructor?.constructorId)}">
+      <span class="grid-position">${escapeHtml(row.position)}</span>
+      <span class="grid-driver">${driverIdentityHtml(row.Driver)}</span>
+      <span class="team-chip" style="--team-color: ${teamColor(row.Constructor?.constructorId)}">${escapeHtml(constructorName(row.Constructor))}</span>
+      ${row.note ? `<span class="grid-note">${escapeHtml(row.note)}</span>` : ''}
+    </div>
+  `).join('');
+}
+
 function renderSchedule() {
   const filtered = state.races.filter(race => {
     if (state.filter === 'all') return true;
@@ -1850,6 +1925,7 @@ function renderQuotes() {
 
 function renderAll() {
   renderSummary();
+  renderStartingGrid();
   renderSchedule();
   renderResultSelector();
   renderVotingPanel();

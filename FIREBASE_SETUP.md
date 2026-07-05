@@ -39,7 +39,8 @@ service cloud.firestore {
       }
 
       match /users/{userId}/categories/{categoryId} {
-        allow read, write: if request.resource.data.keys().hasOnly(['driverId', 'updatedAt'])
+        allow read: if true;
+        allow write: if request.resource.data.keys().hasOnly(['driverId', 'updatedAt'])
           && request.resource.data.driverId is string;
       }
     }

@@ -2001,7 +2001,7 @@ els.nextRaceVotePanel?.addEventListener('click', async event => {
     } catch (error) {
       console.error(error);
       saveLocalVote(state.activeVoteCategory, state.pendingVoteDriverId);
-      state.voteError = 'Vote did not save. Check Firebase rules, then try again.';
+      state.voteError = 'Vote saved only on this browser. Publish the updated Firestore rules from FIREBASE_SETUP.md, then refresh and try again.';
     } finally {
       state.voteSubmitting = false;
       renderVotingPanel();

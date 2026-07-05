@@ -472,6 +472,8 @@ const state = {
   selectedRaceRound: null,
   activeVoteCategory: null,
   pendingVoteDriverId: null,
+  voteSubmitting: false,
+  voteError: '',
   firebaseVotes: {},
   firebaseUserVotes: {},
   voteMode: 'local',
@@ -1731,8 +1733,9 @@ function renderVotePicker() {
       }).join('')}
     </div>
     <div class="vote-actions">
-      <button class="vote-submit" type="button" ${selectedDriverId ? '' : 'disabled'}>Submit vote</button>
-      <button class="vote-cancel" type="button">Cancel</button>
+      ${state.voteError ? `<span class="vote-error">${escapeHtml(state.voteError)}</span>` : ''}
+      <button class="vote-submit" type="button" ${(selectedDriverId && !state.voteSubmitting) ? '' : 'disabled'}>${state.voteSubmitting ? 'Saving...' : 'Submit vote'}</button>
+      <button class="vote-cancel" type="button" ${state.voteSubmitting ? 'disabled' : ''}>Cancel</button>
     </div>
   `;
 }
@@ -1970,29 +1973,46 @@ els.nextRaceVotePanel?.addEventListener('click', async event => {
   if (openButton) {
     state.activeVoteCategory = openButton.dataset.voteCategory;
     state.pendingVoteDriverId = getVoteCategory(state.activeVoteCategory).userVote;
+    state.voteError = '';
+    state.voteSubmitting = false;
     renderVotingPanel();
     return;
   }
 
   if (event.target.closest('.vote-close') || event.target.closest('.vote-cancel')) {
+    if (state.voteSubmitting) return;
     state.activeVoteCategory = null;
     state.pendingVoteDriverId = null;
+    state.voteError = '';
     renderVotingPanel();
     return;
   }
 
   if (event.target.closest('.vote-submit')) {
-    if (!state.activeVoteCategory || !state.pendingVoteDriverId) return;
-    await saveVote(state.activeVoteCategory, state.pendingVoteDriverId);
-    state.activeVoteCategory = null;
-    state.pendingVoteDriverId = null;
+    if (!state.activeVoteCategory || !state.pendingVoteDriverId || state.voteSubmitting) return;
+    state.voteSubmitting = true;
+    state.voteError = '';
     renderVotingPanel();
+    try {
+      await saveVote(state.activeVoteCategory, state.pendingVoteDriverId);
+      state.activeVoteCategory = null;
+      state.pendingVoteDriverId = null;
+      state.voteError = '';
+    } catch (error) {
+      console.error(error);
+      saveLocalVote(state.activeVoteCategory, state.pendingVoteDriverId);
+      state.voteError = 'Vote did not save. Check Firebase rules, then try again.';
+    } finally {
+      state.voteSubmitting = false;
+      renderVotingPanel();
+    }
   }
 });
 
 els.nextRaceVotePanel?.addEventListener('change', event => {
   if (event.target.name !== 'vote-driver') return;
   state.pendingVoteDriverId = event.target.value;
+  state.voteError = '';
   renderVotePicker();
 });
 

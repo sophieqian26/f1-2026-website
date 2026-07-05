@@ -1050,6 +1050,18 @@ tr:last-child td {
   cursor: not-allowed;
 }
 
+.vote-cancel:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.vote-error {
+  margin-right: auto;
+  color: #ffb4a9;
+  font-size: 0.84rem;
+  font-weight: 720;
+}
+
 .vote-results {
   display: grid;
   gap: 10px;

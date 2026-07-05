@@ -935,6 +935,10 @@ tr:last-child td {
   background: var(--surface);
 }
 
+.next-race-section .vote-panel {
+  margin-top: 22px;
+}
+
 .vote-panel-head,
 .vote-picker-head,
 .vote-actions {

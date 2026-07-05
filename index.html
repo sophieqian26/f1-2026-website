@@ -6,7 +6,7 @@
     <title>F1 2026 Season Hub</title>
     <link rel="preconnect" href="https://api.jolpi.ca">
     <link rel="preconnect" href="https://api.allorigins.win">
-    <link rel="stylesheet" href="styles.css?v=20260705-grid-columns">
+    <link rel="stylesheet" href="styles.css?v=20260705-vote-next-race">
   </head>
   <body>
     <header class="site-header">
@@ -103,6 +103,17 @@
             <a class="starting-grid-source" id="startingGridSource" href="https://www.formula1.com/en/results/2026/races/1289/great-britain/qualifying" target="_blank" rel="noreferrer">Official F1 qualifying results</a>
           </section>
         </div>
+        <section class="vote-panel" id="prediction" aria-labelledby="nextRaceVoteTitle">
+          <div class="vote-panel-head">
+            <div>
+              <p class="eyebrow">Fan predictions</p>
+              <h3 id="nextRaceVoteTitle">Vote for the next race</h3>
+            </div>
+            <span id="voteRaceName">Next race loading</span>
+          </div>
+          <div class="vote-category-grid" id="voteCategoryGrid"></div>
+          <div class="vote-picker" id="votePicker" hidden></div>
+        </section>
       </section>
 
       <section class="section shell split" id="schedule">
@@ -144,17 +155,6 @@
             <tbody id="resultsBody"></tbody>
           </table>
         </div>
-        <section class="vote-panel" id="prediction" aria-labelledby="nextRaceVoteTitle">
-          <div class="vote-panel-head">
-            <div>
-              <p class="eyebrow">Fan predictions</p>
-              <h3 id="nextRaceVoteTitle">Vote for the next race</h3>
-            </div>
-            <span id="voteRaceName">Next race loading</span>
-          </div>
-          <div class="vote-category-grid" id="voteCategoryGrid"></div>
-          <div class="vote-picker" id="votePicker" hidden></div>
-        </section>
       </section>
 
       <section class="section shell" id="standings">
@@ -239,6 +239,6 @@
     </footer>
 
     <script src="firebase-config.js?v=20260630-firebase"></script>
-    <script src="script.js?v=20260705-grid-columns"></script>
+    <script src="script.js?v=20260705-vote-next-race"></script>
   </body>
 </html>

@@ -541,6 +541,36 @@ const els = {
   lastUpdated: document.querySelector('#lastUpdated')
 };
 
+const PAGE_IDS = ['next-race', 'schedule', 'results', 'prediction', 'standings', 'profiles', 'news', 'wisdom'];
+
+function pageFromHash() {
+  const hash = window.location.hash.replace('#', '');
+  return PAGE_IDS.includes(hash) ? hash : 'next-race';
+}
+
+function setActivePage(pageId = pageFromHash()) {
+  const activePage = PAGE_IDS.includes(pageId) ? pageId : 'next-race';
+
+  document.body.classList.add('page-mode');
+  document.querySelectorAll('.page-section').forEach(section => {
+    const isActive = section.id === activePage;
+    section.classList.toggle('is-page-active', isActive);
+    section.toggleAttribute('hidden', !isActive);
+  });
+
+  document.querySelectorAll('.nav a').forEach(link => {
+    const isActive = link.getAttribute('href') === `#${activePage}`;
+    link.classList.toggle('active', isActive);
+    if (isActive) {
+      link.setAttribute('aria-current', 'page');
+    } else {
+      link.removeAttribute('aria-current');
+    }
+  });
+
+  window.scrollTo(0, 0);
+}
+
 function escapeHtml(value = '') {
   return String(value).replace(/[&<>"']/g, char => ({
     '&': '&amp;',
@@ -1956,6 +1986,23 @@ function renderAll() {
   renderProfiles();
   renderQuotes();
 }
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', event => {
+    const targetId = link.getAttribute('href').slice(1);
+    const pageId = PAGE_IDS.includes(targetId) ? targetId : 'next-race';
+
+    event.preventDefault();
+    if (window.location.hash !== `#${pageId}`) {
+      history.pushState(null, '', `#${pageId}`);
+    }
+    setActivePage(pageId);
+  });
+});
+
+window.addEventListener('popstate', () => setActivePage());
+window.addEventListener('hashchange', () => setActivePage());
+setActivePage();
 
 document.querySelectorAll('[data-filter]').forEach(button => {
   button.addEventListener('click', () => {

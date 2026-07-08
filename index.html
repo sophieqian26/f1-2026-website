@@ -6,7 +6,7 @@
     <title>F1 2026 Season Hub</title>
     <link rel="preconnect" href="https://api.jolpi.ca">
     <link rel="preconnect" href="https://api.allorigins.win">
-    <link rel="stylesheet" href="styles.css?v=20260705-vote-submit">
+    <link rel="stylesheet" href="styles.css?v=20260708-pages">
   </head>
   <body>
     <header class="site-header">
@@ -78,7 +78,7 @@
         </article>
       </section>
 
-      <section class="section shell next-race-section" id="next-race">
+      <section class="section shell next-race-section page-section" id="next-race">
         <div class="section-head compact">
           <div>
             <p class="eyebrow">Race weekend</p>
@@ -103,20 +103,21 @@
             <a class="starting-grid-source" id="startingGridSource" href="https://www.formula1.com/en/results/2026/races/1289/great-britain/qualifying" target="_blank" rel="noreferrer">Official F1 qualifying results</a>
           </section>
         </div>
-        <section class="vote-panel" id="prediction" aria-labelledby="nextRaceVoteTitle">
-          <div class="vote-panel-head">
-            <div>
-              <p class="eyebrow">Fan predictions</p>
-              <h3 id="nextRaceVoteTitle">Vote for the next race</h3>
-            </div>
-            <span id="voteRaceName">Next race loading</span>
-          </div>
-          <div class="vote-category-grid" id="voteCategoryGrid"></div>
-          <div class="vote-picker" id="votePicker" hidden></div>
-        </section>
       </section>
 
-      <section class="section shell split" id="schedule">
+      <section class="section shell vote-panel page-section" id="prediction" aria-labelledby="nextRaceVoteTitle">
+        <div class="vote-panel-head">
+          <div>
+            <p class="eyebrow">Fan predictions</p>
+            <h2 id="nextRaceVoteTitle">Vote for the next race</h2>
+          </div>
+          <span id="voteRaceName">Next race loading</span>
+        </div>
+        <div class="vote-category-grid" id="voteCategoryGrid"></div>
+        <div class="vote-picker" id="votePicker" hidden></div>
+      </section>
+
+      <section class="section shell split page-section" id="schedule">
         <div class="section-head">
           <p class="eyebrow">Calendar</p>
           <h2>Race schedule</h2>
@@ -131,7 +132,7 @@
         </div>
       </section>
 
-      <section class="section shell" id="results">
+      <section class="section shell page-section" id="results">
         <div class="section-head compact">
           <div>
             <p class="eyebrow">Classified finishers</p>
@@ -157,7 +158,7 @@
         </div>
       </section>
 
-      <section class="section shell" id="standings">
+      <section class="section shell page-section" id="standings">
         <div class="section-head compact">
           <div>
             <p class="eyebrow">Points tables</p>
@@ -205,7 +206,7 @@
         </div>
       </section>
 
-      <section class="section shell" id="profiles">
+      <section class="section shell page-section" id="profiles">
         <div class="section-head">
           <p class="eyebrow">Grid guide</p>
           <h2>Driver and team profiles</h2>
@@ -213,7 +214,7 @@
         <div class="profile-grid" id="profileGrid"></div>
       </section>
 
-      <section class="section shell" id="news">
+      <section class="section shell page-section" id="news">
         <div class="section-head compact">
           <div>
             <p class="eyebrow">Latest headlines</p>
@@ -224,7 +225,7 @@
         <div class="news-grid" id="newsGrid"></div>
       </section>
 
-      <section class="section shell" id="wisdom">
+      <section class="section shell page-section" id="wisdom">
         <div class="section-head">
           <p class="eyebrow">Paddock poetry</p>
           <h2>Words of Wisdom</h2>
@@ -239,6 +240,6 @@
     </footer>
 
     <script src="firebase-config.js?v=20260705-firebase-config"></script>
-    <script src="script.js?v=20260705-vote-rules"></script>
+    <script src="script.js?v=20260708-pages"></script>
   </body>
 </html>

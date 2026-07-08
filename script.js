@@ -180,6 +180,19 @@ const CITY_IMAGE_FALLBACKS = {
   'Silverstone|UK': SILVERSTONE_IMAGE
 };
 
+const OFFICIAL_F1_RACE_PAGES = {
+  '1': { id: '1279', slug: 'australia' },
+  '2': { id: '1280', slug: 'china' },
+  '3': { id: '1281', slug: 'japan' },
+  '4': { id: '1282', slug: 'miami' },
+  '5': { id: '1283', slug: 'canada' },
+  '6': { id: '1284', slug: 'monaco' },
+  '7': { id: '1285', slug: 'spain' },
+  '8': { id: '1287', slug: 'austria' },
+  '9': { id: '1289', slug: 'great-britain' },
+  '10': { id: '1290', slug: 'belgium' }
+};
+
 const NEWS_IMAGE_FALLBACKS = [
   'assets/feature-images/george-russell.avif',
   'assets/feature-images/mercedes-car.webp',
@@ -443,40 +456,67 @@ const RESULT_OVERRIDES = {
       makeResult(21, { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac F1 Team' }, 0, { grid: '19', laps: '4', status: 'Retired' }),
       makeResult(22, { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac F1 Team' }, 0, { grid: '20', laps: '2', status: 'Retired' })
     ]
+  },
+  '9': {
+    raceName: 'British Grand Prix',
+    Results: [
+      makeResult(1, { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, 25, { grid: '2', laps: '52', status: '1:27:11.335' }),
+      makeResult(2, { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, 18, { grid: '4', laps: '52', status: '+0.427s' }),
+      makeResult(3, { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, 15, { grid: '3', laps: '52', status: '+0.772s' }),
+      makeResult(4, { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, 12, { grid: '6', laps: '52', status: '+1.149s' }),
+      makeResult(5, { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, 10, { grid: '5', laps: '52', status: '+1.598s' }),
+      makeResult(6, { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, 8, { grid: '10', laps: '52', status: '+2.023s' }),
+      makeResult(7, { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, 6, { grid: '9', laps: '52', status: '+2.214s' }),
+      makeResult(8, { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, 4, { grid: '11', laps: '52', status: '+2.413s' }),
+      makeResult(9, { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, 2, { grid: '19', laps: '52', status: '+3.229s' }),
+      makeResult(10, { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, 1, { grid: '12', laps: '52', status: '+3.445s' }),
+      makeResult(11, { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, 0, { grid: '8', laps: '52', status: '+4.014s' }),
+      makeResult(12, { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { grid: '14', laps: '52', status: '+5.245s' }),
+      makeResult(13, { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { grid: '17', laps: '52', status: '+5.512s' }),
+      makeResult(14, { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { grid: '20', laps: '52', status: '+7.403s' }),
+      makeResult(15, { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, 0, { grid: '1', laps: '52', status: '+8.005s' }),
+      makeResult(16, { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { grid: '18', laps: '52', status: '+8.162s' }),
+      makeResult(17, { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, 0, { grid: '15', laps: '51', status: '+1 lap' }),
+      makeResult(18, { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { grid: '22', laps: '51', status: '+1 lap' }),
+      makeResult(19, { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { grid: '21', laps: '51', status: '+1 lap' }),
+      makeResult(20, { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, 0, { grid: '7', laps: '46', status: 'DNF' }),
+      makeResult('NC', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, 0, { grid: '16', laps: '43', status: 'DNF' }),
+      makeResult('NC', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, 0, { grid: '13', laps: '36', status: 'DNF' })
+    ]
   }
 };
 
 const CURRENT_DRIVER_POINTS = {
   antonelli: { points: 171, wins: 5 },
-  russell: { points: 131, wins: 2 },
-  hamilton: { points: 125, wins: 1 },
+  russell: { points: 149, wins: 2 },
+  hamilton: { points: 140, wins: 1 },
+  leclerc: { points: 104, wins: 1 },
+  norris: { points: 91, wins: 0 },
   piastri: { points: 80, wins: 0 },
-  norris: { points: 79, wins: 0 },
-  leclerc: { points: 79, wins: 0 },
   max_verstappen: { points: 73, wins: 0 },
-  hadjar: { points: 42, wins: 0 },
-  gasly: { points: 41, wins: 0 },
-  lawson: { points: 30, wins: 0 },
+  hadjar: { points: 52, wins: 0 },
+  gasly: { points: 42, wins: 0 },
+  lawson: { points: 38, wins: 0 },
   bearman: { points: 18, wins: 0 },
-  colapinto: { points: 16, wins: 0 },
-  arvid_lindblad: { points: 14, wins: 0 },
+  arvid_lindblad: { points: 20, wins: 0 },
+  colapinto: { points: 18, wins: 0 },
   sainz: { points: 6, wins: 0 },
+  bortoleto: { points: 6, wins: 0 },
   albon: { points: 5, wins: 0 },
   ocon: { points: 3, wins: 0 },
-  bortoleto: { points: 2, wins: 0 },
   alonso: { points: 1, wins: 0 }
 };
 
 const CURRENT_CONSTRUCTOR_POINTS = {
-  mercedes: { points: 302, wins: 7 },
-  ferrari: { points: 204, wins: 1 },
-  mclaren: { points: 159, wins: 0 },
-  red_bull: { points: 115, wins: 0 },
-  alpine: { points: 57, wins: 0 },
-  rb: { points: 44, wins: 0 },
+  mercedes: { points: 320, wins: 7 },
+  ferrari: { points: 244, wins: 2 },
+  mclaren: { points: 171, wins: 0 },
+  red_bull: { points: 125, wins: 0 },
+  alpine: { points: 60, wins: 0 },
+  rb: { points: 58, wins: 0 },
   haas: { points: 21, wins: 0 },
   williams: { points: 11, wins: 0 },
-  audi: { points: 2, wins: 0 },
+  audi: { points: 6, wins: 0 },
   aston_martin: { points: 1, wins: 0 },
   cadillac: { points: 0, wins: 0 }
 };
@@ -550,6 +590,7 @@ const els = {
   constructorLeaderMeta: document.querySelector('#constructorLeaderMeta'),
   newsCount: document.querySelector('#newsCount'),
   raceList: document.querySelector('#raceList'),
+  raceDetail: document.querySelector('#raceDetail'),
   raceFocus: document.querySelector('#raceFocus'),
   startingGridMeta: document.querySelector('#startingGridMeta'),
   startingGridList: document.querySelector('#startingGridList'),
@@ -570,10 +611,11 @@ const els = {
   lastUpdated: document.querySelector('#lastUpdated')
 };
 
-const PAGE_IDS = ['next-race', 'schedule', 'results', 'prediction', 'standings', 'profiles', 'news', 'wisdom'];
+const PAGE_IDS = ['next-race', 'schedule', 'race-detail', 'results', 'prediction', 'standings', 'profiles', 'news', 'wisdom'];
 
 function pageFromHash() {
   const hash = window.location.hash.replace('#', '');
+  if (/^race-\d+$/.test(hash)) return 'race-detail';
   return PAGE_IDS.includes(hash) ? hash : 'next-race';
 }
 
@@ -588,7 +630,8 @@ function setActivePage(pageId = pageFromHash()) {
   });
 
   document.querySelectorAll('.nav a').forEach(link => {
-    const isActive = link.getAttribute('href') === `#${activePage}`;
+    const href = link.getAttribute('href');
+    const isActive = href === `#${activePage}` || (activePage === 'race-detail' && href === '#schedule');
     link.classList.toggle('active', isActive);
     if (isActive) {
       link.setAttribute('aria-current', 'page');
@@ -1032,6 +1075,28 @@ function cityWikiTitle(location = {}) {
   return specialTitles[cityImageKey(location)] || [city, country].filter(Boolean).join(', ');
 }
 
+function raceByRound(round) {
+  return state.races.find(race => race.round === String(round))
+    || state.results.find(race => race.round === String(round))
+    || raceResult(String(round));
+}
+
+function raceImage(race) {
+  const location = race?.Circuit?.Location || {};
+  const imageKey = cityImageKey(location);
+  return CITY_IMAGE_FALLBACKS[imageKey] || state.cityImages[imageKey] || '';
+}
+
+function officialF1ResultsUrl(race, category = 'race-result') {
+  const override = STARTING_GRID_OVERRIDES[race?.round];
+  if (category === 'qualifying' && override?.sourceUrl) return override.sourceUrl;
+  const official = OFFICIAL_F1_RACE_PAGES[String(race?.round || '')];
+  if (official) {
+    return `https://www.formula1.com/en/results/2026/races/${official.id}/${official.slug}/${category}`;
+  }
+  return 'https://www.formula1.com/en/results.html';
+}
+
 async function loadCityImages() {
   const locations = state.races
     .map(race => race.Circuit?.Location)
@@ -1046,6 +1111,7 @@ async function loadCityImages() {
   }));
 
   renderSchedule();
+  if (pageFromHash() === 'race-detail') renderRaceDetail();
 }
 
 async function loadDriverImages() {
@@ -1534,7 +1600,12 @@ function renderStartingGrid() {
 
   els.startingGridMeta.textContent = `${displayRaceName(race)} · ${grid.note}`;
   els.startingGridSource.href = grid.sourceUrl;
-  els.startingGridList.innerHTML = `
+  els.startingGridList.innerHTML = gridRowsHtml(grid.rows);
+}
+
+function gridRowsHtml(rows = []) {
+  if (!rows.length) return '<div class="empty-state">Official qualifying and starting-grid results are not available yet.</div>';
+  return `
     <div class="grid-header">
       <span>Pos</span>
       <span>No.</span>
@@ -1544,7 +1615,7 @@ function renderStartingGrid() {
       <span>Q2</span>
       <span>Q3</span>
     </div>
-    ${grid.rows.map(row => `
+    ${rows.map(row => `
     <div class="grid-row" style="--team-color: ${teamColor(row.Constructor?.constructorId)}">
       <span class="grid-position">${escapeHtml(row.position)}</span>
       <span class="grid-number">${escapeHtml(row.number)}</span>
@@ -1606,11 +1677,121 @@ function renderSchedule() {
   els.raceList.querySelectorAll('.race-card').forEach(button => {
     button.addEventListener('click', () => {
       state.selectedRaceRound = button.dataset.round;
+      renderRaceDetail(state.selectedRaceRound);
+      history.pushState(null, '', `#race-${state.selectedRaceRound}`);
+      setActivePage('race-detail');
       renderSchedule();
     });
   });
 
   renderRaceFocus(nextRace() || filtered[0]);
+}
+
+function renderRaceDetail(roundFromHash = window.location.hash.replace('#race-', '')) {
+  if (!els.raceDetail) return;
+
+  const round = String(roundFromHash || state.selectedRaceRound || nextRace()?.round || state.races[0]?.round || '');
+  const race = raceByRound(round);
+
+  if (!race) {
+    els.raceDetail.innerHTML = `
+      <div class="empty-state">Select a race from the schedule to open its race page.</div>
+    `;
+    return;
+  }
+
+  state.selectedRaceRound = round;
+  const location = race.Circuit?.Location || {};
+  const city = location.locality || 'City TBC';
+  const country = location.country || 'Country TBC';
+  const image = raceImage(race);
+  const imageStyle = image ? ` style="--race-detail-image: url('${escapeHtml(image)}')"` : '';
+  const grid = STARTING_GRID_OVERRIDES[round];
+  const result = raceResult(round);
+  const status = raceStatus(race);
+  const sourceUrl = officialF1ResultsUrl(race);
+  const qualifyingSourceUrl = officialF1ResultsUrl(race, 'qualifying');
+  const gridMeta = grid?.rows?.length
+    ? `${grid.note || 'Official qualifying table'}`
+    : 'Official qualifying and starting-grid results pending';
+  const resultMeta = result?.Results?.length
+    ? `${result.Results.length} classified finishers`
+    : 'Race result pending';
+
+  els.raceDetail.innerHTML = `
+    <div class="race-detail-hero"${imageStyle}>
+      <button class="race-detail-back" type="button" data-page-back="schedule">Back to schedule</button>
+      <p class="eyebrow">Round ${escapeHtml(round)} race page</p>
+      <h2 id="raceDetailTitle">${escapeHtml(displayRaceName(race))}</h2>
+      <p>${escapeHtml(race.Circuit?.circuitName || 'Circuit TBC')} · ${escapeHtml(city)}, ${escapeHtml(country)}</p>
+      <dl>
+        <dt>Date</dt><dd>${escapeHtml(formatDate(race.date, race.time))}</dd>
+        <dt>Status</dt><dd>${escapeHtml(status)}</dd>
+        <dt>Official tables</dt><dd><a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noreferrer">Formula 1 results center</a></dd>
+      </dl>
+    </div>
+
+    <div class="race-detail-grid">
+      <section class="starting-grid-panel" aria-labelledby="raceQualifyingTitle">
+        <div class="starting-grid-head">
+          <div>
+            <p class="eyebrow">Official table</p>
+            <h3 id="raceQualifyingTitle">Qualifying results</h3>
+          </div>
+          <span>${escapeHtml(gridMeta)}</span>
+        </div>
+        <div class="starting-grid-list">${gridRowsHtml(grid?.rows || [])}</div>
+        <a class="starting-grid-source" href="${escapeHtml(qualifyingSourceUrl)}" target="_blank" rel="noreferrer">Official F1 qualifying table</a>
+      </section>
+
+      <section class="starting-grid-panel" aria-labelledby="raceStartingGridTitle">
+        <div class="starting-grid-head">
+          <div>
+            <p class="eyebrow">Race start</p>
+            <h3 id="raceStartingGridTitle">Starting grid</h3>
+          </div>
+          <span>${escapeHtml(gridMeta)}</span>
+        </div>
+        <div class="starting-grid-list">${gridRowsHtml(grid?.rows || [])}</div>
+        <a class="starting-grid-source" href="${escapeHtml(qualifyingSourceUrl)}" target="_blank" rel="noreferrer">Official F1 qualifying table</a>
+      </section>
+    </div>
+
+    <section class="race-result-panel" aria-labelledby="raceResultTitle">
+      <div class="starting-grid-head">
+        <div>
+          <p class="eyebrow">Classified finishers</p>
+          <h3 id="raceResultTitle">Race results</h3>
+        </div>
+        <span>${escapeHtml(resultMeta)}</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th>Driver</th>
+              <th>Team</th>
+              <th>Grid</th>
+              <th>Laps</th>
+              <th>Status</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${result?.Results?.length ? resultRowsHtml(result.Results) : '<tr><td colspan="7">No official race result is available yet.</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+      <a class="starting-grid-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noreferrer">Official F1 race result table</a>
+    </section>
+  `;
+
+  els.raceDetail.querySelector('[data-page-back="schedule"]')?.addEventListener('click', () => {
+    history.pushState(null, '', '#schedule');
+    setActivePage('schedule');
+    renderSchedule();
+  });
 }
 
 function renderRaceFocus(race) {
@@ -1707,7 +1888,11 @@ function renderResults(round) {
     els.resultsBody.innerHTML = '<tr><td colspan="7">No classified 2026 race result is available yet.</td></tr>';
     return;
   }
-  els.resultsBody.innerHTML = race.Results.map(result => `
+  els.resultsBody.innerHTML = resultRowsHtml(race.Results);
+}
+
+function resultRowsHtml(results = []) {
+  return results.map(result => `
     <tr>
         <td>${escapeHtml(result.positionText || result.position)}</td>
         <td>${driverIdentityHtml(result.Driver)}</td>
@@ -2010,6 +2195,7 @@ function renderAll() {
   renderSummary();
   renderStartingGrid();
   renderSchedule();
+  renderRaceDetail();
   renderResultSelector();
   renderVotingPanel();
   renderStandings();
@@ -2026,12 +2212,19 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     if (window.location.hash !== `#${pageId}`) {
       history.pushState(null, '', `#${pageId}`);
     }
+    if (pageId === 'race-detail') renderRaceDetail();
     setActivePage(pageId);
   });
 });
 
-window.addEventListener('popstate', () => setActivePage());
-window.addEventListener('hashchange', () => setActivePage());
+window.addEventListener('popstate', () => {
+  if (pageFromHash() === 'race-detail') renderRaceDetail();
+  setActivePage();
+});
+window.addEventListener('hashchange', () => {
+  if (pageFromHash() === 'race-detail') renderRaceDetail();
+  setActivePage();
+});
 setActivePage();
 
 document.querySelectorAll('[data-filter]').forEach(button => {

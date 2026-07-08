@@ -729,6 +729,91 @@ body.page-mode .dashboard-grid {
   font-weight: 760;
 }
 
+.race-detail-hero {
+  position: relative;
+  min-height: 360px;
+  display: grid;
+  align-content: end;
+  gap: 10px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(90deg, rgba(8, 9, 12, 0.96) 0%, rgba(8, 9, 12, 0.72) 48%, rgba(8, 9, 12, 0.22) 100%),
+    var(--race-detail-image, linear-gradient(transparent, transparent));
+  background-position: center;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.race-detail-hero h2 {
+  max-width: 780px;
+  margin: 0;
+  font-size: clamp(2.2rem, 4vw, 4.6rem);
+  line-height: 0.98;
+}
+
+.race-detail-hero p {
+  max-width: 680px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.02rem;
+}
+
+.race-detail-hero dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 980px;
+  margin: 18px 0 0;
+}
+
+.race-detail-hero dt {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 820;
+  text-transform: uppercase;
+}
+
+.race-detail-hero dd {
+  margin: 5px 0 0;
+  font-weight: 780;
+}
+
+.race-detail-hero a {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.race-detail-back {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  min-height: 36px;
+  padding: 0 13px;
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  background: rgba(8, 9, 12, 0.68);
+}
+
+.race-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.race-result-panel {
+  margin-top: 16px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
 .odds-chart-wrap {
   display: grid;
   gap: 16px;
@@ -1555,6 +1640,7 @@ tr:last-child td {
   .hero,
   .race-layout,
   .next-race-layout,
+  .race-detail-grid,
   .standings-grid,
   .vote-category-grid,
   .vote-driver-list {

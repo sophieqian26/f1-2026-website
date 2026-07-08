@@ -176,8 +176,7 @@ const GRAND_PRIX_TITLE_BY_COUNTRY = {
 };
 
 const CITY_IMAGE_FALLBACKS = {
-  'Spielberg|Austria': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/2021-09-01_Spielberg_Stadtplatz.jpg/640px-2021-09-01_Spielberg_Stadtplatz.jpg',
-  'Silverstone|UK': SILVERSTONE_IMAGE
+  'Silverstone|UK': 'https://commons.wikimedia.org/wiki/Special:FilePath/High_Street%2C_Silverstone_-_geograph.org.uk_-_5075390.jpg'
 };
 
 const OFFICIAL_F1_RACE_PAGES = {
@@ -1095,22 +1094,20 @@ function cityWikiTitle(location = {}) {
     'Jeddah|Saudi Arabia': 'Jeddah',
     'São Paulo|Brazil': 'São Paulo',
     'Suzuka|Japan': 'Suzuka, Mie',
-    'Silverstone|UK': 'Silverstone Circuit',
-    'Zandvoort|Netherlands': 'Circuit Zandvoort',
-    'Spa-Francorchamps|Belgium': 'Circuit de Spa-Francorchamps',
-    'Melbourne|Australia': 'Albert Park Circuit',
-    'Shanghai|China': 'Shanghai International Circuit',
-    'Miami|USA': 'Miami International Autodrome',
-    'Montreal|Canada': 'Circuit Gilles Villeneuve',
-    'Barcelona|Spain': 'Circuit de Barcelona-Catalunya',
-    'Budapest|Hungary': 'Hungaroring',
-    'Monza|Italy': 'Monza Circuit',
-    'Baku|Azerbaijan': 'Baku City Circuit',
-    'Austin|USA': 'Circuit of the Americas',
-    'Mexico City|Mexico': 'Autódromo Hermanos Rodríguez',
-    'Las Vegas|USA': 'Las Vegas Strip Circuit',
-    'Lusail|Qatar': 'Lusail International Circuit',
-    'Yas Island|UAE': 'Yas Marina Circuit'
+    'Silverstone|UK': 'Silverstone',
+    'Zandvoort|Netherlands': 'Zandvoort',
+    'Spa-Francorchamps|Belgium': 'Spa, Belgium',
+    'Melbourne|Australia': 'Melbourne',
+    'Shanghai|China': 'Shanghai',
+    'Montreal|Canada': 'Montreal',
+    'Barcelona|Spain': 'Barcelona',
+    'Budapest|Hungary': 'Budapest',
+    'Monza|Italy': 'Monza',
+    'Baku|Azerbaijan': 'Baku',
+    'Austin|USA': 'Austin, Texas',
+    'Mexico City|Mexico': 'Mexico City',
+    'Lusail|Qatar': 'Lusail',
+    'Yas Island|UAE': 'Yas Island'
   };
   return specialTitles[cityImageKey(location)] || [city, country].filter(Boolean).join(', ');
 }

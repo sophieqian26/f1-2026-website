@@ -636,18 +636,19 @@ const els = {
   lastUpdated: document.querySelector('#lastUpdated')
 };
 
-const PAGE_IDS = ['next-race', 'schedule', 'race-detail', 'results', 'prediction', 'standings', 'profiles', 'news', 'wisdom'];
+const PAGE_IDS = ['home', 'next-race', 'schedule', 'race-detail', 'results', 'prediction', 'standings', 'profiles', 'news', 'wisdom'];
 
 function pageFromHash() {
   const hash = window.location.hash.replace('#', '');
   if (/^race-\d+$/.test(hash)) return 'race-detail';
-  return PAGE_IDS.includes(hash) ? hash : 'next-race';
+  if (!hash || hash === 'top') return 'home';
+  return PAGE_IDS.includes(hash) ? hash : 'home';
 }
 
 function setActivePage(pageId = pageFromHash()) {
-  const activePage = PAGE_IDS.includes(pageId) ? pageId : 'next-race';
+  const activePage = PAGE_IDS.includes(pageId) ? pageId : 'home';
 
-  document.body.classList.add('page-mode');
+  document.body.classList.toggle('page-mode', activePage !== 'home');
   document.querySelectorAll('.page-section').forEach(section => {
     const isActive = section.id === activePage;
     section.classList.toggle('is-page-active', isActive);
@@ -2277,7 +2278,7 @@ function renderAll() {
 document.querySelectorAll('a[href^="#"]').forEach(link => {
   link.addEventListener('click', event => {
     const targetId = link.getAttribute('href').slice(1);
-    const pageId = PAGE_IDS.includes(targetId) ? targetId : 'next-race';
+    const pageId = targetId === 'top' ? 'home' : (PAGE_IDS.includes(targetId) ? targetId : 'home');
 
     event.preventDefault();
     if (window.location.hash !== `#${pageId}`) {

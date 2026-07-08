@@ -719,6 +719,19 @@ body.page-mode .dashboard-grid {
   grid-column: 8;
 }
 
+.starting-grid-header,
+.starting-grid-row {
+  grid-template-columns: 5px 44px 46px minmax(0, 1.05fr) minmax(124px, 0.55fr) minmax(82px, 0.36fr);
+}
+
+.starting-grid-header span:nth-child(5) {
+  grid-column: 6;
+}
+
+.grid-start-time {
+  grid-column: 6;
+}
+
 .grid-note {
   grid-column: 4 / -1;
 }

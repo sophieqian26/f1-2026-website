@@ -265,6 +265,7 @@ const STARTING_GRID_OVERRIDES = {
   '9': {
     raceName: 'British Grand Prix',
     sourceUrl: 'https://www.formula1.com/en/results/2026/races/1289/great-britain/qualifying',
+    startingGridSourceUrl: 'https://www.formula1.com/en/results/2026/races/1289/great-britain/starting-grid',
     note: 'Official F1 qualifying results.',
     rows: [
       makeGridResult(1, { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '12', q1: '1:29.719', q2: '1:28.493', q3: '1:28.111', laps: '19' }),
@@ -289,6 +290,30 @@ const STARTING_GRID_OVERRIDES = {
       makeGridResult(20, { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '11', q1: '1:31.451', laps: '9' }),
       makeGridResult(21, { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', q1: '1:32.863', laps: '9' }),
       makeGridResult(22, { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '14', q1: '1:33.025', laps: '9' })
+    ],
+    startingGridRows: [
+      makeGridResult(1, { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '12', q3: '1:28.111' }),
+      makeGridResult(2, { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '16', q3: '1:28.286' }),
+      makeGridResult(3, { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '44', q3: '1:28.458' }),
+      makeGridResult(4, { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '63', q3: '1:28.481' }),
+      makeGridResult(5, { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '6', q3: '1:28.746' }),
+      makeGridResult(6, { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '1', q3: '1:28.877' }),
+      makeGridResult(7, { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '3', q3: '1:28.893' }),
+      makeGridResult(8, { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '81', q3: '1:29.032' }),
+      makeGridResult(9, { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '41', q3: '1:29.305' }),
+      makeGridResult(10, { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '30', q3: '1:29.716' }),
+      makeGridResult(11, { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, { number: '5', q2: '1:29.461' }),
+      makeGridResult(12, { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, { number: '27', q2: '1:30.076' }),
+      makeGridResult(13, { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '87', q2: '1:30.501' }),
+      makeGridResult(14, { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, { number: '55', q2: '1:30.623' }),
+      makeGridResult(15, { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, { number: '23', q2: '1:31.341' }),
+      makeGridResult(16, { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '31', q1: '1:30.680' }),
+      makeGridResult(17, { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '77', q1: '1:31.227' }),
+      makeGridResult(18, { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '43', q1: '1:31.321' }),
+      makeGridResult(19, { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '11', q1: '1:31.451' }),
+      makeGridResult(20, { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '10', q2: '1:30.063', note: 'Grid penalty applied' }),
+      makeGridResult(21, { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '14', q1: '1:33.025' }),
+      makeGridResult(22, { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', q1: '1:32.863', note: 'Grid penalty applied' })
     ]
   }
 };
@@ -1070,7 +1095,21 @@ function cityWikiTitle(location = {}) {
     'São Paulo|Brazil': 'São Paulo',
     'Suzuka|Japan': 'Suzuka, Mie',
     'Silverstone|UK': 'Silverstone Circuit',
-    'Zandvoort|Netherlands': 'Zandvoort'
+    'Zandvoort|Netherlands': 'Circuit Zandvoort',
+    'Spa-Francorchamps|Belgium': 'Circuit de Spa-Francorchamps',
+    'Melbourne|Australia': 'Albert Park Circuit',
+    'Shanghai|China': 'Shanghai International Circuit',
+    'Miami|USA': 'Miami International Autodrome',
+    'Montreal|Canada': 'Circuit Gilles Villeneuve',
+    'Barcelona|Spain': 'Circuit de Barcelona-Catalunya',
+    'Budapest|Hungary': 'Hungaroring',
+    'Monza|Italy': 'Monza Circuit',
+    'Baku|Azerbaijan': 'Baku City Circuit',
+    'Austin|USA': 'Circuit of the Americas',
+    'Mexico City|Mexico': 'Autódromo Hermanos Rodríguez',
+    'Las Vegas|USA': 'Las Vegas Strip Circuit',
+    'Lusail|Qatar': 'Lusail International Circuit',
+    'Yas Island|UAE': 'Yas Marina Circuit'
   };
   return specialTitles[cityImageKey(location)] || [city, country].filter(Boolean).join(', ');
 }
@@ -1090,6 +1129,7 @@ function raceImage(race) {
 function officialF1ResultsUrl(race, category = 'race-result') {
   const override = STARTING_GRID_OVERRIDES[race?.round];
   if (category === 'qualifying' && override?.sourceUrl) return override.sourceUrl;
+  if (category === 'starting-grid' && override?.startingGridSourceUrl) return override.startingGridSourceUrl;
   const official = OFFICIAL_F1_RACE_PAGES[String(race?.round || '')];
   if (official) {
     return `https://www.formula1.com/en/results/2026/races/${official.id}/${official.slug}/${category}`;
@@ -1106,7 +1146,7 @@ async function loadCityImages() {
     const title = cityWikiTitle(location);
     if (!title) return;
     const summary = await fetchJson(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
-    const image = summary.thumbnail?.source || summary.originalimage?.source;
+    const image = summary.originalimage?.source || summary.thumbnail?.source;
     if (image) state.cityImages[cityImageKey(location)] = image;
   }));
 
@@ -1630,6 +1670,32 @@ function gridRowsHtml(rows = []) {
   `;
 }
 
+function startingGridRowsHtml(rows = []) {
+  if (!rows.length) return '<div class="empty-state">Official race starting grid is not available yet.</div>';
+  return `
+    <div class="grid-header starting-grid-header">
+      <span>Pos</span>
+      <span>No.</span>
+      <span>Driver</span>
+      <span>Team</span>
+      <span>Time</span>
+    </div>
+    ${rows.map(row => {
+      const time = row.q3 || row.q2 || row.q1 || '-';
+      return `
+      <div class="grid-row starting-grid-row" style="--team-color: ${teamColor(row.Constructor?.constructorId)}">
+        <span class="grid-position">${escapeHtml(row.position)}</span>
+        <span class="grid-number">${escapeHtml(row.number)}</span>
+        <span class="grid-driver">${driverIdentityHtml(row.Driver)}</span>
+        <span class="team-chip" style="--team-color: ${teamColor(row.Constructor?.constructorId)}">${escapeHtml(constructorName(row.Constructor))}</span>
+        <span class="grid-time grid-start-time">${escapeHtml(time)}</span>
+        ${row.note ? `<span class="grid-note">${escapeHtml(row.note)}</span>` : ''}
+      </div>
+    `;
+    }).join('')}
+  `;
+}
+
 function renderSchedule() {
   const filtered = state.races.filter(race => {
     if (state.filter === 'all') return true;
@@ -1711,9 +1777,14 @@ function renderRaceDetail(roundFromHash = window.location.hash.replace('#race-',
   const status = raceStatus(race);
   const sourceUrl = officialF1ResultsUrl(race);
   const qualifyingSourceUrl = officialF1ResultsUrl(race, 'qualifying');
+  const startingGridSourceUrl = officialF1ResultsUrl(race, 'starting-grid');
+  const startingGridRows = grid?.startingGridRows || grid?.rows || [];
   const gridMeta = grid?.rows?.length
     ? `${grid.note || 'Official qualifying table'}`
     : 'Official qualifying and starting-grid results pending';
+  const startingGridMeta = startingGridRows.length
+    ? 'Official race starting grid'
+    : 'Official race starting grid pending';
   const resultMeta = result?.Results?.length
     ? `${result.Results.length} classified finishers`
     : 'Race result pending';
@@ -1750,10 +1821,10 @@ function renderRaceDetail(roundFromHash = window.location.hash.replace('#race-',
             <p class="eyebrow">Race start</p>
             <h3 id="raceStartingGridTitle">Starting grid</h3>
           </div>
-          <span>${escapeHtml(gridMeta)}</span>
+          <span>${escapeHtml(startingGridMeta)}</span>
         </div>
-        <div class="starting-grid-list">${gridRowsHtml(grid?.rows || [])}</div>
-        <a class="starting-grid-source" href="${escapeHtml(qualifyingSourceUrl)}" target="_blank" rel="noreferrer">Official F1 qualifying table</a>
+        <div class="starting-grid-list">${startingGridRowsHtml(startingGridRows)}</div>
+        <a class="starting-grid-source" href="${escapeHtml(startingGridSourceUrl)}" target="_blank" rel="noreferrer">Official F1 starting-grid table</a>
       </section>
     </div>
 

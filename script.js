@@ -216,6 +216,35 @@ const EXTERNAL_ODDS_PREVIEWS = {
       { name: 'Charles Leclerc', percent: 5 },
       { name: 'Max Verstappen', percent: 2 }
     ]
+  },
+  'Belgium|2026': {
+    source: 'JustBookies Belgian Grand Prix odds',
+    url: 'https://www.justbookies.com/belgian-grand-prix-odds/',
+    note: 'Fractional odds converted to implied win probability.',
+    rows: [
+      { name: 'Kimi Antonelli', percent: 38.1, odds: '13/8' },
+      { name: 'George Russell', percent: 26.7, odds: '11/4' },
+      { name: 'Lewis Hamilton', percent: 22.2, odds: '7/2' },
+      { name: 'Charles Leclerc', percent: 15.4, odds: '11/2' },
+      { name: 'Max Verstappen', percent: 8.3, odds: '11/1' },
+      { name: 'Lando Norris', percent: 3.8, odds: '25/1' },
+      { name: 'Oscar Piastri', percent: 2.4, odds: '40/1' },
+      { name: 'Isack Hadjar', percent: 1.0, odds: '100/1' },
+      { name: 'Arvid Lindblad', percent: 0.3, odds: '300/1' },
+      { name: 'Gabriel Bortoleto', percent: 0.2, odds: '500/1' },
+      { name: 'Pierre Gasly', percent: 0.2, odds: '500/1' },
+      { name: 'Nico Hulkenberg', percent: 0.2, odds: '500/1' },
+      { name: 'Franco Colapinto', percent: 0.2, odds: '500/1' },
+      { name: 'Oliver Bearman', percent: 0.2, odds: '500/1' },
+      { name: 'Liam Lawson', percent: 0.2, odds: '500/1' },
+      { name: 'Carlos Sainz', percent: 0.2, odds: '500/1' },
+      { name: 'Esteban Ocon', percent: 0.2, odds: '500/1' },
+      { name: 'Alex Albon', percent: 0.2, odds: '500/1' },
+      { name: 'Valtteri Bottas', percent: 0.2, odds: '500/1' },
+      { name: 'Sergio Perez', percent: 0.2, odds: '500/1' },
+      { name: 'Lance Stroll', percent: 0.2, odds: '500/1' },
+      { name: 'Fernando Alonso', percent: 0.2, odds: '500/1' }
+    ]
   }
 };
 
@@ -1249,7 +1278,7 @@ function percentFromPrice(price) {
   return Math.max(0, Math.min(100, value * 100));
 }
 
-function addOddsRow(map, name, source, percent, url = '') {
+function addOddsRow(map, name, source, percent, url = '', oddsLabel = '') {
   if (!name || !Number.isFinite(percent)) return;
   const driver = findDriverByMarketName(name);
   const displayName = driver ? driverName(driver) : name;
@@ -1257,6 +1286,7 @@ function addOddsRow(map, name, source, percent, url = '') {
   if (!key || key === 'yes' || key === 'no') return;
   const existing = map.get(key) || { name: displayName, driver, polymarket: null, kalshi: null, external: null, sources: {} };
   existing[source] = percent;
+  if (oddsLabel) existing.oddsLabel = oddsLabel;
   if (url) existing.sources[source] = url;
   if (!existing.driver && driver) existing.driver = driver;
   map.set(key, existing);
@@ -1267,7 +1297,7 @@ function normalizeOddsRows(map) {
     const values = [row.polymarket, row.kalshi, row.external].filter(value => Number.isFinite(value));
     const average = values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
     return { ...row, average };
-  }).filter(row => row.average > 0).sort((a, b) => b.average - a.average).slice(0, 8);
+  }).filter(row => row.average > 0).sort((a, b) => b.average - a.average).slice(0, 22);
 }
 
 function oddsSourceText() {
@@ -1358,7 +1388,7 @@ async function loadExternalPreviewOdds(race, map) {
   const key = `${race.Circuit?.Location?.country}|${SEASON}`;
   const preview = EXTERNAL_ODDS_PREVIEWS[key];
   if (!preview) return;
-  preview.rows.forEach(row => addOddsRow(map, row.name, 'external', row.percent, preview.url));
+  preview.rows.forEach(row => addOddsRow(map, row.name, 'external', row.percent, preview.url, row.odds));
 }
 
 function oddsSourceText(race) {
@@ -1614,7 +1644,7 @@ function renderRaceFocus(race) {
         <div class="odds-pie-center">
           ${topPick?.driver ? driverPhotoHtml(topPick.driver, 'odds-center-photo') : ''}
           <strong>${escapeHtml(topPick?.name || 'Top pick')}</strong>
-          <span>${topPick ? `${topPick.average.toFixed(1)}%` : '--'}</span>
+          <span>${escapeHtml(topPick ? `${topPick.average.toFixed(1)}%${topPick.oddsLabel ? ` · ${topPick.oddsLabel}` : ''}` : '--')}</span>
         </div>
       </div>
       <div class="odds-legend">
@@ -1627,7 +1657,7 @@ function renderRaceFocus(race) {
                 ${row.driver ? driverIdentityHtml(row.driver) : escapeHtml(row.name)}
               </span>
               <span class="team-chip" style="--team-color: ${teamColor(constructor.constructorId)}">${escapeHtml(constructorName(constructor))}</span>
-              <strong>${row.average.toFixed(1)}%</strong>
+              <strong>${row.average.toFixed(1)}%${row.oddsLabel ? ` · ${escapeHtml(row.oddsLabel)}` : ''}</strong>
             </div>
           `;
         }).join('')}

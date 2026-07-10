@@ -17,9 +17,25 @@ The prediction cards already support Firebase Firestore. Until this config is fi
 3. Start in production mode.
 4. Use a nearby region.
 
-## 3. Starter Firestore rules
+## 3. Firestore rules
 
-These rules allow public voting for this static website. They validate the document shape, but anyone can still vote from a browser. For a school/friend project this is usually fine; for a large public site, add Firebase App Check later.
+Use these rules in **Firestore Database > Rules**, not Realtime Database rules. These allow public voting for this static website. Anyone with the site link can vote, which is fine for a school/friend project; for a larger public site, add Firebase App Check later.
+
+If you just want the live vote board working quickly, paste this simple version:
+
+```txt
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /raceVotes/{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+```
+
+Use this stricter version after the simple version is confirmed working:
 
 ```txt
 rules_version = '2';

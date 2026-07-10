@@ -589,12 +589,100 @@ body.page-mode .dashboard-grid {
 }
 
 .starting-grid-list {
-  display: grid;
   max-height: 620px;
   overflow-y: auto;
+  overflow-x: auto;
   border: 1px solid var(--line);
   border-radius: 7px;
   background: rgba(0, 0, 0, 0.18);
+}
+
+.session-table {
+  width: 100%;
+  min-width: 780px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.session-table th,
+.session-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.session-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  color: var(--muted);
+  background: #0e1117;
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.session-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.session-table tr {
+  box-shadow: inset 5px 0 0 var(--team-color, transparent);
+}
+
+.session-table th:nth-child(1),
+.session-table td:nth-child(1) {
+  width: 68px;
+}
+
+.session-table th:nth-child(2),
+.session-table td:nth-child(2) {
+  width: 70px;
+}
+
+.session-table th:nth-child(3),
+.session-table td:nth-child(3) {
+  width: 30%;
+}
+
+.session-table th:nth-child(4),
+.session-table td:nth-child(4) {
+  width: 190px;
+}
+
+.qualifying-table th:nth-child(5),
+.qualifying-table td:nth-child(5),
+.qualifying-table th:nth-child(6),
+.qualifying-table td:nth-child(6),
+.qualifying-table th:nth-child(7),
+.qualifying-table td:nth-child(7) {
+  width: 110px;
+}
+
+.starting-grid-table th:nth-child(5),
+.starting-grid-table td:nth-child(5) {
+  width: 130px;
+}
+
+.session-position {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  color: #fff;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #0e1117;
+  font-weight: 850;
+}
+
+.session-table .driver-identity {
+  min-width: 0;
+}
+
+.session-table .team-chip {
+  max-width: 100%;
 }
 
 .grid-header,
@@ -810,7 +898,7 @@ body.page-mode .dashboard-grid {
 
 .race-detail-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   margin-top: 16px;
 }
@@ -1362,6 +1450,14 @@ tr:last-child td {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
   margin-top: 14px;
+}
+
+.points-prediction-status {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 780;
+  text-transform: uppercase;
 }
 
 .points-prediction-card {

@@ -635,12 +635,14 @@ const els = {
   lastUpdated: document.querySelector('#lastUpdated')
 };
 
-const PAGE_IDS = ['home', 'next-race', 'schedule', 'race-detail', 'results', 'prediction', 'standings', 'profiles', 'news', 'wisdom'];
+const PAGE_IDS = ['home', 'next-race', 'schedule', 'race-detail', 'standings', 'profiles', 'news', 'wisdom'];
 
 function pageFromHash() {
   const hash = window.location.hash.replace('#', '');
   if (/^race-\d+$/.test(hash)) return 'race-detail';
   if (!hash || hash === 'top') return 'home';
+  if (hash === 'prediction') return 'next-race';
+  if (hash === 'results') return 'schedule';
   return PAGE_IDS.includes(hash) ? hash : 'home';
 }
 
@@ -1935,6 +1937,7 @@ function renderRaceFocus(race) {
 }
 
 function renderResultSelector() {
+  if (!els.resultRaceSelect || !els.resultsBody) return;
   const resultRaces = allResultRaces();
   els.resultRaceSelect.innerHTML = resultRaces.length
     ? resultRaces.map(race => `<option value="${escapeHtml(race.round)}">${escapeHtml(displayRaceName(race))}</option>`).join('')
@@ -1952,6 +1955,7 @@ function renderResultSelector() {
 }
 
 function renderResults(round) {
+  if (!els.resultsBody) return;
   const race = raceResult(round);
   if (!race?.Results?.length) {
     els.resultsBody.innerHTML = '<tr><td colspan="7">No classified 2026 race result is available yet.</td></tr>';

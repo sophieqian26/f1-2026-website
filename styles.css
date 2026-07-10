@@ -255,10 +255,6 @@ body.page-mode .dashboard-grid {
   display: block;
 }
 
-.page-section.vote-panel {
-  margin-top: 54px;
-}
-
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

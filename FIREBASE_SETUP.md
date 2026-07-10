@@ -43,6 +43,16 @@ service cloud.firestore {
         allow write: if request.resource.data.keys().hasOnly(['driverId', 'updatedAt'])
           && request.resource.data.driverId is string;
       }
+
+      match /pointPredictions/{predictionId} {
+        allow read: if true;
+        allow write: if request.resource.data.keys().hasOnly(['userId', 'categoryId', 'driverId', 'voterName', 'points', 'updatedAt'])
+          && request.resource.data.userId is string
+          && request.resource.data.categoryId is string
+          && request.resource.data.driverId is string
+          && request.resource.data.voterName is string
+          && request.resource.data.points is int;
+      }
     }
   }
 }

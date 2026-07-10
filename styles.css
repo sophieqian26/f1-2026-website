@@ -1284,6 +1284,140 @@ tr:last-child td {
   color: var(--muted);
 }
 
+.points-prediction-panel {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.points-prediction-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.points-prediction-head h3 {
+  margin: 4px 0 0;
+}
+
+.points-prediction-head span,
+.points-prediction-error {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.points-prediction-form {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.85fr) minmax(160px, 1fr) minmax(240px, 1.4fr) minmax(110px, 0.55fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.points-prediction-form label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 780;
+  text-transform: uppercase;
+}
+
+.points-prediction-form input,
+.points-prediction-form select {
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #0e1117;
+}
+
+.points-prediction-submit {
+  height: 40px;
+  padding: 0 14px;
+  color: #fff;
+  border: 0;
+  border-radius: 7px;
+  background: var(--red);
+  font-weight: 820;
+}
+
+.points-prediction-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.points-prediction-error {
+  display: block;
+  margin-top: 10px;
+  color: #ffb4a8;
+  font-weight: 760;
+}
+
+.points-prediction-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.points-prediction-card {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.points-prediction-card h4 {
+  margin: 0 0 10px;
+}
+
+.points-prediction-row {
+  display: grid;
+  grid-template-columns: 4px minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+}
+
+.points-prediction-row:first-of-type {
+  border-top: 0;
+}
+
+.points-prediction-row::before {
+  content: "";
+  width: 4px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--team-color, var(--red));
+}
+
+.points-prediction-row span {
+  min-width: 0;
+}
+
+.points-prediction-row strong,
+.points-prediction-row small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.points-prediction-row small {
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+.points-prediction-row b {
+  color: #fff;
+}
+
 .standings-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 380px;
@@ -1652,7 +1786,9 @@ tr:last-child td {
   .race-detail-grid,
   .standings-grid,
   .vote-category-grid,
-  .vote-driver-list {
+  .vote-driver-list,
+  .points-prediction-form,
+  .points-prediction-list {
     grid-template-columns: 1fr;
   }
 

@@ -6,7 +6,7 @@
     <title>F1 2026 Season Hub</title>
     <link rel="preconnect" href="https://api.jolpi.ca">
     <link rel="preconnect" href="https://api.allorigins.win">
-    <link rel="stylesheet" href="styles.css?v=20260710-next-race-predictions">
+    <link rel="stylesheet" href="styles.css?v=20260710-point-predictions">
   </head>
   <body>
     <header class="site-header">
@@ -112,6 +112,36 @@
           </div>
           <div class="vote-category-grid" id="voteCategoryGrid"></div>
           <div class="vote-picker" id="votePicker" hidden></div>
+          <section class="points-prediction-panel" aria-labelledby="pointsPredictionTitle">
+            <div class="points-prediction-head">
+              <div>
+                <p class="eyebrow">Points prediction</p>
+                <h3 id="pointsPredictionTitle">Stake points on a driver</h3>
+              </div>
+              <span>Pick a category, driver, and point amount</span>
+            </div>
+            <form class="points-prediction-form" id="pointsPredictionForm">
+              <label>
+                Category
+                <select id="pointsPredictionCategory"></select>
+              </label>
+              <label>
+                Your name
+                <input id="pointsPredictionName" type="text" maxlength="40" placeholder="Name">
+              </label>
+              <label>
+                Driver
+                <select id="pointsPredictionDriver"></select>
+              </label>
+              <label>
+                Points
+                <input id="pointsPredictionPoints" type="number" min="1" max="999" step="1" placeholder="10">
+              </label>
+              <button class="points-prediction-submit" type="submit">Submit points</button>
+            </form>
+            <div class="points-prediction-error" id="pointsPredictionError" hidden></div>
+            <div class="points-prediction-list" id="pointsPredictionList"></div>
+          </section>
         </section>
       </section>
 
@@ -216,6 +246,6 @@
     </footer>
 
     <script src="firebase-config.js?v=20260705-firebase-config"></script>
-    <script src="script.js?v=20260710-next-race-predictions"></script>
+    <script src="script.js?v=20260710-point-predictions"></script>
   </body>
 </html>

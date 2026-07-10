@@ -58,6 +58,13 @@ const VOTE_CATEGORIES = [
   }
 ];
 
+const POINT_PREDICTION_CATEGORIES = [
+  { id: 'pole_position', title: 'Pole position' },
+  { id: 'p1', title: 'P1' },
+  { id: 'p2', title: 'P2' },
+  { id: 'race_winner', title: 'Race winner' }
+];
+
 const TEAM_COLORS = {
   ferrari: '#ed1131',
   mclaren: '#ff8000',
@@ -569,6 +576,9 @@ const state = {
   voteError: '',
   firebaseVotes: {},
   firebaseUserVotes: {},
+  firebasePointPredictions: [],
+  pointPredictionSubmitting: false,
+  pointPredictionError: '',
   voteMode: 'local',
   votesReady: false,
   firebaseUnsubscribers: []
@@ -625,6 +635,13 @@ const els = {
   voteRaceName: document.querySelector('#voteRaceName'),
   voteCategoryGrid: document.querySelector('#voteCategoryGrid'),
   votePicker: document.querySelector('#votePicker'),
+  pointsPredictionForm: document.querySelector('#pointsPredictionForm'),
+  pointsPredictionCategory: document.querySelector('#pointsPredictionCategory'),
+  pointsPredictionName: document.querySelector('#pointsPredictionName'),
+  pointsPredictionDriver: document.querySelector('#pointsPredictionDriver'),
+  pointsPredictionPoints: document.querySelector('#pointsPredictionPoints'),
+  pointsPredictionError: document.querySelector('#pointsPredictionError'),
+  pointsPredictionList: document.querySelector('#pointsPredictionList'),
   driversStandingsBody: document.querySelector('#driversStandingsBody'),
   constructorStandingsBody: document.querySelector('#constructorStandingsBody'),
   leaderboard: document.querySelector('#leaderboard'),
@@ -868,12 +885,71 @@ function saveLocalVote(categoryId, driverId) {
   writeVoteStore(store);
 }
 
+function sanitizePredictionName(value = '') {
+  return String(value).trim().replace(/\s+/g, ' ').slice(0, 40);
+}
+
+function normalizePredictionPoints(value) {
+  const points = Math.floor(Number(value));
+  return Number.isFinite(points) ? Math.max(1, Math.min(999, points)) : 0;
+}
+
+function getLocalPointPredictions() {
+  const store = readVoteStore();
+  const raceKey = voteRaceKey();
+  return store[raceKey]?.pointPredictions || [];
+}
+
+function pointPredictions() {
+  const localPredictions = getLocalPointPredictions();
+  if (state.voteMode === 'firebase') {
+    const firebaseIds = new Set(state.firebasePointPredictions.map(item => item.id));
+    return [
+      ...state.firebasePointPredictions,
+      ...localPredictions.filter(item => !firebaseIds.has(item.id))
+    ];
+  }
+  return localPredictions;
+}
+
+function saveLocalPointPrediction(prediction) {
+  const store = readVoteStore();
+  const raceKey = voteRaceKey();
+  const userId = voteUserId();
+  const id = `${userId}-${prediction.categoryId}`;
+  store[raceKey] ||= { categories: {} };
+  store[raceKey].pointPredictions ||= [];
+  const savedPrediction = {
+    id,
+    userId,
+    categoryId: prediction.categoryId,
+    driverId: prediction.driverId,
+    voterName: sanitizePredictionName(prediction.voterName),
+    points: normalizePredictionPoints(prediction.points),
+    updatedAt: Date.now()
+  };
+  store[raceKey].pointPredictions = [
+    ...store[raceKey].pointPredictions.filter(item => item.id !== id),
+    savedPrediction
+  ];
+  writeVoteStore(store);
+  return savedPrediction;
+}
+
 async function saveVote(categoryId, driverId) {
   if (state.voteMode === 'firebase' && window.F1FirebaseVotes?.saveVote) {
     await window.F1FirebaseVotes.saveVote(voteRaceKey(), categoryId, driverId, voteUserId());
     return;
   }
   saveLocalVote(categoryId, driverId);
+}
+
+async function savePointPrediction(prediction) {
+  const savedPrediction = saveLocalPointPrediction(prediction);
+  if (state.voteMode === 'firebase' && window.F1FirebaseVotes?.savePointPrediction) {
+    await window.F1FirebaseVotes.savePointPrediction(voteRaceKey(), savedPrediction);
+  }
+  return savedPrediction;
 }
 
 function voteDrivers() {
@@ -932,9 +1008,11 @@ async function initializeFirebaseVotes() {
         state.firebaseUnsubscribers = [];
         state.firebaseVotes = {};
         state.firebaseUserVotes = {};
+        state.firebasePointPredictions = [];
 
         const totalsRef = collection(db, 'raceVotes', raceKey, 'categories');
         const userRef = collection(db, 'raceVotes', raceKey, 'users', voteUserId(), 'categories');
+        const pointPredictionsRef = collection(db, 'raceVotes', raceKey, 'pointPredictions');
 
         state.firebaseUnsubscribers.push(onSnapshot(totalsRef, snapshot => {
           snapshot.forEach(categoryDoc => {
@@ -947,6 +1025,14 @@ async function initializeFirebaseVotes() {
           snapshot.forEach(categoryDoc => {
             state.firebaseUserVotes[categoryDoc.id] = categoryDoc.data()?.driverId || null;
           });
+          renderVotingPanel();
+        }));
+
+        state.firebaseUnsubscribers.push(onSnapshot(pointPredictionsRef, snapshot => {
+          state.firebasePointPredictions = snapshot.docs.map(predictionDoc => ({
+            id: predictionDoc.id,
+            ...predictionDoc.data()
+          }));
           renderVotingPanel();
         }));
       },
@@ -970,6 +1056,23 @@ async function initializeFirebaseVotes() {
           transaction.set(categoryRef, { totals, updatedAt: serverTimestamp() }, { merge: true });
           transaction.set(userVoteRef, { driverId, updatedAt: serverTimestamp() }, { merge: true });
         });
+
+        await setDoc(doc(db, 'raceVotes', raceKey), {
+          season: SEASON,
+          raceKey,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+      },
+
+      async savePointPrediction(raceKey, prediction) {
+        await setDoc(doc(db, 'raceVotes', raceKey, 'pointPredictions', prediction.id), {
+          userId: prediction.userId,
+          categoryId: prediction.categoryId,
+          driverId: prediction.driverId,
+          voterName: prediction.voterName,
+          points: prediction.points,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
 
         await setDoc(doc(db, 'raceVotes', raceKey), {
           season: SEASON,
@@ -2058,6 +2161,59 @@ function renderVotePicker() {
   `;
 }
 
+function renderPointPredictionPanel() {
+  if (!els.pointsPredictionForm) return;
+  const drivers = voteDrivers();
+  const predictions = pointPredictions()
+    .map(item => {
+      const row = drivers.find(driverRow => driverRow.Driver?.driverId === item.driverId);
+      return row ? { ...item, row } : null;
+    })
+    .filter(Boolean)
+    .sort((a, b) => Number(b.points) - Number(a.points) || Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
+  const selectedCategory = els.pointsPredictionCategory.value || POINT_PREDICTION_CATEGORIES[0]?.id || '';
+  const selectedDriver = els.pointsPredictionDriver.value || drivers[0]?.Driver?.driverId || '';
+
+  els.pointsPredictionCategory.innerHTML = POINT_PREDICTION_CATEGORIES
+    .map(category => `<option value="${escapeHtml(category.id)}">${escapeHtml(category.title)}</option>`)
+    .join('');
+  els.pointsPredictionDriver.innerHTML = drivers.length
+    ? drivers.map(row => `<option value="${escapeHtml(row.Driver.driverId)}">${driverFlag(row.Driver)} ${escapeHtml(driverName(row.Driver))} · ${escapeHtml(constructorName(row.Constructors?.[0]))}</option>`).join('')
+    : '<option value="">Drivers loading</option>';
+  els.pointsPredictionCategory.value = selectedCategory;
+  els.pointsPredictionDriver.value = selectedDriver;
+  els.pointsPredictionName.value ||= localStorage.getItem(`${VOTE_USER_KEY}-name`) || '';
+
+  els.pointsPredictionForm.querySelector('.points-prediction-submit').disabled = state.pointPredictionSubmitting || !drivers.length;
+  els.pointsPredictionForm.querySelector('.points-prediction-submit').textContent = state.pointPredictionSubmitting ? 'Saving...' : 'Submit points';
+
+  els.pointsPredictionError.hidden = !state.pointPredictionError;
+  els.pointsPredictionError.textContent = state.pointPredictionError;
+
+  const groupedHtml = POINT_PREDICTION_CATEGORIES.map(category => {
+    const rows = predictions.filter(item => item.categoryId === category.id).slice(0, 6);
+    return `
+      <article class="points-prediction-card">
+        <h4>${escapeHtml(category.title)}</h4>
+        ${rows.length ? rows.map(item => {
+          const team = item.row.Constructors?.[0] || {};
+          return `
+            <div class="points-prediction-row" style="--team-color: ${teamColor(team.constructorId)}">
+              <span>
+                <strong>${escapeHtml(item.voterName)}</strong>
+                <small>${driverIdentityHtml(item.row.Driver)} · ${escapeHtml(constructorName(team))}</small>
+              </span>
+              <b>${escapeHtml(item.points)} pts</b>
+            </div>
+          `;
+        }).join('') : '<p class="empty-state">No point predictions yet.</p>'}
+      </article>
+    `;
+  }).join('');
+
+  els.pointsPredictionList.innerHTML = groupedHtml;
+}
+
 function renderVotingPanel() {
   const race = nextRace();
   if (!els.nextRaceVotePanel) return;
@@ -2065,6 +2221,7 @@ function renderVotingPanel() {
     els.voteRaceName.textContent = 'Waiting for next race';
     els.voteCategoryGrid.innerHTML = '<div class="empty-state">Voting opens when the next race and driver list are loaded.</div>';
     els.votePicker.hidden = true;
+    renderPointPredictionPanel();
     return;
   }
 
@@ -2072,6 +2229,7 @@ function renderVotingPanel() {
   els.voteRaceName.textContent = `${displayRaceName(race)} · Round ${race.round} · ${modeLabel}`;
   els.voteCategoryGrid.innerHTML = VOTE_CATEGORIES.map(voteCategoryCard).join('');
   renderVotePicker();
+  renderPointPredictionPanel();
 }
 
 function renderStandings() {
@@ -2357,6 +2515,38 @@ els.nextRaceVotePanel?.addEventListener('change', event => {
   state.pendingVoteDriverId = event.target.value;
   state.voteError = '';
   renderVotePicker();
+});
+
+els.pointsPredictionForm?.addEventListener('submit', async event => {
+  event.preventDefault();
+  if (state.pointPredictionSubmitting) return;
+
+  const voterName = sanitizePredictionName(els.pointsPredictionName.value);
+  const categoryId = els.pointsPredictionCategory.value;
+  const driverId = els.pointsPredictionDriver.value;
+  const points = normalizePredictionPoints(els.pointsPredictionPoints.value);
+
+  if (!voterName || !categoryId || !driverId || !points) {
+    state.pointPredictionError = 'Enter your name, choose a driver, and add at least 1 point.';
+    renderPointPredictionPanel();
+    return;
+  }
+
+  state.pointPredictionSubmitting = true;
+  state.pointPredictionError = '';
+  renderPointPredictionPanel();
+
+  try {
+    localStorage.setItem(`${VOTE_USER_KEY}-name`, voterName);
+    await savePointPrediction({ voterName, categoryId, driverId, points });
+    els.pointsPredictionPoints.value = '';
+  } catch (error) {
+    console.error(error);
+    state.pointPredictionError = 'Prediction saved only on this browser. Update Firebase rules to share it live.';
+  } finally {
+    state.pointPredictionSubmitting = false;
+    renderVotingPanel();
+  }
 });
 
 loadSeasonData()

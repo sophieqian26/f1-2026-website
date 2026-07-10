@@ -11,6 +11,7 @@ const POLYMARKET_EVENTS_API = 'https://gamma-api.polymarket.com/events';
 const KALSHI_MARKETS_API = 'https://api.elections.kalshi.com/trade-api/v2/markets';
 const VOTE_STORAGE_KEY = `f1-${SEASON}-race-votes`;
 const VOTE_USER_KEY = `f1-${SEASON}-vote-user-id`;
+const THEME_STORAGE_KEY = `f1-${SEASON}-theme`;
 const FIREBASE_SDK_VERSION = '10.12.5';
 
 const VOTE_CATEGORIES = [
@@ -1244,6 +1245,7 @@ const els = {
   pointsPredictionPoints: document.querySelector('#pointsPredictionPoints'),
   pointsPredictionError: document.querySelector('#pointsPredictionError'),
   pointsPredictionList: document.querySelector('#pointsPredictionList'),
+  themeToggle: document.querySelector('#themeToggle'),
   driversStandingsBody: document.querySelector('#driversStandingsBody'),
   constructorStandingsBody: document.querySelector('#constructorStandingsBody'),
   leaderboard: document.querySelector('#leaderboard'),
@@ -1289,6 +1291,25 @@ function setActivePage(pageId = pageFromHash()) {
   window.scrollTo(0, 0);
 }
 
+function currentTheme() {
+  return localStorage.getItem(THEME_STORAGE_KEY) === 'light' ? 'light' : 'dark';
+}
+
+function applyTheme(theme = currentTheme()) {
+  const isLight = theme === 'light';
+  document.body.classList.toggle('light-theme', isLight);
+  if (els.themeToggle) {
+    els.themeToggle.textContent = isLight ? 'Dark mode' : 'Light mode';
+    els.themeToggle.setAttribute('aria-pressed', String(isLight));
+  }
+}
+
+function toggleTheme() {
+  const nextTheme = currentTheme() === 'light' ? 'dark' : 'light';
+  localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  applyTheme(nextTheme);
+}
+
 function escapeHtml(value = '') {
   return String(value).replace(/[&<>"']/g, char => ({
     '&': '&amp;',
@@ -1301,6 +1322,27 @@ function escapeHtml(value = '') {
 
 function teamColor(constructorId = '') {
   return TEAM_COLORS[String(constructorId).toLowerCase()] || '#e10600';
+}
+
+function hexToRgb(hex = '') {
+  const value = String(hex).replace('#', '').trim();
+  if (!/^[0-9a-f]{6}$/i.test(value)) return null;
+  return {
+    r: parseInt(value.slice(0, 2), 16),
+    g: parseInt(value.slice(2, 4), 16),
+    b: parseInt(value.slice(4, 6), 16)
+  };
+}
+
+function readableTextColor(hex = '') {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return '#ffffff';
+  const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+  return luminance > 0.58 ? '#08090c' : '#ffffff';
+}
+
+function readableMutedColor(hex = '') {
+  return readableTextColor(hex) === '#08090c' ? 'rgba(8, 9, 12, 0.72)' : 'rgba(255, 255, 255, 0.76)';
 }
 
 function formatDate(date, time) {
@@ -2959,12 +3001,13 @@ function renderProfiles() {
   const profiles = state.drivers.length ? state.drivers : [];
   els.profileGrid.innerHTML = profiles.length ? profiles.map(row => {
     const team = row.Constructors?.[0] || {};
+    const color = teamColor(team.constructorId);
     const image = state.driverImages[row.Driver?.driverId];
     const imageHtml = image
       ? `<img class="profile-photo" src="${escapeHtml(image)}" alt="${escapeHtml(driverName(row.Driver))}">`
       : `<div class="profile-photo profile-photo-fallback" aria-hidden="true">${escapeHtml(driverName(row.Driver).split(' ').map(part => part[0]).join('').slice(0, 2))}</div>`;
     return `
-      <article class="profile-card" style="--team-color: ${teamColor(team.constructorId)}" data-driver-id="${escapeHtml(row.Driver?.driverId)}" tabindex="0" role="button" aria-label="${escapeHtml(driverName(row.Driver))} profile card">
+      <article class="profile-card" style="--team-color: ${color}; --profile-text: ${readableTextColor(color)}; --profile-muted: ${readableMutedColor(color)}" data-driver-id="${escapeHtml(row.Driver?.driverId)}" tabindex="0" role="button" aria-label="${escapeHtml(driverName(row.Driver))} profile card">
         <div class="profile-card-inner">
           <div class="profile-card-face profile-card-front">
             <div class="profile-copy">
@@ -3080,6 +3123,8 @@ window.addEventListener('hashchange', () => {
   if (pageFromHash() === 'race-detail') renderRaceDetail();
   setActivePage();
 });
+applyTheme();
+els.themeToggle?.addEventListener('click', toggleTheme);
 setActivePage();
 
 document.querySelectorAll('[data-filter]').forEach(button => {

@@ -6,7 +6,7 @@
     <title>F1 2026 Season Hub</title>
     <link rel="preconnect" href="https://api.jolpi.ca">
     <link rel="preconnect" href="https://api.allorigins.win">
-    <link rel="stylesheet" href="styles.css?v=20260710-stacked-race-tables">
+    <link rel="stylesheet" href="styles.css?v=20260710-light-mode-profiles">
   </head>
   <body>
     <header class="site-header">
@@ -23,7 +23,10 @@
         <a href="#news">News</a>
         <a href="#wisdom">Wisdom</a>
       </nav>
-      <div class="status-pill" id="dataStatus">Connecting</div>
+      <div class="header-tools">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false">Light mode</button>
+        <div class="status-pill" id="dataStatus">Connecting</div>
+      </div>
     </header>
 
     <main id="top">
@@ -246,6 +249,6 @@
     </footer>
 
     <script src="firebase-config.js?v=20260705-firebase-config"></script>
-    <script src="script.js?v=20260710-stacked-race-tables"></script>
+    <script src="script.js?v=20260710-light-mode-profiles"></script>
   </body>
 </html>

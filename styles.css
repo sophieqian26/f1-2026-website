@@ -163,8 +163,8 @@ body.light-theme .status-pill {
 
 body.light-theme .hero-shade {
   background:
-    linear-gradient(90deg, rgba(244, 246, 250, 0.84) 0%, rgba(244, 246, 250, 0.58) 42%, rgba(244, 246, 250, 0.08) 100%),
-    linear-gradient(0deg, #f4f6fa 0%, rgba(244, 246, 250, 0.04) 42%);
+    linear-gradient(90deg, rgba(244, 246, 250, 0.72) 0%, rgba(244, 246, 250, 0.38) 42%, rgba(244, 246, 250, 0) 100%),
+    linear-gradient(0deg, rgba(244, 246, 250, 0.58) 0%, rgba(244, 246, 250, 0) 42%);
 }
 
 body.light-theme .hero-panel,
@@ -334,6 +334,11 @@ h3 {
   line-height: 1.05;
 }
 
+.hero-panel .metric-label,
+.hero-panel strong {
+  color: #ffffff;
+}
+
 .shell {
   width: min(1440px, calc(100% - 72px));
   margin-inline: auto;
@@ -383,6 +388,12 @@ body.page-mode .dashboard-grid {
   background-size: cover;
 }
 
+body.light-theme .summary-tile.image-tile {
+  background-image:
+    linear-gradient(90deg, rgba(17, 20, 26, 0.88) 0%, rgba(17, 20, 26, 0.58) 52%, rgba(17, 20, 26, 0.14) 100%),
+    var(--summary-image);
+}
+
 .summary-tile::before {
   content: "";
   position: absolute;
@@ -424,6 +435,12 @@ body.page-mode .dashboard-grid {
 .summary-tile strong {
   position: relative;
   z-index: 1;
+}
+
+.summary-tile.image-tile span,
+.summary-tile.image-tile strong,
+.summary-tile.image-tile small {
+  color: #ffffff;
 }
 
 .section-head {
@@ -544,6 +561,23 @@ body.light-theme .race-card::after {
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0));
 }
 
+body.light-theme .race-card-top,
+body.light-theme .race-card p,
+body.light-theme .race-card .driver-nationality,
+body.light-theme .podium-position,
+body.light-theme .podium-team,
+body.light-theme .podium-empty {
+  color: rgba(16, 22, 33, 0.76);
+}
+
+body.light-theme .race-card h3,
+body.light-theme .race-card .race-status,
+body.light-theme .race-card .driver-name,
+body.light-theme .podium-finisher,
+body.light-theme .host-city {
+  color: #101621;
+}
+
 .race-card > * {
   position: relative;
   z-index: 1;
@@ -659,18 +693,25 @@ body.light-theme .race-card::after {
   position: sticky;
   overflow: hidden;
   background:
-    linear-gradient(90deg, rgba(17, 20, 26, 0.98) 0%, rgba(17, 20, 26, 0.9) 54%, rgba(17, 20, 26, 0.46) 100%),
+    linear-gradient(180deg, rgba(8, 9, 12, 0.04) 0%, rgba(8, 9, 12, 0.22) 28%, rgba(8, 9, 12, 0.82) 58%, rgba(8, 9, 12, 0.98) 78%, rgba(8, 9, 12, 0.98) 100%),
+    linear-gradient(90deg, rgba(8, 9, 12, 0.92) 0%, rgba(8, 9, 12, 0.6) 54%, rgba(8, 9, 12, 0.08) 100%),
     var(--focus-image, linear-gradient(transparent, transparent));
-  background-position: var(--quote-position, center right);
-  background-size: cover;
+  background-color: rgba(8, 9, 12, 0.98);
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
 }
 
 body.light-theme .race-focus {
+  color: #ffffff;
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.84) 0%, rgba(255, 255, 255, 0.58) 48%, rgba(255, 255, 255, 0.12) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.28) 28%, rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.98) 78%, #ffffff 100%),
+    linear-gradient(90deg, rgba(8, 9, 12, 0.74) 0%, rgba(8, 9, 12, 0.36) 54%, rgba(8, 9, 12, 0.04) 100%),
     var(--focus-image, linear-gradient(transparent, transparent));
-  background-position: var(--quote-position, center right);
-  background-size: cover;
+  background-color: #ffffff;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
 }
 
 .focus-media {
@@ -691,6 +732,18 @@ body.light-theme .race-focus {
 
 .race-focus dt {
   color: var(--muted);
+}
+
+body.light-theme .race-focus p,
+body.light-theme .race-focus dt,
+body.light-theme .race-focus .eyebrow,
+body.light-theme .race-focus .odds-source {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+body.light-theme .race-focus h3,
+body.light-theme .race-focus dd {
+  color: #ffffff;
 }
 
 .race-focus dd {
@@ -1045,16 +1098,29 @@ body.light-theme .race-focus {
 }
 
 .odds-chart-wrap {
+  position: relative;
   display: grid;
   gap: 16px;
   margin-top: 22px;
+  padding: 18px 12px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 7px;
+  background: rgba(8, 9, 12, 0.4);
+  overflow: hidden;
+}
+
+body.light-theme .odds-chart-wrap {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.52);
 }
 
 .odds-pie {
   position: relative;
+  z-index: 1;
   width: min(260px, 100%);
   aspect-ratio: 1;
   margin-inline: auto;
+  margin-top: 4px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 50%;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.38);
@@ -1134,8 +1200,18 @@ body.light-theme .race-focus {
 }
 
 .odds-legend {
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: 8px;
+  padding: 12px 8px 8px;
+  border-radius: 7px;
+  background: rgba(8, 9, 12, 0.34);
+  overflow: hidden;
+}
+
+body.light-theme .odds-legend {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .odds-legend-row {
@@ -1147,10 +1223,12 @@ body.light-theme .race-focus {
   padding: 7px 0 7px 10px;
   border-left: 5px solid var(--slice-color, var(--red));
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(8, 9, 12, 0.48);
+  backdrop-filter: blur(1px);
 }
 
 .odds-legend-row.top-pick {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(8, 9, 12, 0.62);
 }
 
 .odds-photo {
@@ -1176,6 +1254,10 @@ body.light-theme .race-focus {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.race-focus .odds-legend-driver .driver-nationality {
+  color: #ffffff;
 }
 
 .odds-empty {
@@ -1327,7 +1409,7 @@ tr:last-child td {
 }
 
 body.light-theme .vote-card {
-  color: #101621;
+  color: #ffffff;
   background-color: #ffffff;
   background-image:
     linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.48) 50%, rgba(255, 255, 255, 0.86) 100%),
@@ -1353,19 +1435,20 @@ body.light-theme .vote-card {
 
 .vote-card h4 {
   margin: 4px 0 0;
+  color: #ffffff;
   font-size: 1.05rem;
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.72);
 }
 
 .vote-card p {
   margin: 0;
-  color: var(--muted);
+  color: #ffffff;
   font-size: 0.9rem;
   line-height: 1.45;
 }
 
 .vote-card-kicker {
-  color: var(--muted);
+  color: #ffffff;
   font-size: 0.74rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -1377,7 +1460,7 @@ body.light-theme .vote-card {
 .vote-cancel,
 .vote-close {
   min-height: 38px;
-  color: var(--text);
+  color: #ffffff;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--surface-2);
@@ -1386,6 +1469,7 @@ body.light-theme .vote-card {
 
 .vote-open,
 .vote-submit {
+  color: #ffffff;
   background: var(--red);
   border-color: var(--red);
 }
@@ -1509,8 +1593,14 @@ body.light-theme .vote-card {
   background: rgba(255, 255, 255, 0.07);
 }
 
+.vote-driver-option .driver-name,
+.vote-driver-option .driver-nationality,
 .vote-driver-option small {
-  color: var(--muted);
+  color: #ffffff;
+}
+
+.vote-driver-option small {
+  opacity: 0.78;
 }
 
 .points-prediction-panel {
@@ -1925,6 +2015,27 @@ body.light-theme .vote-card {
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
+}
+
+.news-feature {
+  min-height: 260px;
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(90deg, rgba(17, 20, 26, 0.96) 0%, rgba(17, 20, 26, 0.72) 44%, rgba(17, 20, 26, 0.12) 100%),
+    url("assets/feature-images/mercedes-car.webp");
+  background-position: center;
+  background-size: cover;
+  box-shadow: var(--shadow);
+}
+
+body.light-theme .news-feature {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.32) 44%, rgba(255, 255, 255, 0) 100%),
+    url("assets/feature-images/mercedes-car.webp");
 }
 
 .news-image {

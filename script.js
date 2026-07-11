@@ -4,7 +4,7 @@ const NEWS_FEEDS = [
   'https://feeds.bbci.co.uk/sport/formula1/rss.xml',
   'https://www.motorsport.com/rss/f1/news/'
 ];
-const RACE_FOCUS_IMAGE = 'assets/race-focus-antonelli.png';
+const RACE_FOCUS_IMAGE = 'assets/feature-images/odds-kimi-antonelli.png';
 const SILVERSTONE_IMAGE = 'assets/feature-images/silverstone-circuit.jpg';
 
 const POLYMARKET_EVENTS_API = 'https://gamma-api.polymarket.com/events';
@@ -61,7 +61,7 @@ const VOTE_CATEGORIES = [
 
 const POINT_PREDICTION_CATEGORIES = [
   { id: 'pole_position', title: 'Pole position' },
-  { id: 'p1', title: 'P1' },
+  { id: 'p3', title: 'P3' },
   { id: 'p2', title: 'P2' },
   { id: 'race_winner', title: 'Race winner' }
 ];
@@ -2644,7 +2644,7 @@ function renderRaceFocus(race) {
   const topPick = oddsRows[0];
   const imageKey = cityImageKey(location);
   const cityImage = CITY_IMAGE_FALLBACKS[imageKey] || state.cityImages[imageKey];
-  const focusImage = location.country === 'UK' ? SILVERSTONE_IMAGE : (RACE_FOCUS_IMAGE || cityImage);
+  const focusImage = location.country === 'UK' ? SILVERSTONE_IMAGE : RACE_FOCUS_IMAGE;
   if (focusImage) {
     els.raceFocus.style.setProperty('--focus-image', `url('${focusImage}')`);
   } else {

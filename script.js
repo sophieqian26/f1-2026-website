@@ -13,6 +13,7 @@ const VOTE_STORAGE_KEY = `f1-${SEASON}-race-votes`;
 const VOTE_USER_KEY = `f1-${SEASON}-vote-user-id`;
 const THEME_STORAGE_KEY = `f1-${SEASON}-theme`;
 const FIREBASE_SDK_VERSION = '10.12.5';
+const STARTING_F1_BUCKS = 50;
 
 const VOTE_CATEGORIES = [
   {
@@ -1165,6 +1166,8 @@ const state = {
   driverImages: {},
   quoteImages: {},
   driverCareer: {},
+  accountProfileSaving: false,
+  accountProfileError: '',
   odds: {
     status: 'loading',
     raceRound: null,
@@ -1182,9 +1185,14 @@ const state = {
   firebasePointPredictions: [],
   pointPredictionSubmitting: false,
   pointPredictionError: '',
+  authReady: false,
+  authUser: null,
+  wallet: null,
+  authError: '',
   voteMode: 'local',
   votesReady: false,
-  firebaseUnsubscribers: []
+  firebaseUnsubscribers: [],
+  walletUnsubscribe: null
 };
 
 function makeResult(position, driver, constructor, points, details = {}) {
@@ -1235,12 +1243,39 @@ const els = {
   resultRaceSelect: document.querySelector('#resultRaceSelect'),
   resultsBody: document.querySelector('#resultsBody'),
   nextRaceVotePanel: document.querySelector('#prediction'),
+  accountWidget: document.querySelector('#accountWidget'),
+  accountToggle: document.querySelector('#accountToggle'),
+  accountPanel: document.querySelector('#accountPanel'),
+  accountLabel: document.querySelector('#accountLabel'),
+  accountForm: document.querySelector('#accountForm'),
+  accountName: document.querySelector('#accountName'),
+  accountEmail: document.querySelector('#accountEmail'),
+  accountPassword: document.querySelector('#accountPassword'),
+  accountSignUp: document.querySelector('#accountSignUp'),
+  accountSignOut: document.querySelector('#accountSignOut'),
+  accountSignedOut: document.querySelector('#accountSignedOut'),
+  accountSignedIn: document.querySelector('#accountSignedIn'),
+  accountUserName: document.querySelector('#accountUserName'),
+  accountUserEmail: document.querySelector('#accountUserEmail'),
+  walletBalance: document.querySelector('#walletBalance'),
+  accountError: document.querySelector('#accountError'),
+  accountPage: document.querySelector('#accountPage'),
+  accountAvatar: document.querySelector('#accountAvatar'),
+  accountPageName: document.querySelector('#accountPageName'),
+  accountPageStatus: document.querySelector('#accountPageStatus'),
+  accountPageBalance: document.querySelector('#accountPageBalance'),
+  accountPageSignOut: document.querySelector('#accountPageSignOut'),
+  accountPreferencesForm: document.querySelector('#accountPreferencesForm'),
+  profilePictureDriver: document.querySelector('#profilePictureDriver'),
+  favoriteTeam: document.querySelector('#favoriteTeam'),
+  favoriteDriver: document.querySelector('#favoriteDriver'),
+  accountPredictionsList: document.querySelector('#accountPredictionsList'),
+  accountProfileError: document.querySelector('#accountProfileError'),
   voteRaceName: document.querySelector('#voteRaceName'),
   voteCategoryGrid: document.querySelector('#voteCategoryGrid'),
   votePicker: document.querySelector('#votePicker'),
   pointsPredictionForm: document.querySelector('#pointsPredictionForm'),
   pointsPredictionCategory: document.querySelector('#pointsPredictionCategory'),
-  pointsPredictionName: document.querySelector('#pointsPredictionName'),
   pointsPredictionDriver: document.querySelector('#pointsPredictionDriver'),
   pointsPredictionPoints: document.querySelector('#pointsPredictionPoints'),
   pointsPredictionError: document.querySelector('#pointsPredictionError'),
@@ -1250,13 +1285,14 @@ const els = {
   constructorStandingsBody: document.querySelector('#constructorStandingsBody'),
   leaderboard: document.querySelector('#leaderboard'),
   profileGrid: document.querySelector('#profileGrid'),
+  teamProfileGrid: document.querySelector('#teamProfileGrid'),
   quoteGrid: document.querySelector('#quoteGrid'),
   newsGrid: document.querySelector('#newsGrid'),
   refreshNews: document.querySelector('#refreshNews'),
   lastUpdated: document.querySelector('#lastUpdated')
 };
 
-const PAGE_IDS = ['home', 'next-race', 'schedule', 'race-detail', 'standings', 'profiles', 'news', 'wisdom'];
+const PAGE_IDS = ['home', 'next-race', 'schedule', 'race-detail', 'standings', 'account', 'profiles', 'news', 'wisdom'];
 
 function pageFromHash() {
   const hash = window.location.hash.replace('#', '');
@@ -1538,6 +1574,11 @@ function normalizePredictionPoints(value) {
   return Number.isFinite(points) ? Math.max(1, Math.min(999, points)) : 0;
 }
 
+function formatF1Bucks(value) {
+  const amount = Math.max(0, Math.floor(Number(value) || 0));
+  return `${amount.toLocaleString()} F1 Bucks`;
+}
+
 function getLocalPointPredictions() {
   const store = readVoteStore();
   const raceKey = voteRaceKey();
@@ -1551,10 +1592,14 @@ function pointPredictions() {
   return getLocalPointPredictions();
 }
 
+function accountPointPredictions() {
+  return pointPredictions().filter(item => state.authUser && item.userId === state.authUser.uid);
+}
+
 function saveLocalPointPrediction(prediction) {
   const store = readVoteStore();
   const raceKey = voteRaceKey();
-  const userId = voteUserId();
+  const userId = state.authUser?.uid || voteUserId();
   const id = `${userId}-${prediction.categoryId}`;
   store[raceKey] ||= { categories: {} };
   store[raceKey].pointPredictions ||= [];
@@ -1588,6 +1633,7 @@ async function savePointPrediction(prediction) {
   const savedPrediction = saveLocalPointPrediction(prediction);
   if (state.voteMode === 'firebase') {
     if (!window.F1FirebaseVotes?.savePointPrediction) throw new Error('Firebase point prediction API is not ready.');
+    if (!state.authUser) throw new Error('Sign in to stake F1 Bucks.');
     await window.F1FirebaseVotes.savePointPrediction(voteRaceKey(), savedPrediction);
   }
   return savedPrediction;
@@ -1620,12 +1666,134 @@ function firebaseConfigReady() {
   return Boolean(config?.apiKey && config?.projectId && config?.appId);
 }
 
+function authUserName() {
+  return state.wallet?.displayName || state.authUser?.displayName || state.authUser?.email?.split('@')[0] || 'F1 fan';
+}
+
+function authErrorMessage(error) {
+  const code = error?.code || '';
+  if (code.includes('email-already-in-use')) return 'That email already has an account. Try signing in.';
+  if (code.includes('invalid-credential') || code.includes('wrong-password') || code.includes('user-not-found')) return 'Email or password is incorrect.';
+  if (code.includes('weak-password')) return 'Password needs at least 6 characters.';
+  if (code.includes('invalid-email')) return 'Enter a valid email address.';
+  if (code.includes('operation-not-allowed')) return 'Enable Email/Password sign-in in Firebase Authentication.';
+  return error?.message || 'Account action failed. Try again.';
+}
+
+function renderAccountPanel() {
+  if (!els.accountWidget) return;
+  const signedIn = Boolean(state.authUser);
+  const balance = state.wallet?.f1BucksBalance;
+
+  els.accountLabel.textContent = signedIn ? authUserName() : 'Sign in';
+  els.accountToggle?.setAttribute('aria-expanded', String(!els.accountPanel?.hidden));
+
+  if (els.accountSignedOut) els.accountSignedOut.hidden = signedIn;
+  if (els.accountSignedIn) els.accountSignedIn.hidden = !signedIn;
+  if (els.accountUserName) els.accountUserName.textContent = authUserName();
+  if (els.accountUserEmail) els.accountUserEmail.textContent = 'Open your profile page from the username button.';
+  if (els.walletBalance) els.walletBalance.textContent = Number.isFinite(Number(balance))
+    ? formatF1Bucks(balance)
+    : 'Loading wallet...';
+  if (els.accountError) {
+    els.accountError.hidden = !state.authError;
+    els.accountError.textContent = state.authError;
+  }
+}
+
+function driverOptionHtml(row, selectedId = '') {
+  const driver = row.Driver || {};
+  return `<option value="${escapeHtml(driver.driverId)}" ${driver.driverId === selectedId ? 'selected' : ''}>${driverFlag(driver)} ${escapeHtml(driverName(driver))}</option>`;
+}
+
+function constructorOptionHtml(row, selectedId = '') {
+  const constructor = row.constructor || row.Constructor || {};
+  const id = constructor.constructorId;
+  return `<option value="${escapeHtml(id)}" ${id === selectedId ? 'selected' : ''}>${escapeHtml(constructorName(constructor))}</option>`;
+}
+
+function selectedProfileDriver() {
+  const driverId = state.wallet?.profileDriverId || state.wallet?.favoriteDriverId || state.drivers[0]?.Driver?.driverId || '';
+  return state.drivers.find(row => row.Driver?.driverId === driverId)?.Driver || state.drivers[0]?.Driver || null;
+}
+
+function renderAccountPage() {
+  if (!els.accountPage) return;
+  const signedIn = Boolean(state.authUser);
+  const wallet = state.wallet || {};
+  const profileDriver = selectedProfileDriver();
+  const profileImage = profileDriver ? state.driverImages[profileDriver.driverId] : '';
+  const balance = Number.isFinite(Number(wallet.f1BucksBalance)) ? wallet.f1BucksBalance : 0;
+
+  els.accountPageName.textContent = signedIn ? authUserName() : 'Sign in';
+  els.accountPageStatus.textContent = signedIn
+    ? 'Customize your profile and track every F1 Bucks prediction you place.'
+    : 'Sign in from the header to unlock your wallet and profile.';
+  els.accountPageBalance.textContent = signedIn ? formatF1Bucks(balance) : '-- F1 Bucks';
+
+  if (els.accountAvatar) {
+    els.accountAvatar.innerHTML = profileImage
+      ? `<img src="${escapeHtml(profileImage)}" alt="${escapeHtml(driverName(profileDriver))} profile picture">`
+      : `<span>${profileDriver ? escapeHtml(driverName(profileDriver).split(' ').map(part => part[0]).join('').slice(0, 2)) : 'F1'}</span>`;
+  }
+
+  const drivers = voteDrivers();
+  const teams = teamProfileRows();
+  if (els.profilePictureDriver) {
+    els.profilePictureDriver.disabled = !signedIn;
+    els.profilePictureDriver.innerHTML = drivers.length
+      ? drivers.map(row => driverOptionHtml(row, wallet.profileDriverId || '')).join('')
+      : '<option value="">Drivers loading</option>';
+  }
+  if (els.favoriteDriver) {
+    els.favoriteDriver.disabled = !signedIn;
+    els.favoriteDriver.innerHTML = drivers.length
+      ? drivers.map(row => driverOptionHtml(row, wallet.favoriteDriverId || '')).join('')
+      : '<option value="">Drivers loading</option>';
+  }
+  if (els.favoriteTeam) {
+    els.favoriteTeam.disabled = !signedIn;
+    els.favoriteTeam.innerHTML = teams.length
+      ? teams.map(row => constructorOptionHtml(row, wallet.favoriteTeamId || '')).join('')
+      : '<option value="">Teams loading</option>';
+  }
+
+  const saveButton = els.accountPreferencesForm?.querySelector('button[type="submit"]');
+  if (saveButton) {
+    saveButton.disabled = !signedIn || state.accountProfileSaving;
+    saveButton.textContent = state.accountProfileSaving ? 'Saving...' : (signedIn ? 'Save profile' : 'Sign in to save');
+  }
+
+  if (els.accountProfileError) {
+    els.accountProfileError.hidden = !state.accountProfileError;
+    els.accountProfileError.textContent = state.accountProfileError;
+  }
+  if (els.accountPageSignOut) els.accountPageSignOut.disabled = !signedIn;
+
+  const predictions = accountPointPredictions()
+    .sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
+  els.accountPredictionsList.innerHTML = predictions.length ? predictions.map(item => {
+    const category = POINT_PREDICTION_CATEGORIES.find(entry => entry.id === item.categoryId);
+    const row = state.drivers.find(driverRow => driverRow.Driver?.driverId === item.driverId);
+    const team = row?.Constructors?.[0] || {};
+    return `
+      <div class="account-prediction-row" style="--team-color: ${teamColor(team.constructorId)}">
+        <span>
+          <strong>${escapeHtml(category?.title || item.categoryId)}</strong>
+          <small>${row ? driverIdentityHtml(row.Driver) : escapeHtml(item.driverId)} · ${escapeHtml(constructorName(team))}</small>
+        </span>
+        <b>${escapeHtml(item.points)} F1 Bucks</b>
+      </div>
+    `;
+  }).join('') : `<p class="empty-state">${signedIn ? 'No F1 Bucks predictions placed yet.' : 'Sign in to see your predictions.'}</p>`;
+}
+
 function handleFirebaseVotingError(error) {
   console.warn('Firebase voting unavailable, falling back to local votes.', error);
   state.voteMode = 'local';
   state.votesReady = true;
   state.voteError = 'Firebase rules are blocking shared voting. Publish the Firestore rules from FIREBASE_SETUP.md, then refresh.';
-  state.pointPredictionError = 'Firebase rules are blocking live point predictions. Publish the Firestore rules from FIREBASE_SETUP.md, then refresh.';
+  state.pointPredictionError = 'Firebase rules are blocking live F1 Bucks predictions. Publish the Firestore rules from FIREBASE_SETUP.md, then refresh.';
   renderVotingPanel();
 }
 
@@ -1648,9 +1816,113 @@ async function initializeFirebaseVotes() {
       setDoc,
       serverTimestamp
     } = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-firestore.js`);
+    const {
+      getAuth,
+      onAuthStateChanged,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut: firebaseSignOut,
+      updateProfile
+    } = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-auth.js`);
 
     const app = initializeApp(window.F1_FIREBASE_CONFIG);
     const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    async function ensureUserWallet(user) {
+      if (!user) return;
+      const userRef = doc(db, 'users', user.uid);
+      await runTransaction(db, async transaction => {
+        const snapshot = await transaction.get(userRef);
+        const base = {
+          email: user.email || '',
+          displayName: user.displayName || '',
+          updatedAt: serverTimestamp()
+        };
+        if (snapshot.exists()) {
+          transaction.set(userRef, base, { merge: true });
+          return;
+        }
+        transaction.set(userRef, {
+          ...base,
+          f1BucksBalance: STARTING_F1_BUCKS,
+          createdAt: serverTimestamp()
+        });
+      });
+    }
+
+    window.F1FirebaseAccount = {
+      async signUp(email, password, displayName) {
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
+        if (displayName) await updateProfile(credential.user, { displayName });
+        await ensureUserWallet({
+          uid: credential.user.uid,
+          email: credential.user.email || '',
+          displayName: displayName || credential.user.displayName || ''
+        });
+      },
+
+      async signIn(email, password) {
+        await signInWithEmailAndPassword(auth, email, password);
+      },
+
+      async updateProfilePreferences(preferences) {
+        const user = auth.currentUser;
+        if (!user) throw new Error('Sign in to save your profile.');
+        await setDoc(doc(db, 'users', user.uid), {
+          profileDriverId: preferences.profileDriverId || '',
+          favoriteTeamId: preferences.favoriteTeamId || '',
+          favoriteDriverId: preferences.favoriteDriverId || '',
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+      },
+
+      async signOut() {
+        await firebaseSignOut(auth);
+      }
+    };
+
+    onAuthStateChanged(auth, async user => {
+      if (state.walletUnsubscribe) {
+        state.walletUnsubscribe();
+        state.walletUnsubscribe = null;
+      }
+
+      state.authReady = true;
+      state.authError = '';
+      state.authUser = user ? {
+        uid: user.uid,
+        email: user.email || '',
+        displayName: user.displayName || ''
+      } : null;
+      state.wallet = null;
+
+      if (!user) {
+        renderAccountPanel();
+        renderAccountPage();
+        renderVotingPanel();
+        return;
+      }
+
+      try {
+        await ensureUserWallet(user);
+        state.walletUnsubscribe = onSnapshot(doc(db, 'users', user.uid), snapshot => {
+          state.wallet = snapshot.exists() ? snapshot.data() : null;
+          renderAccountPanel();
+          renderAccountPage();
+          renderVotingPanel();
+        }, error => {
+          console.warn('Firebase wallet unavailable.', error);
+          state.authError = 'Wallet could not load. Check Firebase users rules.';
+          renderAccountPanel();
+        });
+      } catch (error) {
+        console.warn('Firebase wallet setup failed.', error);
+        state.authError = 'Wallet could not be created. Check Firebase users rules.';
+        renderAccountPanel();
+        renderAccountPage();
+      }
+    });
 
     window.F1FirebaseVotes = {
       listen(raceKey) {
@@ -1662,7 +1934,7 @@ async function initializeFirebaseVotes() {
 
         const totalsRef = collection(db, 'raceVotes', raceKey, 'categories');
         const userRef = collection(db, 'raceVotes', raceKey, 'users', voteUserId(), 'categories');
-        const pointPredictionsRef = collection(db, 'raceVotes', raceKey, 'pointPredictions');
+        const pointPredictionsRef = collection(db, 'raceVotes', raceKey, 'f1BuckStakes');
 
         const onFirebaseSnapshotError = error => {
           state.firebaseUnsubscribers.forEach(unsubscribe => unsubscribe());
@@ -1690,6 +1962,7 @@ async function initializeFirebaseVotes() {
             ...predictionDoc.data()
           }));
           renderVotingPanel();
+          renderAccountPage();
         }, onFirebaseSnapshotError));
       },
 
@@ -1721,14 +1994,44 @@ async function initializeFirebaseVotes() {
       },
 
       async savePointPrediction(raceKey, prediction) {
-        await setDoc(doc(db, 'raceVotes', raceKey, 'pointPredictions', prediction.id), {
-          userId: prediction.userId,
-          categoryId: prediction.categoryId,
-          driverId: prediction.driverId,
-          voterName: prediction.voterName,
-          points: prediction.points,
-          updatedAt: serverTimestamp()
-        }, { merge: true });
+        const user = auth.currentUser;
+        if (!user) throw new Error('Sign in to stake F1 Bucks.');
+        const walletRef = doc(db, 'users', user.uid);
+        const predictionRef = doc(db, 'raceVotes', raceKey, 'f1BuckStakes', prediction.id);
+
+        await runTransaction(db, async transaction => {
+          const walletSnapshot = await transaction.get(walletRef);
+          const predictionSnapshot = await transaction.get(predictionRef);
+          const currentBalance = walletSnapshot.exists()
+            ? Number(walletSnapshot.data().f1BucksBalance) || 0
+            : STARTING_F1_BUCKS;
+          const previousStake = predictionSnapshot.exists()
+            ? Number(predictionSnapshot.data().points) || 0
+            : 0;
+          const stakeDifference = prediction.points - previousStake;
+
+          if (stakeDifference > currentBalance) {
+            throw new Error('Not enough F1 Bucks for that stake.');
+          }
+
+          const walletData = {
+            email: user.email || '',
+            displayName: user.displayName || authUserName(),
+            f1BucksBalance: currentBalance - stakeDifference,
+            updatedAt: serverTimestamp()
+          };
+          if (!walletSnapshot.exists()) walletData.createdAt = serverTimestamp();
+          transaction.set(walletRef, walletData, { merge: true });
+
+          transaction.set(predictionRef, {
+            userId: user.uid,
+            categoryId: prediction.categoryId,
+            driverId: prediction.driverId,
+            voterName: prediction.voterName,
+            points: prediction.points,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+        });
 
         await setDoc(doc(db, 'raceVotes', raceKey), {
           season: SEASON,
@@ -1924,6 +2227,7 @@ async function loadDriverImages() {
   }));
 
   renderProfiles();
+  renderAccountPage();
   renderRaceFocus(nextRace());
 }
 
@@ -2826,8 +3130,9 @@ function renderVotePicker() {
 function renderPointPredictionPanel() {
   if (!els.pointsPredictionForm) return;
   const drivers = voteDrivers();
-  const modeLabel = state.voteMode === 'firebase' ? 'Live Firebase points board' : 'Local preview points board';
-  const predictions = pointPredictions()
+  const modeLabel = state.voteMode === 'firebase' ? 'Live Firebase F1 Bucks board' : 'Local preview F1 Bucks board';
+  const needsSignIn = state.voteMode === 'firebase' && !state.authUser;
+  const predictions = accountPointPredictions()
     .map(item => {
       const row = drivers.find(driverRow => driverRow.Driver?.driverId === item.driverId);
       return row ? { ...item, row } : null;
@@ -2845,10 +3150,11 @@ function renderPointPredictionPanel() {
     : '<option value="">Drivers loading</option>';
   els.pointsPredictionCategory.value = selectedCategory;
   els.pointsPredictionDriver.value = selectedDriver;
-  els.pointsPredictionName.value ||= localStorage.getItem(`${VOTE_USER_KEY}-name`) || '';
 
-  els.pointsPredictionForm.querySelector('.points-prediction-submit').disabled = state.pointPredictionSubmitting || !drivers.length;
-  els.pointsPredictionForm.querySelector('.points-prediction-submit').textContent = state.pointPredictionSubmitting ? 'Saving...' : 'Submit points';
+  els.pointsPredictionForm.querySelector('.points-prediction-submit').disabled = state.pointPredictionSubmitting || !drivers.length || needsSignIn;
+  els.pointsPredictionForm.querySelector('.points-prediction-submit').textContent = state.pointPredictionSubmitting
+    ? 'Saving...'
+    : (needsSignIn ? 'Sign in to stake' : 'Submit F1 Bucks');
 
   els.pointsPredictionError.hidden = !state.pointPredictionError;
   els.pointsPredictionError.textContent = state.pointPredictionError;
@@ -2863,19 +3169,20 @@ function renderPointPredictionPanel() {
           return `
             <div class="points-prediction-row" style="--team-color: ${teamColor(team.constructorId)}">
               <span>
-                <strong>${escapeHtml(item.voterName)}</strong>
+                <strong>${escapeHtml(item.voterName || authUserName())}</strong>
                 <small>${driverIdentityHtml(item.row.Driver)} · ${escapeHtml(constructorName(team))}</small>
               </span>
-              <b>${escapeHtml(item.points)} pts</b>
+              <b>${escapeHtml(item.points)} F1 Bucks</b>
             </div>
           `;
-        }).join('') : '<p class="empty-state">No point predictions yet.</p>'}
+        }).join('') : '<p class="empty-state">No F1 Bucks predictions yet.</p>'}
       </article>
     `;
   }).join('');
 
   els.pointsPredictionList.innerHTML = `
     <div class="points-prediction-status">${escapeHtml(modeLabel)}</div>
+    ${needsSignIn ? '<p class="empty-state">Sign in with email to use your F1 Bucks wallet.</p>' : ''}
     ${groupedHtml}
   `;
 }
@@ -2997,6 +3304,78 @@ function updateProfileBack(driverId) {
   if (back) back.innerHTML = careerBackHtml(row);
 }
 
+function teamProfileRows() {
+  const rows = [];
+  const seen = new Set();
+
+  state.constructors.forEach((row, index) => {
+    const constructor = row.Constructor || {};
+    const id = constructor.constructorId;
+    if (!id || seen.has(id)) return;
+    seen.add(id);
+    rows.push({
+      constructor,
+      points: row.points || '0',
+      wins: row.wins || '0',
+      rank: row.position || String(index + 1)
+    });
+  });
+
+  state.drivers.forEach(row => {
+    const constructor = row.Constructors?.[0] || {};
+    const id = constructor.constructorId;
+    if (!id || seen.has(id)) return;
+    seen.add(id);
+    rows.push({
+      constructor,
+      points: '0',
+      wins: '0',
+      rank: 'TBC'
+    });
+  });
+
+  return rows;
+}
+
+function teamDrivers(constructorId = '') {
+  return state.drivers
+    .filter(row => row.Constructors?.[0]?.constructorId === constructorId)
+    .map(row => row.Driver);
+}
+
+function renderTeamProfiles() {
+  if (!els.teamProfileGrid) return;
+  const rows = teamProfileRows();
+  els.teamProfileGrid.innerHTML = rows.length ? rows.map(row => {
+    const id = row.constructor.constructorId;
+    const color = teamColor(id);
+    const drivers = teamDrivers(id);
+    return `
+      <article class="team-profile-card" style="--team-color: ${color}; --profile-text: ${readableTextColor(color)}; --profile-muted: ${readableMutedColor(color)}">
+        <div class="team-profile-top">
+          <div class="team-profile-logo">${teamLogoHtml(row.constructor)}</div>
+          <div>
+            <span class="profile-meta">Constructor rank ${escapeHtml(row.rank)}</span>
+            <strong>${escapeHtml(constructorName(row.constructor))}</strong>
+            <p>${escapeHtml(row.points)} championship points · ${escapeHtml(row.wins)} wins</p>
+          </div>
+        </div>
+        <div class="team-profile-drivers" aria-label="${escapeHtml(constructorName(row.constructor))} drivers">
+          ${drivers.length ? drivers.map(driver => `
+            <span>${driverFlag(driver)} ${escapeHtml(driverName(driver))}</span>
+          `).join('') : '<span>Drivers TBC</span>'}
+        </div>
+      </article>
+    `;
+  }).join('') : `
+    <article class="team-profile-card team-profile-empty">
+      <span class="profile-meta">Live API</span>
+      <strong>Team profiles pending</strong>
+      <p>Team cards fill automatically from the 2026 constructor standings.</p>
+    </article>
+  `;
+}
+
 function renderProfiles() {
   const profiles = state.drivers.length ? state.drivers : [];
   els.profileGrid.innerHTML = profiles.length ? profiles.map(row => {
@@ -3045,6 +3424,8 @@ function renderProfiles() {
     event.preventDefault();
     flipProfileCard(card);
   };
+
+  renderTeamProfiles();
 }
 
 function flipProfileCard(card) {
@@ -3090,6 +3471,8 @@ function renderQuotes() {
 }
 
 function renderAll() {
+  renderAccountPanel();
+  renderAccountPage();
   renderSummary();
   renderStartingGrid();
   renderSchedule();
@@ -3125,6 +3508,121 @@ window.addEventListener('hashchange', () => {
 });
 applyTheme();
 els.themeToggle?.addEventListener('click', toggleTheme);
+els.accountToggle?.addEventListener('click', () => {
+  if (!els.accountPanel) return;
+  if (state.authUser) {
+    els.accountPanel.hidden = true;
+    history.pushState(null, '', '#account');
+    setActivePage('account');
+    renderAccountPage();
+    return;
+  }
+  els.accountPanel.hidden = !els.accountPanel.hidden;
+  renderAccountPanel();
+});
+
+els.accountForm?.addEventListener('submit', async event => {
+  event.preventDefault();
+  const email = els.accountEmail.value.trim();
+  const password = els.accountPassword.value;
+
+  if (!window.F1FirebaseAccount?.signIn) {
+    state.authError = 'Firebase Auth is still connecting. Try again in a moment.';
+    renderAccountPanel();
+    return;
+  }
+
+  state.authError = '';
+  renderAccountPanel();
+  try {
+    await window.F1FirebaseAccount.signIn(email, password);
+    els.accountPassword.value = '';
+    els.accountPanel.hidden = true;
+    history.pushState(null, '', '#account');
+    setActivePage('account');
+  } catch (error) {
+    state.authError = authErrorMessage(error);
+    renderAccountPanel();
+  }
+});
+
+els.accountSignUp?.addEventListener('click', async () => {
+  const email = els.accountEmail.value.trim();
+  const password = els.accountPassword.value;
+  const displayName = sanitizePredictionName(els.accountName.value);
+
+  if (!window.F1FirebaseAccount?.signUp) {
+    state.authError = 'Firebase Auth is still connecting. Try again in a moment.';
+    renderAccountPanel();
+    return;
+  }
+
+  state.authError = '';
+  renderAccountPanel();
+  try {
+    await window.F1FirebaseAccount.signUp(email, password, displayName);
+    els.accountPassword.value = '';
+    els.accountPanel.hidden = true;
+    history.pushState(null, '', '#account');
+    setActivePage('account');
+  } catch (error) {
+    state.authError = authErrorMessage(error);
+    renderAccountPanel();
+  }
+});
+
+els.accountSignOut?.addEventListener('click', async () => {
+  if (!window.F1FirebaseAccount?.signOut) return;
+  state.authError = '';
+  try {
+    await window.F1FirebaseAccount.signOut();
+  } catch (error) {
+    state.authError = authErrorMessage(error);
+  }
+  renderAccountPanel();
+  renderAccountPage();
+});
+
+els.accountPageSignOut?.addEventListener('click', async () => {
+  if (!window.F1FirebaseAccount?.signOut) return;
+  state.authError = '';
+  try {
+    await window.F1FirebaseAccount.signOut();
+    history.pushState(null, '', '#home');
+    setActivePage('home');
+  } catch (error) {
+    state.accountProfileError = authErrorMessage(error);
+  }
+  renderAccountPanel();
+  renderAccountPage();
+});
+
+els.accountPreferencesForm?.addEventListener('submit', async event => {
+  event.preventDefault();
+  if (state.accountProfileSaving) return;
+  if (!state.authUser || !window.F1FirebaseAccount?.updateProfilePreferences) {
+    state.accountProfileError = 'Sign in before saving your profile.';
+    renderAccountPage();
+    return;
+  }
+
+  state.accountProfileSaving = true;
+  state.accountProfileError = '';
+  renderAccountPage();
+
+  try {
+    await window.F1FirebaseAccount.updateProfilePreferences({
+      profileDriverId: els.profilePictureDriver.value,
+      favoriteTeamId: els.favoriteTeam.value,
+      favoriteDriverId: els.favoriteDriver.value
+    });
+  } catch (error) {
+    state.accountProfileError = authErrorMessage(error);
+  } finally {
+    state.accountProfileSaving = false;
+    renderAccountPage();
+  }
+});
 setActivePage();
 
 document.querySelectorAll('[data-filter]').forEach(button => {
@@ -3190,13 +3688,25 @@ els.pointsPredictionForm?.addEventListener('submit', async event => {
   event.preventDefault();
   if (state.pointPredictionSubmitting) return;
 
-  const voterName = sanitizePredictionName(els.pointsPredictionName.value);
+  const voterName = sanitizePredictionName(authUserName());
   const categoryId = els.pointsPredictionCategory.value;
   const driverId = els.pointsPredictionDriver.value;
   const points = normalizePredictionPoints(els.pointsPredictionPoints.value);
 
-  if (!voterName || !categoryId || !driverId || !points) {
-    state.pointPredictionError = 'Enter your name, choose a driver, and add at least 1 point.';
+  if (state.voteMode === 'firebase' && !state.authUser) {
+    state.pointPredictionError = 'Sign in before staking F1 Bucks live.';
+    renderPointPredictionPanel();
+    return;
+  }
+
+  if (!categoryId || !driverId || !points) {
+    state.pointPredictionError = 'Choose a driver and add at least 1 F1 Buck.';
+    renderPointPredictionPanel();
+    return;
+  }
+
+  if (state.voteMode === 'firebase' && state.wallet && points > Number(state.wallet.f1BucksBalance || 0)) {
+    state.pointPredictionError = `You only have ${formatF1Bucks(state.wallet.f1BucksBalance)} available.`;
     renderPointPredictionPanel();
     return;
   }
@@ -3206,13 +3716,12 @@ els.pointsPredictionForm?.addEventListener('submit', async event => {
   renderPointPredictionPanel();
 
   try {
-    localStorage.setItem(`${VOTE_USER_KEY}-name`, voterName);
     await savePointPrediction({ voterName, categoryId, driverId, points });
     els.pointsPredictionPoints.value = '';
   } catch (error) {
     console.error(error);
     state.pointPredictionError = state.voteMode === 'firebase'
-      ? 'Point prediction did not save live. Check the pointPredictions rule in FIREBASE_SETUP.md, then try again.'
+      ? 'F1 Bucks prediction did not save live. Check the f1BuckStakes rule in FIREBASE_SETUP.md, then try again.'
       : 'Prediction saved only on this browser. Refresh after Firebase connects to share it live.';
   } finally {
     state.pointPredictionSubmitting = false;

@@ -17,9 +17,19 @@ The prediction cards already support Firebase Firestore. Until this config is fi
 3. Start in production mode.
 4. Use a nearby region.
 
-## 3. Firestore rules
+## 3. Enable email login
 
-Use these rules in **Firestore Database > Rules**, not Realtime Database rules. These allow public voting for this static website. Anyone with the site link can vote, which is fine for a school/friend project; for a larger public site, add Firebase App Check later.
+1. In Firebase Console, open **Authentication**.
+2. Click **Get started** if it is not enabled yet.
+3. Open **Sign-in method**.
+4. Enable **Email/Password**.
+5. Save.
+
+The site uses email/password accounts for F1 Bucks wallets. New users start with `50` F1 Bucks.
+
+## 4. Firestore rules
+
+Use these rules in **Firestore Database > Rules**, not Realtime Database rules. These allow public voting for the free prediction cards and authenticated wallet access for F1 Bucks. For a larger public site, move F1 Bucks deductions into Cloud Functions and add Firebase App Check later.
 
 If you just want the live vote board working quickly, paste this simple version:
 
@@ -30,6 +40,10 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /raceVotes/{document=**} {
       allow read, write: if true;
+    }
+
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
   }
 }
@@ -42,6 +56,20 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly(['email', 'displayName', 'f1BucksBalance', 'profileDriverId', 'favoriteTeamId', 'favoriteDriverId', 'createdAt', 'updatedAt'])
+        && request.resource.data.email is string
+        && request.resource.data.displayName is string
+        && request.resource.data.f1BucksBalance is int
+        && request.resource.data.f1BucksBalance >= 0
+        && (!('profileDriverId' in request.resource.data) || request.resource.data.profileDriverId is string)
+        && (!('favoriteTeamId' in request.resource.data) || request.resource.data.favoriteTeamId is string)
+        && (!('favoriteDriverId' in request.resource.data) || request.resource.data.favoriteDriverId is string);
+    }
+
     match /raceVotes/{raceKey} {
       allow read: if true;
       allow write: if request.resource.data.keys().hasOnly(['season', 'raceKey', 'updatedAt'])
@@ -60,9 +88,11 @@ service cloud.firestore {
           && request.resource.data.driverId is string;
       }
 
-      match /pointPredictions/{predictionId} {
+      match /f1BuckStakes/{predictionId} {
         allow read: if true;
-        allow write: if request.resource.data.keys().hasOnly(['userId', 'categoryId', 'driverId', 'voterName', 'points', 'updatedAt'])
+        allow write: if request.auth != null
+          && request.auth.uid == request.resource.data.userId
+          && request.resource.data.keys().hasOnly(['userId', 'categoryId', 'driverId', 'voterName', 'points', 'updatedAt'])
           && request.resource.data.userId is string
           && request.resource.data.categoryId is string
           && request.resource.data.driverId is string
@@ -74,14 +104,14 @@ service cloud.firestore {
 }
 ```
 
-## 4. Publish
+## 5. Publish
 
 After `firebase-config.js` is filled in:
 
 ```bash
-git add firebase-config.js script.js index.html FIREBASE_SETUP.md
+git add firebase-config.js script.js index.html styles.css FIREBASE_SETUP.md
 git commit -m "Configure Firebase voting"
 git push origin main
 ```
 
-Then refresh the GitHub Pages site. The prediction header should say `Shared live voting`.
+Then refresh the GitHub Pages site. The account button should let you sign in and show your F1 Bucks wallet.

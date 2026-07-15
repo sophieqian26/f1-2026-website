@@ -6,7 +6,7 @@
     <title>F1 2026 Season Hub</title>
     <link rel="preconnect" href="https://api.jolpi.ca">
     <link rel="preconnect" href="https://api.allorigins.win">
-    <link rel="stylesheet" href="styles.css?v=20260711-focus-nationality-white">
+    <link rel="stylesheet" href="styles.css?v=20260715-account-stakes">
   </head>
   <body>
     <header class="site-header">
@@ -24,6 +24,37 @@
         <a href="#wisdom">Wisdom</a>
       </nav>
       <div class="header-tools">
+        <div class="account-widget" id="accountWidget">
+          <button class="account-toggle" id="accountToggle" type="button" aria-expanded="false">
+            <span id="accountLabel">Sign in</span>
+          </button>
+          <div class="account-panel" id="accountPanel" hidden>
+            <div class="account-signed-out" id="accountSignedOut">
+              <strong>F1 Bucks account</strong>
+              <p>Sign in to save your wallet and prediction stakes.</p>
+              <form id="accountForm" class="account-form">
+                <input id="accountName" type="text" autocomplete="name" maxlength="40" placeholder="Display name">
+                <input id="accountEmail" type="email" autocomplete="email" placeholder="Email address" required>
+                <input id="accountPassword" type="password" autocomplete="current-password" minlength="6" placeholder="Password" required>
+                <div class="account-actions">
+                  <button id="accountSignIn" type="submit">Sign in</button>
+                  <button id="accountSignUp" type="button">Create account</button>
+                </div>
+              </form>
+            </div>
+            <div class="account-signed-in" id="accountSignedIn" hidden>
+              <span class="account-kicker">Signed in</span>
+              <strong id="accountUserName">F1 fan</strong>
+              <p id="accountUserEmail">Account profile ready</p>
+              <div class="wallet-balance">
+                <span>Balance</span>
+                <strong id="walletBalance">-- F1 Bucks</strong>
+              </div>
+              <button id="accountSignOut" type="button">Sign out</button>
+            </div>
+            <p class="account-error" id="accountError" hidden></p>
+          </div>
+        </div>
         <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false">Light mode</button>
         <div class="status-pill" id="dataStatus">Connecting</div>
       </div>
@@ -118,10 +149,10 @@
           <section class="points-prediction-panel" aria-labelledby="pointsPredictionTitle">
             <div class="points-prediction-head">
               <div>
-                <p class="eyebrow">Points prediction</p>
-                <h3 id="pointsPredictionTitle">Stake points on a driver</h3>
+                <p class="eyebrow">F1 Bucks prediction</p>
+                <h3 id="pointsPredictionTitle">Stake F1 Bucks on a driver</h3>
               </div>
-              <span>Pick a category, driver, and point amount</span>
+              <span>Pick a category, driver, and F1 Bucks amount</span>
             </div>
             <form class="points-prediction-form" id="pointsPredictionForm">
               <label>
@@ -129,18 +160,14 @@
                 <select id="pointsPredictionCategory"></select>
               </label>
               <label>
-                Your name
-                <input id="pointsPredictionName" type="text" maxlength="40" placeholder="Name">
-              </label>
-              <label>
                 Driver
                 <select id="pointsPredictionDriver"></select>
               </label>
               <label>
-                Points
+                F1 Bucks
                 <input id="pointsPredictionPoints" type="number" min="1" max="999" step="1" placeholder="10">
               </label>
-              <button class="points-prediction-submit" type="submit">Submit points</button>
+              <button class="points-prediction-submit" type="submit">Submit F1 Bucks</button>
             </form>
             <div class="points-prediction-error" id="pointsPredictionError" hidden></div>
             <div class="points-prediction-list" id="pointsPredictionList"></div>
@@ -215,12 +242,68 @@
         </div>
       </section>
 
+      <section class="section shell page-section" id="account">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">My paddock</p>
+            <h2>Account profile</h2>
+          </div>
+        </div>
+        <div class="account-page" id="accountPage">
+          <section class="account-profile-card">
+            <div class="account-profile-hero">
+              <div class="account-avatar" id="accountAvatar">F1</div>
+              <div>
+                <span class="account-kicker">Username</span>
+                <h3 id="accountPageName">Sign in</h3>
+                <p id="accountPageStatus">Create an account to save your F1 Bucks profile.</p>
+              </div>
+            </div>
+            <div class="wallet-balance large">
+              <span>Balance</span>
+              <strong id="accountPageBalance">-- F1 Bucks</strong>
+            </div>
+            <button class="account-page-signout" id="accountPageSignOut" type="button">Sign out</button>
+          </section>
+          <section class="account-preferences-card">
+            <h3>Favorites</h3>
+            <form class="account-preferences-form" id="accountPreferencesForm">
+              <label>
+                Profile picture driver
+                <select id="profilePictureDriver"></select>
+              </label>
+              <label>
+                Favorite team
+                <select id="favoriteTeam"></select>
+              </label>
+              <label>
+                Favorite racer
+                <select id="favoriteDriver"></select>
+              </label>
+              <button id="saveAccountPreferences" type="submit">Save profile</button>
+            </form>
+            <p class="account-error" id="accountProfileError" hidden></p>
+          </section>
+          <section class="account-predictions-card">
+            <h3>Predictions placed</h3>
+            <div id="accountPredictionsList"></div>
+          </section>
+        </div>
+      </section>
+
       <section class="section shell page-section" id="profiles">
         <div class="section-head">
           <p class="eyebrow">Grid guide</p>
           <h2>Driver and team profiles</h2>
         </div>
         <div class="profile-grid" id="profileGrid"></div>
+        <div class="section-head compact profile-subhead">
+          <div>
+            <p class="eyebrow">Constructor guide</p>
+            <h3>Team profiles</h3>
+          </div>
+        </div>
+        <div class="team-profile-grid" id="teamProfileGrid"></div>
       </section>
 
       <section class="section shell page-section" id="news">
@@ -250,6 +333,6 @@
     </footer>
 
     <script src="firebase-config.js?v=20260705-firebase-config"></script>
-    <script src="script.js?v=20260711-focus-nationality-white"></script>
+    <script src="script.js?v=20260715-account-stakes"></script>
   </body>
 </html>

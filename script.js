@@ -1168,6 +1168,7 @@ const state = {
   driverCareer: {},
   accountProfileSaving: false,
   accountProfileError: '',
+  accountProfileMessage: '',
   odds: {
     status: 'loading',
     raceRound: null,
@@ -1765,8 +1766,10 @@ function renderAccountPage() {
   }
 
   if (els.accountProfileError) {
-    els.accountProfileError.hidden = !state.accountProfileError;
-    els.accountProfileError.textContent = state.accountProfileError;
+    const message = state.accountProfileError || state.accountProfileMessage;
+    els.accountProfileError.hidden = !message;
+    els.accountProfileError.textContent = message;
+    els.accountProfileError.classList.toggle('is-success', Boolean(state.accountProfileMessage && !state.accountProfileError));
   }
   if (els.accountPageSignOut) els.accountPageSignOut.disabled = !signedIn;
 
@@ -3606,16 +3609,24 @@ els.accountPreferencesForm?.addEventListener('submit', async event => {
     return;
   }
 
+  const preferences = {
+    profileDriverId: els.profilePictureDriver.value,
+    favoriteTeamId: els.favoriteTeam.value,
+    favoriteDriverId: els.favoriteDriver.value
+  };
+
   state.accountProfileSaving = true;
   state.accountProfileError = '';
+  state.accountProfileMessage = '';
   renderAccountPage();
 
   try {
-    await window.F1FirebaseAccount.updateProfilePreferences({
-      profileDriverId: els.profilePictureDriver.value,
-      favoriteTeamId: els.favoriteTeam.value,
-      favoriteDriverId: els.favoriteDriver.value
-    });
+    await window.F1FirebaseAccount.updateProfilePreferences(preferences);
+    state.wallet = {
+      ...(state.wallet || {}),
+      ...preferences
+    };
+    state.accountProfileMessage = 'Profile saved.';
   } catch (error) {
     state.accountProfileError = authErrorMessage(error);
   } finally {

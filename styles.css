@@ -273,6 +273,10 @@ body.light-theme .account-panel {
   font-weight: 760;
 }
 
+.account-error.is-success {
+  color: #73e6aa;
+}
+
 .account-page {
   display: grid;
   grid-template-columns: minmax(300px, 0.8fr) minmax(360px, 1fr);

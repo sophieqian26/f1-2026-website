@@ -6,7 +6,7 @@
     <title>F1 2026 Season Hub</title>
     <link rel="preconnect" href="https://api.jolpi.ca">
     <link rel="preconnect" href="https://api.allorigins.win">
-    <link rel="stylesheet" href="styles.css?v=20260715-profile-save-fix">
+    <link rel="stylesheet" href="styles.css?v=20260722-hungarian-odds">
   </head>
   <body>
     <header class="site-header">
@@ -288,6 +288,23 @@
             <h3>Predictions placed</h3>
             <div id="accountPredictionsList"></div>
           </section>
+          <section class="account-payout-card" id="kimiPayoutCard">
+            <div>
+              <span class="account-kicker">Result payout</span>
+              <h3>Kimi Antonelli win settlement</h3>
+            </div>
+            <div id="kimiPayoutBody"></div>
+          </section>
+          <section class="creator-dashboard-card" id="creatorDashboard" hidden>
+            <div class="creator-dashboard-head">
+              <div>
+                <span class="account-kicker">Creator only</span>
+                <h3>Signed-in users and F1 Bucks stakes</h3>
+              </div>
+              <button id="refreshCreatorDashboard" type="button">Refresh</button>
+            </div>
+            <div id="creatorDashboardBody"></div>
+          </section>
         </div>
       </section>
 
@@ -333,6 +350,6 @@
     </footer>
 
     <script src="firebase-config.js?v=20260705-firebase-config"></script>
-    <script src="script.js?v=20260715-profile-save-fix"></script>
+    <script src="script.js?v=20260722-hungarian-odds"></script>
   </body>
 </html>

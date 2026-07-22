@@ -31,6 +31,14 @@ The site uses email/password accounts for F1 Bucks wallets. New users start with
 
 Use these rules in **Firestore Database > Rules**, not Realtime Database rules. These allow public voting for the free prediction cards and authenticated wallet access for F1 Bucks. For a larger public site, move F1 Bucks deductions into Cloud Functions and add Firebase App Check later.
 
+For the creator-only dashboard:
+
+1. Open Firebase Console > Authentication > Users.
+2. Click your creator account.
+3. Copy your **User UID**.
+4. Paste that UID into `CREATOR_UID` in `script.js`.
+5. Paste the same UID over `PASTE_YOUR_CREATOR_UID_HERE` in the rules below.
+
 If you just want the live vote board working quickly, paste this simple version:
 
 ```txt
@@ -49,25 +57,21 @@ service cloud.firestore {
 }
 ```
 
-Use this stricter version after the simple version is confirmed working:
+Use this signed-in wallet version after the simple version is confirmed working. This is the version to use for F1 Bucks payouts:
 
 ```txt
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isCreator() {
+      return request.auth != null
+        && request.auth.uid == "PASTE_YOUR_CREATOR_UID_HERE";
+    }
+
     match /users/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
-      allow create, update: if request.auth != null
-        && request.auth.uid == userId
-        && request.resource.data.keys().hasOnly(['email', 'displayName', 'f1BucksBalance', 'profileDriverId', 'favoriteTeamId', 'favoriteDriverId', 'createdAt', 'updatedAt'])
-        && request.resource.data.email is string
-        && request.resource.data.displayName is string
-        && request.resource.data.f1BucksBalance is int
-        && request.resource.data.f1BucksBalance >= 0
-        && (!('profileDriverId' in request.resource.data) || request.resource.data.profileDriverId is string)
-        && (!('favoriteTeamId' in request.resource.data) || request.resource.data.favoriteTeamId is string)
-        && (!('favoriteDriverId' in request.resource.data) || request.resource.data.favoriteDriverId is string);
+      allow read: if (request.auth != null && request.auth.uid == userId) || isCreator();
+      allow create, update: if request.auth != null && request.auth.uid == userId;
     }
 
     match /raceVotes/{raceKey} {
@@ -89,16 +93,14 @@ service cloud.firestore {
       }
 
       match /f1BuckStakes/{predictionId} {
-        allow read: if true;
+        allow read: if request.auth != null;
         allow write: if request.auth != null
-          && request.auth.uid == request.resource.data.userId
-          && request.resource.data.keys().hasOnly(['userId', 'categoryId', 'driverId', 'voterName', 'points', 'updatedAt'])
-          && request.resource.data.userId is string
-          && request.resource.data.categoryId is string
-          && request.resource.data.driverId is string
-          && request.resource.data.voterName is string
-          && request.resource.data.points is int;
+          && request.auth.uid == request.resource.data.userId;
       }
+    }
+
+    match /{path=**}/f1BuckStakes/{predictionId} {
+      allow read: if isCreator();
     }
   }
 }

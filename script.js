@@ -14,6 +14,27 @@ const VOTE_USER_KEY = `f1-${SEASON}-vote-user-id`;
 const THEME_STORAGE_KEY = `f1-${SEASON}-theme`;
 const FIREBASE_SDK_VERSION = '10.12.5';
 const STARTING_F1_BUCKS = 50;
+const PREDICTION_LOCK_HOLD_MS = 6 * 60 * 60 * 1000;
+const CREATOR_UID = '';
+const KIMI_WIN_SETTLEMENT = {
+  raceKey: `${SEASON}-round-10`,
+  categoryId: 'race_winner',
+  driverId: 'antonelli',
+  winnerName: 'Kimi Antonelli',
+  raceName: 'Belgian Grand Prix',
+  oddsLabel: '13/8',
+  oddsNumerator: 13,
+  oddsDenominator: 8,
+  source: 'JustBookies Belgian Grand Prix odds'
+};
+const MANUAL_KIMI_STAKE_OVERRIDES = [
+  {
+    username: 'kimiantonelli12',
+    points: 20,
+    creditMode: 'profit_only',
+    note: 'Manual correction for the Kimi race-winner stake that was not saved live.'
+  }
+];
 
 const VOTE_CATEGORIES = [
   {
@@ -100,6 +121,23 @@ const TEAM_LOGOS = {
   audi: 'assets/team-logos/audi.png',
   cadillac: 'assets/team-logos/cadillac.png'
 };
+
+const TEAM_CARS = {
+  ferrari: 'assets/team-cars/ferrari.png',
+  mclaren: 'assets/team-cars/mclaren.png',
+  mercedes: 'assets/team-cars/mercedes.png',
+  red_bull: 'assets/team-cars/red_bull.png',
+  redbull: 'assets/team-cars/red_bull.png',
+  aston_martin: 'assets/team-cars/aston_martin.png',
+  alpine: 'assets/team-cars/alpine.png',
+  williams: 'assets/team-cars/williams.png',
+  rb: 'assets/team-cars/rb.png',
+  racing_bulls: 'assets/team-cars/rb.png',
+  haas: 'assets/team-cars/haas.png',
+  audi: 'assets/team-cars/audi.png',
+  cadillac: 'assets/team-cars/cadillac.png'
+};
+const TEAM_CAR_ASSET_VERSION = '20260722-clean-full-cars';
 
 const TEAM_LOGO_LABELS = {
   ferrari: 'Ferrari',
@@ -265,6 +303,17 @@ const EXTERNAL_ODDS_PREVIEWS = {
       { name: 'Sergio Perez', percent: 0.2, odds: '500/1' },
       { name: 'Lance Stroll', percent: 0.2, odds: '500/1' },
       { name: 'Fernando Alonso', percent: 0.2, odds: '500/1' }
+    ]
+  },
+  'Hungary|2026': {
+    source: 'OddsChecker Hungarian Grand Prix winner market',
+    url: 'https://www.oddschecker.com/motorsport/formula-1/hungarian-grand-prix/winner',
+    note: 'Best American odds from OddsChecker converted to implied win probability.',
+    rows: [
+      { name: 'Kimi Antonelli', percent: 36.4, odds: '+175' },
+      { name: 'Lewis Hamilton', percent: 20.0, odds: '+400' },
+      { name: 'Charles Leclerc', percent: 18.2, odds: '+450' },
+      { name: 'George Russell', percent: 14.3, odds: '+600' }
     ]
   }
 };
@@ -752,6 +801,60 @@ const STARTING_GRID_OVERRIDES = {
       makeGridResult('21', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '14', q3: '1:33.025' }),
       makeGridResult('22', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', q3: '1:32.863' })
     ]
+  },
+  '10': {
+    raceName: 'Belgian Grand Prix',
+    sourceUrl: 'https://www.formula1.com/en/results/2026/races/1290/belgium/qualifying',
+    startingGridSourceUrl: 'https://www.formula1.com/en/results/2026/races/1290/belgium/starting-grid',
+    note: 'Official F1 qualifying results. Alonso, Hadjar, Stroll, and Sainz started from the back after additional power unit elements; Norris started from the pit lane after Parc Ferme changes.',
+    rows: [
+      makeGridResult('1', { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '12', q1: '1:44.829', q2: '1:44.218', q3: '1:43.305', laps: '17' }),
+      makeGridResult('2', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '3', q1: '1:44.918', q2: '1:43.635', q3: '1:43.768', laps: '14' }),
+      makeGridResult('3', { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '1', q1: '1:43.754', q2: '1:44.283', q3: '1:44.360', laps: '18' }),
+      makeGridResult('4', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '63', q1: '1:45.306', q2: '1:44.632', q3: '1:44.498', laps: '17' }),
+      makeGridResult('5', { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '16', q1: '1:45.564', q2: '1:44.595', q3: '1:44.501', laps: '17' }),
+      makeGridResult('6', { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '44', q1: '1:44.581', q2: '1:44.863', q3: '1:44.531', laps: '18' }),
+      makeGridResult('7', { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '81', q1: '1:44.945', q2: '1:44.964', q3: '1:44.543', laps: '20' }),
+      makeGridResult('8', { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '10', q1: '1:45.744', q2: '1:44.793', q3: '1:45.126', laps: '21' }),
+      makeGridResult('9', { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, { number: '5', q1: '1:45.528', q2: '1:45.102', q3: '1:45.273', laps: '22' }),
+      makeGridResult('10', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, { number: '27', q1: '1:44.772', q2: '1:45.224', q3: '1:45.871', laps: '18' }),
+      makeGridResult('11', { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '87', q1: '1:46.073', q2: '1:45.577', q3: '', laps: '18' }),
+      makeGridResult('12', { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '6', q1: '1:45.879', q2: '1:45.685', q3: '', laps: '18' }),
+      makeGridResult('13', { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '30', q1: '1:45.886', q2: '1:46.092', q3: '', laps: '16' }),
+      makeGridResult('14', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, { number: '23', q1: '1:46.106', q2: '1:46.274', q3: '', laps: '18' }),
+      makeGridResult('15', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', q1: '1:46.123', q2: '1:46.447', q3: '', laps: '15' }),
+      makeGridResult('16', { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, { number: '55', q1: '1:46.179', q2: '', q3: '', laps: '11' }),
+      makeGridResult('17', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '14', q1: '1:46.270', q2: '', q3: '', laps: '10' }),
+      makeGridResult('18', { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '31', q1: '1:46.279', q2: '', q3: '', laps: '10' }),
+      makeGridResult('19', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '77', q1: '1:46.297', q2: '', q3: '', laps: '9' }),
+      makeGridResult('20', { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '43', q1: '1:46.402', q2: '', q3: '', laps: '7' }),
+      makeGridResult('21', { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '41', q1: '1:46.576', q2: '', q3: '', laps: '9' }),
+      makeGridResult('22', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '11', q1: '1:47.340', q2: '', q3: '', laps: '9' })
+    ],
+    startingGridRows: [
+      makeGridResult('1', { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '12', q3: '1:43.305' }),
+      makeGridResult('2', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '3', q3: '1:43.768' }),
+      makeGridResult('3', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '63', q3: '1:44.498' }),
+      makeGridResult('4', { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '16', q3: '1:44.501' }),
+      makeGridResult('5', { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '44', q3: '1:44.531' }),
+      makeGridResult('6', { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '81', q3: '1:44.543' }),
+      makeGridResult('7', { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '10', q3: '1:45.126' }),
+      makeGridResult('8', { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, { number: '5', q3: '1:45.273' }),
+      makeGridResult('9', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, { number: '27', q3: '1:45.871' }),
+      makeGridResult('10', { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '87', q3: '1:45.577' }),
+      makeGridResult('11', { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '30', q3: '1:46.092' }),
+      makeGridResult('12', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, { number: '23', q3: '1:46.274' }),
+      makeGridResult('13', { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '1', q3: '1:44.360' }),
+      makeGridResult('14', { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '31', q3: '1:46.279' }),
+      makeGridResult('15', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '77', q3: '1:46.297' }),
+      makeGridResult('16', { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '43', q3: '1:46.402' }),
+      makeGridResult('17', { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '41', q3: '1:46.576' }),
+      makeGridResult('18', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '11', q3: '1:47.340' }),
+      makeGridResult('19', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '14', q3: '1:46.270' }),
+      makeGridResult('20', { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '6', q3: '1:45.685' }),
+      makeGridResult('21', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', q3: '1:46.447' }),
+      makeGridResult('22', { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, { number: '55', q3: '1:46.179' })
+    ]
   }
 };
 
@@ -1118,24 +1221,51 @@ const RESULT_OVERRIDES = {
       makeResult('NC', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, 0, { grid: '16', laps: '43', status: 'DNF' }),
       makeResult('NC', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, 0, { grid: '12', laps: '36', status: 'DNF' })
     ]
+  },
+  '10': {
+    raceName: 'Belgian Grand Prix',
+    Results: [
+      makeResult('1', { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, 25, { grid: '1', laps: '44', status: '1:24:42.479' }),
+      makeResult('2', { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, 18, { grid: '4', laps: '44', status: '+1.952s' }),
+      makeResult('3', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, 15, { grid: '2', laps: '44', status: '+11.586s' }),
+      makeResult('4', { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, 12, { grid: '5', laps: '44', status: '+17.245s' }),
+      makeResult('5', { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, 10, { grid: '6', laps: '44', status: '+18.988s' }),
+      makeResult('6', { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, 8, { grid: '20', laps: '44', status: '+23.307s' }),
+      makeResult('7', { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, 6, { grid: '13', laps: '44', status: '+35.009s' }),
+      makeResult('8', { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, 4, { grid: '8', laps: '44', status: '+39.820s' }),
+      makeResult('9', { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, 2, { grid: '17', laps: '44', status: '+44.201s' }),
+      makeResult('10', { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, 1, { grid: '16', laps: '44', status: '+45.000s' }),
+      makeResult('11', { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, 0, { grid: '7', laps: '44', status: '+45.628s' }),
+      makeResult('12', { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, 0, { grid: '11', laps: '44', status: '+46.157s' }),
+      makeResult('13', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, 0, { grid: '9', laps: '44', status: '+46.514s' }),
+      makeResult('14', { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { grid: '10', laps: '43', status: '+1 lap' }),
+      makeResult('15', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, 0, { grid: '12', laps: '43', status: '+1 lap' }),
+      makeResult('16', { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, 0, { grid: '22', laps: '43', status: '+1 lap' }),
+      makeResult('17', { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { grid: '14', laps: '43', status: '+1 lap' }),
+      makeResult('18', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { grid: '15', laps: '43', status: '+1 lap' }),
+      makeResult('19', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { grid: '19', laps: '43', status: '+1 lap' }),
+      makeResult('NC', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { grid: '21', laps: '30', status: 'DNF' }),
+      makeResult('NC', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { grid: '18', laps: '19', status: 'DNF' }),
+      makeResult('NC', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, 0, { grid: '3', laps: '3', status: 'DNF' })
+    ]
   }
 };
 
 const CURRENT_DRIVER_POINTS = {
-  antonelli: { points: 158, wins: 5 },
-  hamilton: { points: 129, wins: 1 },
+  antonelli: { points: 183, wins: 6 },
+  hamilton: { points: 141, wins: 1 },
   russell: { points: 128, wins: 2 },
-  leclerc: { points: 87, wins: 1 },
-  norris: { points: 71, wins: 0 },
-  max_verstappen: { points: 67, wins: 0 },
-  piastri: { points: 65, wins: 0 },
-  hadjar: { points: 52, wins: 0 },
+  leclerc: { points: 105, wins: 1 },
+  max_verstappen: { points: 82, wins: 0 },
+  norris: { points: 77, wins: 0 },
+  piastri: { points: 75, wins: 0 },
+  hadjar: { points: 60, wins: 0 },
   gasly: { points: 41, wins: 0 },
   lawson: { points: 36, wins: 0 },
-  arvid_lindblad: { points: 19, wins: 0 },
-  colapinto: { points: 18, wins: 0 },
+  arvid_lindblad: { points: 21, wins: 0 },
+  colapinto: { points: 19, wins: 0 },
   bearman: { points: 17, wins: 0 },
-  bortoleto: { points: 6, wins: 0 },
+  bortoleto: { points: 10, wins: 0 },
   sainz: { points: 6, wins: 0 },
   albon: { points: 5, wins: 0 },
   ocon: { points: 3, wins: 0 },
@@ -1143,15 +1273,15 @@ const CURRENT_DRIVER_POINTS = {
 };
 
 const CURRENT_CONSTRUCTOR_POINTS = {
-  mercedes: { points: 286, wins: 7 },
-  ferrari: { points: 216, wins: 2 },
-  mclaren: { points: 136, wins: 0 },
-  red_bull: { points: 119, wins: 0 },
-  alpine: { points: 59, wins: 0 },
-  rb: { points: 55, wins: 0 },
+  mercedes: { points: 311, wins: 8 },
+  ferrari: { points: 246, wins: 2 },
+  mclaren: { points: 152, wins: 0 },
+  red_bull: { points: 142, wins: 0 },
+  alpine: { points: 60, wins: 0 },
+  rb: { points: 57, wins: 0 },
   haas: { points: 20, wins: 0 },
   williams: { points: 11, wins: 0 },
-  audi: { points: 6, wins: 0 },
+  audi: { points: 10, wins: 0 },
   aston_martin: { points: 1, wins: 0 },
   cadillac: { points: 0, wins: 0 }
 };
@@ -1169,6 +1299,10 @@ const state = {
   accountProfileSaving: false,
   accountProfileError: '',
   accountProfileMessage: '',
+  creatorDashboardLoading: false,
+  creatorDashboardError: '',
+  creatorProfiles: [],
+  creatorStakes: [],
   odds: {
     status: 'loading',
     raceRound: null,
@@ -1184,8 +1318,12 @@ const state = {
   firebaseVotes: {},
   firebaseUserVotes: {},
   firebasePointPredictions: [],
+  kimiPayoutStake: null,
   pointPredictionSubmitting: false,
   pointPredictionError: '',
+  kimiPayoutSubmitting: false,
+  kimiPayoutError: '',
+  kimiPayoutMessage: '',
   authReady: false,
   authUser: null,
   wallet: null,
@@ -1193,7 +1331,8 @@ const state = {
   voteMode: 'local',
   votesReady: false,
   firebaseUnsubscribers: [],
-  walletUnsubscribe: null
+  walletUnsubscribe: null,
+  payoutUnsubscribe: null
 };
 
 function makeResult(position, driver, constructor, points, details = {}) {
@@ -1272,6 +1411,11 @@ const els = {
   favoriteDriver: document.querySelector('#favoriteDriver'),
   accountPredictionsList: document.querySelector('#accountPredictionsList'),
   accountProfileError: document.querySelector('#accountProfileError'),
+  kimiPayoutCard: document.querySelector('#kimiPayoutCard'),
+  kimiPayoutBody: document.querySelector('#kimiPayoutBody'),
+  creatorDashboard: document.querySelector('#creatorDashboard'),
+  refreshCreatorDashboard: document.querySelector('#refreshCreatorDashboard'),
+  creatorDashboardBody: document.querySelector('#creatorDashboardBody'),
   voteRaceName: document.querySelector('#voteRaceName'),
   voteCategoryGrid: document.querySelector('#voteCategoryGrid'),
   votePicker: document.querySelector('#votePicker'),
@@ -1467,6 +1611,11 @@ function teamLogoHtml(constructor = {}) {
   `;
 }
 
+function teamCarImage(constructorId = '') {
+  const src = TEAM_CARS[String(constructorId).toLowerCase()] || '';
+  return src ? `${src}?v=${TEAM_CAR_ASSET_VERSION}` : '';
+}
+
 function driverTeam(driver = {}) {
   return state.drivers.find(item => item.Driver?.driverId === driver.driverId)?.Constructors?.[0] || {};
 }
@@ -1479,6 +1628,18 @@ function displayRaceName(race = {}) {
 
 function nextRace() {
   return state.races.find(race => raceBucket(race) === 'upcoming') || null;
+}
+
+function activePredictionRace() {
+  const now = new Date();
+  return state.races.find(race => {
+    const startsAt = dateValue(race);
+    return startsAt <= now && now - startsAt < PREDICTION_LOCK_HOLD_MS;
+  }) || nextRace();
+}
+
+function racePredictionsLocked(race = activePredictionRace()) {
+  return Boolean(race && dateValue(race) <= new Date());
 }
 
 function normalizeName(value = '') {
@@ -1528,7 +1689,7 @@ function voteUserId() {
 }
 
 function voteRaceKey() {
-  const race = nextRace();
+  const race = activePredictionRace();
   return race ? `${SEASON}-round-${race.round}` : `${SEASON}-next-race`;
 }
 
@@ -1597,6 +1758,62 @@ function accountPointPredictions() {
   return pointPredictions().filter(item => state.authUser && item.userId === state.authUser.uid);
 }
 
+function racePointPredictions() {
+  return pointPredictions();
+}
+
+function payoutProfitForStake(points, settlement = KIMI_WIN_SETTLEMENT) {
+  const stake = Math.max(0, Math.floor(Number(points) || 0));
+  return Math.floor((stake * settlement.oddsNumerator) / settlement.oddsDenominator);
+}
+
+function payoutReturnForStake(points, settlement = KIMI_WIN_SETTLEMENT) {
+  const stake = Math.max(0, Math.floor(Number(points) || 0));
+  return stake + payoutProfitForStake(stake, settlement);
+}
+
+function compactAccountKey(value = '') {
+  return String(value).toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function manualKimiStakeOverride() {
+  if (!state.authUser) return null;
+  const accountKeys = [
+    authUserName(),
+    state.wallet?.displayName,
+    state.authUser?.displayName,
+    state.authUser?.email?.split('@')[0]
+  ].map(compactAccountKey).filter(Boolean);
+
+  const override = MANUAL_KIMI_STAKE_OVERRIDES.find(item => {
+    const overrideKey = compactAccountKey(item.username);
+    return accountKeys.some(key => key === overrideKey);
+  });
+  if (!override) return null;
+
+  return {
+    id: `${state.authUser.uid}-${KIMI_WIN_SETTLEMENT.categoryId}`,
+    userId: state.authUser.uid,
+    categoryId: KIMI_WIN_SETTLEMENT.categoryId,
+    driverId: KIMI_WIN_SETTLEMENT.driverId,
+    voterName: authUserName(),
+    points: normalizePredictionPoints(override.points),
+    raceKey: KIMI_WIN_SETTLEMENT.raceKey,
+    manualStake: true,
+    creditMode: override.creditMode,
+    overrideNote: override.note
+  };
+}
+
+function kimiWinStake() {
+  const savedStake = accountPointPredictions().find(item => (
+    item.raceKey === KIMI_WIN_SETTLEMENT.raceKey
+    && item.categoryId === KIMI_WIN_SETTLEMENT.categoryId
+    && item.driverId === KIMI_WIN_SETTLEMENT.driverId
+  )) || state.kimiPayoutStake || null;
+  return savedStake || manualKimiStakeOverride();
+}
+
 function saveLocalPointPrediction(prediction) {
   const store = readVoteStore();
   const raceKey = voteRaceKey();
@@ -1611,6 +1828,7 @@ function saveLocalPointPrediction(prediction) {
     driverId: prediction.driverId,
     voterName: sanitizePredictionName(prediction.voterName),
     points: normalizePredictionPoints(prediction.points),
+    raceKey,
     updatedAt: Date.now()
   };
   store[raceKey].pointPredictions = [
@@ -1671,6 +1889,10 @@ function authUserName() {
   return state.wallet?.displayName || state.authUser?.displayName || state.authUser?.email?.split('@')[0] || 'F1 fan';
 }
 
+function isCreator() {
+  return Boolean(CREATOR_UID && state.authUser?.uid === CREATOR_UID);
+}
+
 function authErrorMessage(error) {
   const code = error?.code || '';
   if (code.includes('email-already-in-use')) return 'That email already has an account. Try signing in.';
@@ -1716,6 +1938,75 @@ function constructorOptionHtml(row, selectedId = '') {
 function selectedProfileDriver() {
   const driverId = state.wallet?.profileDriverId || state.wallet?.favoriteDriverId || state.drivers[0]?.Driver?.driverId || '';
   return state.drivers.find(row => row.Driver?.driverId === driverId)?.Driver || state.drivers[0]?.Driver || null;
+}
+
+function driverLabelById(driverId = '') {
+  const row = state.drivers.find(item => item.Driver?.driverId === driverId);
+  return row ? `${driverFlag(row.Driver)} ${driverName(row.Driver)}` : (driverId || 'TBC');
+}
+
+function teamLabelById(constructorId = '') {
+  const row = teamProfileRows().find(item => item.constructor?.constructorId === constructorId);
+  return row ? constructorName(row.constructor) : (constructorId || 'TBC');
+}
+
+function categoryLabelById(categoryId = '') {
+  return POINT_PREDICTION_CATEGORIES.find(category => category.id === categoryId)?.title || categoryId || 'TBC';
+}
+
+function renderCreatorDashboard() {
+  if (!els.creatorDashboard || !els.creatorDashboardBody) return;
+  const creator = isCreator();
+  els.creatorDashboard.hidden = !creator;
+  if (!creator) return;
+
+  if (els.refreshCreatorDashboard) {
+    els.refreshCreatorDashboard.disabled = state.creatorDashboardLoading;
+    els.refreshCreatorDashboard.textContent = state.creatorDashboardLoading ? 'Loading...' : 'Refresh';
+  }
+
+  if (state.creatorDashboardError) {
+    els.creatorDashboardBody.innerHTML = `<p class="account-error">${escapeHtml(state.creatorDashboardError)}</p>`;
+    return;
+  }
+
+  const stakesByUser = state.creatorStakes.reduce((map, stake) => {
+    map[stake.userId] ||= [];
+    map[stake.userId].push(stake);
+    return map;
+  }, {});
+
+  els.creatorDashboardBody.innerHTML = state.creatorProfiles.length ? state.creatorProfiles.map(profile => {
+    const uid = profile.id;
+    const stakes = stakesByUser[uid] || [];
+    return `
+      <article class="creator-user-card">
+        <div class="creator-user-head">
+          <span>
+            <strong>${escapeHtml(profile.displayName || 'F1 fan')}</strong>
+            <small>${uid === state.authUser?.uid ? 'Creator account' : 'Signed-in user'}</small>
+          </span>
+          <b>${escapeHtml(formatF1Bucks(profile.f1BucksBalance))}</b>
+        </div>
+        <div class="creator-profile-grid">
+          <span><small>Profile picture</small><strong>${escapeHtml(driverLabelById(profile.profileDriverId))}</strong></span>
+          <span><small>Favorite racer</small><strong>${escapeHtml(driverLabelById(profile.favoriteDriverId))}</strong></span>
+          <span><small>Favorite team</small><strong>${escapeHtml(teamLabelById(profile.favoriteTeamId))}</strong></span>
+        </div>
+        <div class="creator-stake-list">
+          ${stakes.length ? stakes.map(stake => `
+            <div class="creator-stake-row">
+              <span>
+                <strong>${escapeHtml(categoryLabelById(stake.categoryId))}</strong>
+                <small>${escapeHtml(driverLabelById(stake.driverId))} · Round ${escapeHtml(stake.raceKey || 'TBC')}</small>
+              </span>
+              <b>${escapeHtml(formatF1Bucks(stake.points))}</b>
+            </div>
+          `).join('') : '<p class="empty-state">No stakes placed.</p>'}
+        </div>
+      </article>
+    `;
+  }).join('') : '<p class="empty-state">No signed-in user profiles found yet.</p>';
 }
 
 function renderAccountPage() {
@@ -1789,6 +2080,40 @@ function renderAccountPage() {
       </div>
     `;
   }).join('') : `<p class="empty-state">${signedIn ? 'No F1 Bucks predictions placed yet.' : 'Sign in to see your predictions.'}</p>`;
+
+  if (els.kimiPayoutCard && els.kimiPayoutBody) {
+    const stake = signedIn ? kimiWinStake() : null;
+    const stakeAmount = Number(stake?.points) || 0;
+    const profit = payoutProfitForStake(stakeAmount);
+    const savedCredit = Number(stake?.payoutReturn) || 0;
+    const creditAmount = savedCredit || (stake?.creditMode === 'profit_only' ? profit : payoutReturnForStake(stakeAmount));
+    const settled = Boolean(stake?.settledAt || stake?.payoutReturn);
+    const message = state.kimiPayoutError || state.kimiPayoutMessage;
+    const note = stake?.payoutNote || (stake?.creditMode === 'profit_only'
+      ? 'Manual correction: this stake was not saved live, so claiming credits profit only.'
+      : 'Since your stake was already deducted, claiming adds stake plus profit back to your balance.');
+    els.kimiPayoutCard.hidden = !signedIn;
+    els.kimiPayoutBody.innerHTML = stake ? `
+      <div class="payout-summary-grid">
+        <span><small>Race</small><strong>${escapeHtml(KIMI_WIN_SETTLEMENT.raceName)}</strong></span>
+        <span><small>Winning pick</small><strong>${escapeHtml(KIMI_WIN_SETTLEMENT.winnerName)}</strong></span>
+        <span><small>Odds</small><strong>${escapeHtml(KIMI_WIN_SETTLEMENT.oddsLabel)}</strong></span>
+        <span><small>Your stake</small><strong>${escapeHtml(formatF1Bucks(stakeAmount))}</strong></span>
+        <span><small>Profit</small><strong>${escapeHtml(formatF1Bucks(profit))}</strong></span>
+        <span><small>Credit amount</small><strong>${escapeHtml(formatF1Bucks(creditAmount))}</strong></span>
+      </div>
+      <p class="payout-note">Using ${escapeHtml(KIMI_WIN_SETTLEMENT.source)}. ${escapeHtml(note)}</p>
+      <button class="account-payout-button" id="claimKimiPayout" type="button" ${state.kimiPayoutSubmitting || settled || state.voteMode !== 'firebase' ? 'disabled' : ''}>
+        ${state.kimiPayoutSubmitting ? 'Crediting...' : (settled ? 'Payout credited' : `Claim ${formatF1Bucks(creditAmount)}`)}
+      </button>
+      ${message ? `<p class="account-error ${state.kimiPayoutMessage && !state.kimiPayoutError ? 'is-success' : ''}">${escapeHtml(message)}</p>` : ''}
+    ` : `
+      <p class="empty-state">No eligible Kimi Antonelli race-winner stake found for ${escapeHtml(KIMI_WIN_SETTLEMENT.raceName)}.</p>
+      ${message ? `<p class="account-error ${state.kimiPayoutMessage && !state.kimiPayoutError ? 'is-success' : ''}">${escapeHtml(message)}</p>` : ''}
+    `;
+  }
+
+  renderCreatorDashboard();
 }
 
 function handleFirebaseVotingError(error) {
@@ -1814,6 +2139,8 @@ async function initializeFirebaseVotes() {
       getFirestore,
       doc,
       collection,
+      collectionGroup,
+      getDocs,
       onSnapshot,
       runTransaction,
       setDoc,
@@ -1825,12 +2152,15 @@ async function initializeFirebaseVotes() {
       createUserWithEmailAndPassword,
       signInWithEmailAndPassword,
       signOut: firebaseSignOut,
-      updateProfile
+      updateProfile,
+      setPersistence,
+      browserLocalPersistence
     } = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-auth.js`);
 
     const app = initializeApp(window.F1_FIREBASE_CONFIG);
     const db = getFirestore(app);
     const auth = getAuth(app);
+    await setPersistence(auth, browserLocalPersistence);
 
     async function ensureUserWallet(user) {
       if (!user) return;
@@ -1880,6 +2210,97 @@ async function initializeFirebaseVotes() {
         }, { merge: true });
       },
 
+      async settleKimiWinPayout() {
+        const user = auth.currentUser;
+        if (!user) throw new Error('Sign in to claim your payout.');
+
+        const predictionId = `${user.uid}-${KIMI_WIN_SETTLEMENT.categoryId}`;
+        const walletRef = doc(db, 'users', user.uid);
+        const predictionRef = doc(db, 'raceVotes', KIMI_WIN_SETTLEMENT.raceKey, 'f1BuckStakes', predictionId);
+
+        await runTransaction(db, async transaction => {
+          const walletSnapshot = await transaction.get(walletRef);
+          const predictionSnapshot = await transaction.get(predictionRef);
+          const manualStake = manualKimiStakeOverride();
+          const prediction = predictionSnapshot.exists() ? predictionSnapshot.data() : manualStake;
+          if (!prediction) throw new Error('No matching Kimi win stake found.');
+
+          const missingSavedStake = !predictionSnapshot.exists();
+          if (!missingSavedStake && prediction.userId !== user.uid) throw new Error('This stake belongs to another account.');
+          if (prediction.categoryId !== KIMI_WIN_SETTLEMENT.categoryId || prediction.driverId !== KIMI_WIN_SETTLEMENT.driverId) {
+            throw new Error('Only the Kimi race-winner stake can be settled here.');
+          }
+          if (!missingSavedStake && (prediction.settledAt || prediction.payoutReturn)) {
+            throw new Error('This Kimi win payout was already credited.');
+          }
+
+          const stakeAmount = Math.max(0, Math.floor(Number(prediction.points) || 0));
+          const profit = payoutProfitForStake(stakeAmount);
+          const payoutCredit = prediction.creditMode === 'profit_only' ? profit : stakeAmount + profit;
+          const currentBalance = walletSnapshot.exists()
+            ? Number(walletSnapshot.data().f1BucksBalance) || 0
+            : STARTING_F1_BUCKS;
+
+          transaction.set(walletRef, {
+            email: user.email || '',
+            displayName: user.displayName || authUserName(),
+            f1BucksBalance: currentBalance + payoutCredit,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+
+          transaction.set(predictionRef, {
+            userId: user.uid,
+            categoryId: KIMI_WIN_SETTLEMENT.categoryId,
+            driverId: KIMI_WIN_SETTLEMENT.driverId,
+            voterName: prediction.voterName || authUserName(),
+            points: stakeAmount,
+            raceKey: KIMI_WIN_SETTLEMENT.raceKey,
+            settledAt: serverTimestamp(),
+            settledResult: `${KIMI_WIN_SETTLEMENT.winnerName} win`,
+            payoutOdds: KIMI_WIN_SETTLEMENT.oddsLabel,
+            payoutProfit: profit,
+            payoutReturn: payoutCredit,
+            payoutSource: KIMI_WIN_SETTLEMENT.source,
+            payoutNote: missingSavedStake ? manualStake.overrideNote : 'Saved stake settled.',
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+        });
+      },
+
+      async loadCreatorDashboard() {
+        const user = auth.currentUser;
+        if (!user || user.uid !== CREATOR_UID) throw new Error('Creator access only.');
+        const [usersSnapshot, stakesSnapshot] = await Promise.all([
+          getDocs(collection(db, 'users')),
+          getDocs(collectionGroup(db, 'f1BuckStakes'))
+        ]);
+
+        state.creatorProfiles = usersSnapshot.docs.map(userDoc => {
+          const data = userDoc.data();
+          return {
+            id: userDoc.id,
+            displayName: data.displayName || 'F1 fan',
+            f1BucksBalance: Number(data.f1BucksBalance) || 0,
+            profileDriverId: data.profileDriverId || '',
+            favoriteTeamId: data.favoriteTeamId || '',
+            favoriteDriverId: data.favoriteDriverId || ''
+          };
+        }).sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+        state.creatorStakes = stakesSnapshot.docs.map(stakeDoc => {
+          const data = stakeDoc.data();
+          return {
+            id: stakeDoc.id,
+            raceKey: data.raceKey || stakeDoc.ref.parent.parent?.id || '',
+            userId: data.userId || '',
+            categoryId: data.categoryId || '',
+            driverId: data.driverId || '',
+            points: Number(data.points) || 0,
+            updatedAt: data.updatedAt?.toMillis?.() || 0
+          };
+        }).sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
+      },
+
       async signOut() {
         await firebaseSignOut(auth);
       }
@@ -1890,6 +2311,10 @@ async function initializeFirebaseVotes() {
         state.walletUnsubscribe();
         state.walletUnsubscribe = null;
       }
+      if (state.payoutUnsubscribe) {
+        state.payoutUnsubscribe();
+        state.payoutUnsubscribe = null;
+      }
 
       state.authReady = true;
       state.authError = '';
@@ -1899,8 +2324,10 @@ async function initializeFirebaseVotes() {
         displayName: user.displayName || ''
       } : null;
       state.wallet = null;
+      state.kimiPayoutStake = null;
 
       if (!user) {
+        window.F1FirebaseVotes?.listen(voteRaceKey());
         renderAccountPanel();
         renderAccountPage();
         renderVotingPanel();
@@ -1909,15 +2336,28 @@ async function initializeFirebaseVotes() {
 
       try {
         await ensureUserWallet(user);
+        window.F1FirebaseVotes?.listen(voteRaceKey());
         state.walletUnsubscribe = onSnapshot(doc(db, 'users', user.uid), snapshot => {
           state.wallet = snapshot.exists() ? snapshot.data() : null;
           renderAccountPanel();
           renderAccountPage();
           renderVotingPanel();
+          if (isCreator()) loadCreatorDashboard();
         }, error => {
           console.warn('Firebase wallet unavailable.', error);
           state.authError = 'Wallet could not load. Check Firebase users rules.';
           renderAccountPanel();
+        });
+        const kimiStakeRef = doc(db, 'raceVotes', KIMI_WIN_SETTLEMENT.raceKey, 'f1BuckStakes', `${user.uid}-${KIMI_WIN_SETTLEMENT.categoryId}`);
+        state.payoutUnsubscribe = onSnapshot(kimiStakeRef, snapshot => {
+          state.kimiPayoutStake = snapshot.exists()
+            ? { id: snapshot.id, ...snapshot.data() }
+            : null;
+          renderAccountPage();
+        }, error => {
+          console.warn('Kimi payout stake unavailable.', error);
+          state.kimiPayoutError = 'Kimi payout stake could not load. Check Firebase f1BuckStakes rules.';
+          renderAccountPage();
         });
       } catch (error) {
         console.warn('Firebase wallet setup failed.', error);
@@ -1937,7 +2377,8 @@ async function initializeFirebaseVotes() {
 
         const totalsRef = collection(db, 'raceVotes', raceKey, 'categories');
         const userRef = collection(db, 'raceVotes', raceKey, 'users', voteUserId(), 'categories');
-        const pointPredictionsRef = collection(db, 'raceVotes', raceKey, 'f1BuckStakes');
+        const stakesRef = collection(db, 'raceVotes', raceKey, 'f1BuckStakes');
+        const pointPredictionsRef = auth.currentUser ? stakesRef : null;
 
         const onFirebaseSnapshotError = error => {
           state.firebaseUnsubscribers.forEach(unsubscribe => unsubscribe());
@@ -1959,14 +2400,20 @@ async function initializeFirebaseVotes() {
           renderVotingPanel();
         }, onFirebaseSnapshotError));
 
-        state.firebaseUnsubscribers.push(onSnapshot(pointPredictionsRef, snapshot => {
-          state.firebasePointPredictions = snapshot.docs.map(predictionDoc => ({
-            id: predictionDoc.id,
-            ...predictionDoc.data()
-          }));
+        if (pointPredictionsRef) {
+          state.firebaseUnsubscribers.push(onSnapshot(pointPredictionsRef, snapshot => {
+            state.firebasePointPredictions = snapshot.docs.map(predictionDoc => ({
+              id: predictionDoc.id,
+              ...predictionDoc.data()
+            }));
+            renderVotingPanel();
+            renderAccountPage();
+          }, onFirebaseSnapshotError));
+        } else {
+          state.firebasePointPredictions = [];
           renderVotingPanel();
           renderAccountPage();
-        }, onFirebaseSnapshotError));
+        }
       },
 
       async saveVote(raceKey, categoryId, driverId, userId) {
@@ -1990,9 +2437,9 @@ async function initializeFirebaseVotes() {
         });
 
         await setDoc(doc(db, 'raceVotes', raceKey), {
-          season: SEASON,
-          raceKey,
-          updatedAt: serverTimestamp()
+        season: SEASON,
+        raceKey,
+        updatedAt: serverTimestamp()
         }, { merge: true });
       },
 
@@ -2032,6 +2479,7 @@ async function initializeFirebaseVotes() {
             driverId: prediction.driverId,
             voterName: prediction.voterName,
             points: prediction.points,
+            raceKey,
             updatedAt: serverTimestamp()
           }, { merge: true });
         });
@@ -2049,6 +2497,31 @@ async function initializeFirebaseVotes() {
     window.F1FirebaseVotes.listen(voteRaceKey());
   } catch (error) {
     handleFirebaseVotingError(error);
+  }
+}
+
+async function loadCreatorDashboard() {
+  if (!isCreator()) {
+    renderCreatorDashboard();
+    return;
+  }
+  if (!window.F1FirebaseAccount?.loadCreatorDashboard) {
+    state.creatorDashboardError = 'Creator dashboard is still connecting.';
+    renderCreatorDashboard();
+    return;
+  }
+
+  state.creatorDashboardLoading = true;
+  state.creatorDashboardError = '';
+  renderCreatorDashboard();
+  try {
+    await window.F1FirebaseAccount.loadCreatorDashboard();
+  } catch (error) {
+    console.warn('Creator dashboard unavailable.', error);
+    state.creatorDashboardError = 'Creator dashboard could not load. Check CREATOR_UID and Firebase rules.';
+  } finally {
+    state.creatorDashboardLoading = false;
+    renderCreatorDashboard();
   }
 }
 
@@ -3051,6 +3524,7 @@ function resultRowsHtml(results = []) {
 }
 
 function voteCategoryCard(category) {
+  const locked = racePredictionsLocked();
   const data = getVoteCategory(category.id);
   const results = voteResults(category.id);
   const userDriver = data.userVote
@@ -3082,7 +3556,7 @@ function voteCategoryCard(category) {
         <h4>${escapeHtml(category.title)}</h4>
       </div>
       ${resultHtml}
-      <button class="vote-open" type="button" data-vote-category="${escapeHtml(category.id)}">${data.userVote ? 'Change vote' : 'Vote'}</button>
+      <button class="vote-open" type="button" data-vote-category="${escapeHtml(category.id)}" ${locked ? 'disabled' : ''}>${locked ? 'Locked' : (data.userVote ? 'Change vote' : 'Vote')}</button>
     </article>
   `;
 }
@@ -3132,10 +3606,14 @@ function renderVotePicker() {
 
 function renderPointPredictionPanel() {
   if (!els.pointsPredictionForm) return;
+  const race = activePredictionRace();
+  const locked = racePredictionsLocked(race);
   const drivers = voteDrivers();
-  const modeLabel = state.voteMode === 'firebase' ? 'Live Firebase F1 Bucks board' : 'Local preview F1 Bucks board';
+  const modeLabel = locked
+    ? 'Stakes locked - race started'
+    : (state.voteMode === 'firebase' ? 'Live Firebase F1 Bucks board' : 'Local preview F1 Bucks board');
   const needsSignIn = state.voteMode === 'firebase' && !state.authUser;
-  const predictions = accountPointPredictions()
+  const predictions = racePointPredictions()
     .map(item => {
       const row = drivers.find(driverRow => driverRow.Driver?.driverId === item.driverId);
       return row ? { ...item, row } : null;
@@ -3154,10 +3632,14 @@ function renderPointPredictionPanel() {
   els.pointsPredictionCategory.value = selectedCategory;
   els.pointsPredictionDriver.value = selectedDriver;
 
-  els.pointsPredictionForm.querySelector('.points-prediction-submit').disabled = state.pointPredictionSubmitting || !drivers.length || needsSignIn;
+  els.pointsPredictionCategory.disabled = locked || state.pointPredictionSubmitting;
+  els.pointsPredictionDriver.disabled = locked || state.pointPredictionSubmitting;
+  els.pointsPredictionPoints.disabled = locked || state.pointPredictionSubmitting;
+
+  els.pointsPredictionForm.querySelector('.points-prediction-submit').disabled = state.pointPredictionSubmitting || !drivers.length || needsSignIn || locked;
   els.pointsPredictionForm.querySelector('.points-prediction-submit').textContent = state.pointPredictionSubmitting
     ? 'Saving...'
-    : (needsSignIn ? 'Sign in to stake' : 'Submit F1 Bucks');
+    : (locked ? 'Stakes closed' : (needsSignIn ? 'Sign in to stake' : 'Submit F1 Bucks'));
 
   els.pointsPredictionError.hidden = !state.pointPredictionError;
   els.pointsPredictionError.textContent = state.pointPredictionError;
@@ -3185,13 +3667,14 @@ function renderPointPredictionPanel() {
 
   els.pointsPredictionList.innerHTML = `
     <div class="points-prediction-status">${escapeHtml(modeLabel)}</div>
+    ${locked && race ? `<p class="empty-state">Stakes closed when ${escapeHtml(displayRaceName(race))} started. Saved stakes stay visible below.</p>` : ''}
     ${needsSignIn ? '<p class="empty-state">Sign in with email to use your F1 Bucks wallet.</p>' : ''}
     ${groupedHtml}
   `;
 }
 
 function renderVotingPanel() {
-  const race = nextRace();
+  const race = activePredictionRace();
   if (!els.nextRaceVotePanel) return;
   if (!race || !state.drivers.length) {
     els.voteRaceName.textContent = 'Waiting for next race';
@@ -3201,7 +3684,14 @@ function renderVotingPanel() {
     return;
   }
 
-  const modeLabel = state.voteMode === 'firebase' ? 'Shared live voting' : 'Local preview voting';
+  const locked = racePredictionsLocked(race);
+  const modeLabel = locked
+    ? 'Predictions locked - race started'
+    : (state.voteMode === 'firebase' ? 'Shared live voting' : 'Local preview voting');
+  if (locked) {
+    state.activeVoteCategory = null;
+    state.pendingVoteDriverId = null;
+  }
   els.voteRaceName.textContent = `${displayRaceName(race)} · Round ${race.round} · ${modeLabel}`;
   els.voteCategoryGrid.innerHTML = VOTE_CATEGORIES.map(voteCategoryCard).join('');
   renderVotePicker();
@@ -3349,25 +3839,32 @@ function teamDrivers(constructorId = '') {
 function renderTeamProfiles() {
   if (!els.teamProfileGrid) return;
   const rows = teamProfileRows();
-  els.teamProfileGrid.innerHTML = rows.length ? rows.map(row => {
+  els.teamProfileGrid.innerHTML = rows.length ? rows.map((row, index) => {
     const id = row.constructor.constructorId;
     const color = teamColor(id);
     const drivers = teamDrivers(id);
+    const carImage = teamCarImage(id);
+    const carHtml = carImage
+      ? `<img class="team-profile-car" src="${escapeHtml(carImage)}" alt="${escapeHtml(constructorName(row.constructor))} 2026 car" loading="lazy">`
+      : '';
     return `
-      <article class="team-profile-card" style="--team-color: ${color}; --profile-text: ${readableTextColor(color)}; --profile-muted: ${readableMutedColor(color)}">
-        <div class="team-profile-top">
-          <div class="team-profile-logo">${teamLogoHtml(row.constructor)}</div>
-          <div>
-            <span class="profile-meta">Constructor rank ${escapeHtml(row.rank)}</span>
-            <strong>${escapeHtml(constructorName(row.constructor))}</strong>
-            <p>${escapeHtml(row.points)} championship points · ${escapeHtml(row.wins)} wins</p>
+      <article class="team-profile-card ${index % 2 ? 'is-offset' : ''}" style="--team-color: ${color}; --profile-text: ${readableTextColor(color)}; --profile-muted: ${readableMutedColor(color)}">
+        <div class="team-profile-content">
+          <div class="team-profile-top">
+            <div class="team-profile-logo">${teamLogoHtml(row.constructor)}</div>
+            <div>
+              <span class="profile-meta">Constructor rank ${escapeHtml(row.rank)}</span>
+              <strong>${escapeHtml(constructorName(row.constructor))}</strong>
+              <p>${escapeHtml(row.points)} championship points · ${escapeHtml(row.wins)} wins</p>
+            </div>
+          </div>
+          <div class="team-profile-drivers" aria-label="${escapeHtml(constructorName(row.constructor))} drivers">
+            ${drivers.length ? drivers.map(driver => `
+              <span>${driverFlag(driver)} ${escapeHtml(driverName(driver))}</span>
+            `).join('') : '<span>Drivers TBC</span>'}
           </div>
         </div>
-        <div class="team-profile-drivers" aria-label="${escapeHtml(constructorName(row.constructor))} drivers">
-          ${drivers.length ? drivers.map(driver => `
-            <span>${driverFlag(driver)} ${escapeHtml(driverName(driver))}</span>
-          `).join('') : '<span>Drivers TBC</span>'}
-        </div>
+        ${carHtml}
       </article>
     `;
   }).join('') : `
@@ -3600,6 +4097,37 @@ els.accountPageSignOut?.addEventListener('click', async () => {
   renderAccountPage();
 });
 
+els.refreshCreatorDashboard?.addEventListener('click', loadCreatorDashboard);
+
+els.accountPage?.addEventListener('click', async event => {
+  if (!event.target.closest('#claimKimiPayout')) return;
+  if (state.kimiPayoutSubmitting) return;
+  if (!state.authUser || !window.F1FirebaseAccount?.settleKimiWinPayout) {
+    state.kimiPayoutError = 'Sign in before claiming the Kimi payout.';
+    state.kimiPayoutMessage = '';
+    renderAccountPage();
+    return;
+  }
+
+  state.kimiPayoutSubmitting = true;
+  state.kimiPayoutError = '';
+  state.kimiPayoutMessage = '';
+  renderAccountPage();
+
+  try {
+    await window.F1FirebaseAccount.settleKimiWinPayout();
+    state.kimiPayoutMessage = 'Kimi win payout credited to your F1 Bucks balance.';
+  } catch (error) {
+    console.error(error);
+    state.kimiPayoutError = error?.code?.includes('permission-denied') || error?.message?.toLowerCase?.().includes('permission')
+      ? 'Firebase rules are blocking your wallet payout. Publish the F1 Bucks payout rules from FIREBASE_SETUP.md, then refresh and claim again.'
+      : (error?.message || 'Kimi payout could not be credited. Check Firebase rules, then try again.');
+  } finally {
+    state.kimiPayoutSubmitting = false;
+    renderAccountPage();
+  }
+});
+
 els.accountPreferencesForm?.addEventListener('submit', async event => {
   event.preventDefault();
   if (state.accountProfileSaving) return;
@@ -3650,6 +4178,11 @@ els.refreshNews.addEventListener('click', loadNews);
 els.nextRaceVotePanel?.addEventListener('click', async event => {
   const openButton = event.target.closest('[data-vote-category]');
   if (openButton) {
+    if (racePredictionsLocked()) {
+      state.voteError = 'Predictions are locked because the race has started.';
+      renderVotingPanel();
+      return;
+    }
     state.activeVoteCategory = openButton.dataset.voteCategory;
     state.pendingVoteDriverId = getVoteCategory(state.activeVoteCategory).userVote;
     state.voteError = '';
@@ -3669,6 +4202,11 @@ els.nextRaceVotePanel?.addEventListener('click', async event => {
 
   if (event.target.closest('.vote-submit')) {
     if (!state.activeVoteCategory || !state.pendingVoteDriverId || state.voteSubmitting) return;
+    if (racePredictionsLocked()) {
+      state.voteError = 'Predictions are locked because the race has started.';
+      renderVotingPanel();
+      return;
+    }
     state.voteSubmitting = true;
     state.voteError = '';
     renderVotingPanel();
@@ -3703,6 +4241,12 @@ els.pointsPredictionForm?.addEventListener('submit', async event => {
   const categoryId = els.pointsPredictionCategory.value;
   const driverId = els.pointsPredictionDriver.value;
   const points = normalizePredictionPoints(els.pointsPredictionPoints.value);
+
+  if (racePredictionsLocked()) {
+    state.pointPredictionError = 'Stakes are closed because the race has started. Saved stakes are still visible.';
+    renderPointPredictionPanel();
+    return;
+  }
 
   if (state.voteMode === 'firebase' && !state.authUser) {
     state.pointPredictionError = 'Sign in before staking F1 Bucks live.';
@@ -3749,3 +4293,7 @@ loadSeasonData()
     initializeFirebaseVotes();
   });
 loadNews();
+
+window.setInterval(() => {
+  renderVotingPanel();
+}, 60 * 1000);

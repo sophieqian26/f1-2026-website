@@ -236,7 +236,8 @@ const OFFICIAL_F1_RACE_PAGES = {
   '7': { id: '1287', slug: 'barcelona-catalunya' },
   '8': { id: '1288', slug: 'austria' },
   '9': { id: '1289', slug: 'great-britain' },
-  '10': { id: '1290', slug: 'belgium' }
+  '10': { id: '1290', slug: 'belgium' },
+  '11': { id: '1291', slug: 'hungary' }
 };
 
 const NEWS_IMAGE_FALLBACKS = [
@@ -1324,6 +1325,10 @@ const state = {
   kimiPayoutSubmitting: false,
   kimiPayoutError: '',
   kimiPayoutMessage: '',
+  chatMessages: [],
+  chatSubmitting: false,
+  chatError: '',
+  chatReady: false,
   authReady: false,
   authUser: null,
   wallet: null,
@@ -1332,7 +1337,8 @@ const state = {
   votesReady: false,
   firebaseUnsubscribers: [],
   walletUnsubscribe: null,
-  payoutUnsubscribe: null
+  payoutUnsubscribe: null,
+  chatUnsubscribe: null
 };
 
 function makeResult(position, driver, constructor, points, details = {}) {
@@ -1434,10 +1440,17 @@ const els = {
   quoteGrid: document.querySelector('#quoteGrid'),
   newsGrid: document.querySelector('#newsGrid'),
   refreshNews: document.querySelector('#refreshNews'),
+  chatStatus: document.querySelector('#chatStatus'),
+  chatMessages: document.querySelector('#chatMessages'),
+  chatForm: document.querySelector('#chatForm'),
+  chatInput: document.querySelector('#chatInput'),
+  chatCount: document.querySelector('#chatCount'),
+  chatSubmit: document.querySelector('#chatSubmit'),
+  chatError: document.querySelector('#chatError'),
   lastUpdated: document.querySelector('#lastUpdated')
 };
 
-const PAGE_IDS = ['home', 'next-race', 'schedule', 'race-detail', 'standings', 'account', 'profiles', 'news', 'wisdom'];
+const PAGE_IDS = ['home', 'next-race', 'schedule', 'race-detail', 'standings', 'account', 'profiles', 'news', 'chat', 'wisdom'];
 
 function pageFromHash() {
   const hash = window.location.hash.replace('#', '');
@@ -2116,20 +2129,83 @@ function renderAccountPage() {
   renderCreatorDashboard();
 }
 
+function chatTimestampLabel(value) {
+  const date = value?.toDate?.() || (value ? new Date(value) : null);
+  if (!date || Number.isNaN(date.getTime())) return 'Just now';
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  }).format(date);
+}
+
+function renderChat() {
+  if (!els.chatMessages || !els.chatForm) return;
+  const signedIn = Boolean(state.authUser);
+  const connected = state.voteMode === 'firebase' && state.chatReady;
+
+  if (els.chatStatus) {
+    els.chatStatus.textContent = signedIn
+      ? (connected ? `${state.chatMessages.length} messages in the race room` : 'Connecting to live chat...')
+      : 'Sign in to read and send race chat messages.';
+  }
+
+  els.chatMessages.innerHTML = signedIn
+    ? (state.chatMessages.length ? state.chatMessages.map(message => {
+      const mine = message.userId === state.authUser?.uid;
+      return `
+        <article class="chat-message ${mine ? 'is-mine' : ''}">
+          <div class="chat-message-head">
+            <strong>${escapeHtml(message.displayName || 'F1 fan')}</strong>
+            <time>${escapeHtml(chatTimestampLabel(message.createdAt))}</time>
+          </div>
+          <p>${escapeHtml(message.text || '')}</p>
+        </article>
+      `;
+    }).join('') : '<p class="empty-state">No messages yet. Start the race chat.</p>')
+    : '<p class="empty-state">Sign in from the header to join the live race chat.</p>';
+
+  if (signedIn && state.chatMessages.length) {
+    requestAnimationFrame(() => {
+      els.chatMessages.scrollTop = els.chatMessages.scrollHeight;
+    });
+  }
+
+  if (els.chatInput) {
+    els.chatInput.disabled = !signedIn || !connected || state.chatSubmitting;
+    if (els.chatCount) els.chatCount.textContent = `${els.chatInput.value.length} / 300`;
+  }
+  if (els.chatSubmit) {
+    els.chatSubmit.disabled = !signedIn || !connected || state.chatSubmitting || !els.chatInput?.value.trim();
+    els.chatSubmit.textContent = state.chatSubmitting ? 'Sending...' : 'Send';
+  }
+  if (els.chatError) {
+    els.chatError.hidden = !state.chatError;
+    els.chatError.textContent = state.chatError;
+  }
+}
+
 function handleFirebaseVotingError(error) {
   console.warn('Firebase voting unavailable, falling back to local votes.', error);
   state.voteMode = 'local';
   state.votesReady = true;
   state.voteError = 'Firebase rules are blocking shared voting. Publish the Firestore rules from FIREBASE_SETUP.md, then refresh.';
   state.pointPredictionError = 'Firebase rules are blocking live F1 Bucks predictions. Publish the Firestore rules from FIREBASE_SETUP.md, then refresh.';
+  state.chatReady = false;
+  state.chatError = 'Firebase rules are blocking race chat. Publish the Firestore rules from FIREBASE_SETUP.md, then refresh.';
   renderVotingPanel();
+  renderChat();
 }
 
 async function initializeFirebaseVotes() {
   if (!firebaseConfigReady()) {
     state.voteMode = 'local';
     state.votesReady = true;
+    state.chatReady = false;
+    state.chatError = 'Firebase is not configured yet, so live race chat is unavailable.';
     renderVotingPanel();
+    renderChat();
     return;
   }
 
@@ -2140,8 +2216,12 @@ async function initializeFirebaseVotes() {
       doc,
       collection,
       collectionGroup,
+      addDoc,
       getDocs,
       onSnapshot,
+      query,
+      orderBy,
+      limit,
       runTransaction,
       setDoc,
       serverTimestamp
@@ -2208,6 +2288,19 @@ async function initializeFirebaseVotes() {
           favoriteDriverId: preferences.favoriteDriverId || '',
           updatedAt: serverTimestamp()
         }, { merge: true });
+      },
+
+      async sendChatMessage(text) {
+        const user = auth.currentUser;
+        if (!user) throw new Error('Sign in to send chat messages.');
+        const cleanText = String(text || '').replace(/\s+/g, ' ').trim().slice(0, 300);
+        if (!cleanText) throw new Error('Write a message before sending.');
+        await addDoc(collection(db, 'raceChat'), {
+          text: cleanText,
+          userId: user.uid,
+          displayName: authUserName().slice(0, 40),
+          createdAt: serverTimestamp()
+        });
       },
 
       async settleKimiWinPayout() {
@@ -2315,6 +2408,10 @@ async function initializeFirebaseVotes() {
         state.payoutUnsubscribe();
         state.payoutUnsubscribe = null;
       }
+      if (state.chatUnsubscribe) {
+        state.chatUnsubscribe();
+        state.chatUnsubscribe = null;
+      }
 
       state.authReady = true;
       state.authError = '';
@@ -2325,12 +2422,15 @@ async function initializeFirebaseVotes() {
       } : null;
       state.wallet = null;
       state.kimiPayoutStake = null;
+      state.chatMessages = [];
+      state.chatReady = false;
 
       if (!user) {
         window.F1FirebaseVotes?.listen(voteRaceKey());
         renderAccountPanel();
         renderAccountPage();
         renderVotingPanel();
+        renderChat();
         return;
       }
 
@@ -2342,6 +2442,7 @@ async function initializeFirebaseVotes() {
           renderAccountPanel();
           renderAccountPage();
           renderVotingPanel();
+          renderChat();
           if (isCreator()) loadCreatorDashboard();
         }, error => {
           console.warn('Firebase wallet unavailable.', error);
@@ -2359,11 +2460,30 @@ async function initializeFirebaseVotes() {
           state.kimiPayoutError = 'Kimi payout stake could not load. Check Firebase f1BuckStakes rules.';
           renderAccountPage();
         });
+        const chatQuery = query(collection(db, 'raceChat'), orderBy('createdAt', 'desc'), limit(80));
+        state.chatUnsubscribe = onSnapshot(chatQuery, snapshot => {
+          state.chatMessages = snapshot.docs
+            .map(messageDoc => ({ id: messageDoc.id, ...messageDoc.data() }))
+            .sort((a, b) => {
+              const left = a.createdAt?.toMillis?.() || 0;
+              const right = b.createdAt?.toMillis?.() || 0;
+              return left - right;
+            });
+          state.chatReady = true;
+          state.chatError = '';
+          renderChat();
+        }, error => {
+          console.warn('Firebase chat unavailable.', error);
+          state.chatReady = false;
+          state.chatError = 'Race chat could not load. Publish the raceChat Firestore rules from FIREBASE_SETUP.md, then refresh.';
+          renderChat();
+        });
       } catch (error) {
         console.warn('Firebase wallet setup failed.', error);
         state.authError = 'Wallet could not be created. Check Firebase users rules.';
         renderAccountPanel();
         renderAccountPage();
+        renderChat();
       }
     });
 
@@ -3982,6 +4102,7 @@ function renderAll() {
   renderStandings();
   renderProfiles();
   renderQuotes();
+  renderChat();
 }
 
 document.querySelectorAll('a[href^="#"]').forEach(link => {
@@ -4095,6 +4216,46 @@ els.accountPageSignOut?.addEventListener('click', async () => {
   }
   renderAccountPanel();
   renderAccountPage();
+});
+
+els.chatInput?.addEventListener('input', renderChat);
+
+els.chatForm?.addEventListener('submit', async event => {
+  event.preventDefault();
+  if (state.chatSubmitting) return;
+  const text = els.chatInput?.value || '';
+
+  if (!state.authUser) {
+    state.chatError = 'Sign in before sending a race chat message.';
+    renderChat();
+    return;
+  }
+  if (!window.F1FirebaseAccount?.sendChatMessage) {
+    state.chatError = 'Firebase chat is still connecting. Try again in a moment.';
+    renderChat();
+    return;
+  }
+  if (!text.trim()) {
+    state.chatError = 'Write a message before sending.';
+    renderChat();
+    return;
+  }
+
+  state.chatSubmitting = true;
+  state.chatError = '';
+  renderChat();
+  try {
+    await window.F1FirebaseAccount.sendChatMessage(text);
+    els.chatInput.value = '';
+  } catch (error) {
+    console.error(error);
+    state.chatError = error?.code?.includes('permission-denied')
+      ? 'Firebase rules are blocking race chat. Publish the raceChat rules from FIREBASE_SETUP.md, then refresh.'
+      : (error?.message || 'Race chat message did not send. Try again.');
+  } finally {
+    state.chatSubmitting = false;
+    renderChat();
+  }
 });
 
 els.refreshCreatorDashboard?.addEventListener('click', loadCreatorDashboard);

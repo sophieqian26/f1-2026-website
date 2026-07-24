@@ -6,7 +6,7 @@
     <title>F1 2026 Season Hub</title>
     <link rel="preconnect" href="https://api.jolpi.ca">
     <link rel="preconnect" href="https://api.allorigins.win">
-    <link rel="stylesheet" href="styles.css?v=20260722-hungarian-odds">
+    <link rel="stylesheet" href="styles.css?v=20260724-hungary-results-link">
   </head>
   <body>
     <header class="site-header">
@@ -21,6 +21,7 @@
         <a href="#standings">Standings</a>
         <a href="#profiles">Profiles</a>
         <a href="#news">News</a>
+        <a href="#chat">Race chat</a>
         <a href="#wisdom">Wisdom</a>
       </nav>
       <div class="header-tools">
@@ -335,6 +336,29 @@
         <div class="news-grid" id="newsGrid"></div>
       </section>
 
+      <section class="section shell page-section" id="chat">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Race room</p>
+            <h2>Race chat</h2>
+          </div>
+        </div>
+        <div class="chat-layout">
+          <section class="chat-panel" aria-label="Live race chat">
+            <div class="chat-status" id="chatStatus">Connecting to Firebase chat...</div>
+            <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+            <form class="chat-form" id="chatForm">
+              <textarea id="chatInput" maxlength="300" rows="3" placeholder="Talk about the race..." required></textarea>
+              <div class="chat-form-actions">
+                <span id="chatCount">0 / 300</span>
+                <button id="chatSubmit" type="submit">Send</button>
+              </div>
+            </form>
+            <p class="account-error" id="chatError" hidden></p>
+          </section>
+        </div>
+      </section>
+
       <section class="section shell page-section" id="wisdom">
         <div class="section-head">
           <p class="eyebrow">Paddock poetry</p>
@@ -350,6 +374,6 @@
     </footer>
 
     <script src="firebase-config.js?v=20260705-firebase-config"></script>
-    <script src="script.js?v=20260722-hungarian-odds"></script>
+    <script src="script.js?v=20260724-hungary-results-link"></script>
   </body>
 </html>

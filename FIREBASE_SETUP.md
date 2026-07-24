@@ -50,6 +50,10 @@ service cloud.firestore {
       allow read, write: if true;
     }
 
+    match /raceChat/{messageId} {
+      allow read, create: if request.auth != null;
+    }
+
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
@@ -101,6 +105,20 @@ service cloud.firestore {
 
     match /{path=**}/f1BuckStakes/{predictionId} {
       allow read: if isCreator();
+    }
+
+    match /raceChat/{messageId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['text', 'userId', 'displayName', 'createdAt'])
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 300
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() > 0
+        && request.resource.data.displayName.size() <= 40
+        && request.resource.data.createdAt == request.time;
     }
   }
 }

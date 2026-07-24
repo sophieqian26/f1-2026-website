@@ -919,6 +919,18 @@ const WISDOM_QUOTES = [
     imagePosition: 'center'
   },
   {
+    driver: 'Lewis Hamilton',
+    driverId: 'hamilton',
+    teamColor: TEAM_COLORS.mercedes,
+    quote: 'Bono my tyres are gone.',
+    context: 'Classic Lewis radio tension over tyre life.',
+    source: 'Fan clip',
+    sourceUrl: 'https://www.google.com/search?q=Lewis+Hamilton+Bono+my+tyres+are+gone',
+    wikiTitle: 'Lewis_Hamilton',
+    imageUrl: 'assets/quote-drivers/lewis-hamilton.jpg',
+    imagePosition: 'center'
+  },
+  {
     driver: 'Charles Leclerc',
     driverId: 'leclerc',
     teamColor: TEAM_COLORS.ferrari,
@@ -1633,6 +1645,15 @@ function driverTeam(driver = {}) {
   return state.drivers.find(item => item.Driver?.driverId === driver.driverId)?.Constructors?.[0] || {};
 }
 
+function driverTeamById(driverId = '') {
+  return state.drivers.find(item => item.Driver?.driverId === driverId)?.Constructors?.[0] || {};
+}
+
+function favoriteDriverChatColor(driverId = state.wallet?.favoriteDriverId || '') {
+  const constructor = driverTeamById(driverId);
+  return teamColor(constructor.constructorId);
+}
+
 function displayRaceName(race = {}) {
   const scheduleRace = race.Circuit ? race : state.races.find(item => item.round === race.round);
   const country = scheduleRace?.Circuit?.Location?.country;
@@ -2154,8 +2175,9 @@ function renderChat() {
   els.chatMessages.innerHTML = signedIn
     ? (state.chatMessages.length ? state.chatMessages.map(message => {
       const mine = message.userId === state.authUser?.uid;
+      const chatColor = message.favoriteTeamColor || favoriteDriverChatColor(message.favoriteDriverId);
       return `
-        <article class="chat-message ${mine ? 'is-mine' : ''}">
+        <article class="chat-message ${mine ? 'is-mine' : ''}" style="--chat-color: ${escapeHtml(chatColor)}; --chat-text-color: ${escapeHtml(readableTextColor(chatColor))}; --chat-muted-color: ${escapeHtml(readableMutedColor(chatColor))}">
           <div class="chat-message-head">
             <strong>${escapeHtml(message.displayName || 'F1 fan')}</strong>
             <time>${escapeHtml(chatTimestampLabel(message.createdAt))}</time>
@@ -2295,10 +2317,14 @@ async function initializeFirebaseVotes() {
         if (!user) throw new Error('Sign in to send chat messages.');
         const cleanText = String(text || '').replace(/\s+/g, ' ').trim().slice(0, 300);
         if (!cleanText) throw new Error('Write a message before sending.');
+        const favoriteDriverId = state.wallet?.favoriteDriverId || '';
+        const favoriteTeamColor = favoriteDriverChatColor(favoriteDriverId);
         await addDoc(collection(db, 'raceChat'), {
           text: cleanText,
           userId: user.uid,
           displayName: authUserName().slice(0, 40),
+          favoriteDriverId,
+          favoriteTeamColor,
           createdAt: serverTimestamp()
         });
       },

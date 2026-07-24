@@ -603,9 +603,19 @@ body.light-theme .account-panel {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background:
-    linear-gradient(135deg, rgba(225, 6, 0, 0.14), transparent 34%),
-    var(--surface);
+    linear-gradient(135deg, rgba(8, 9, 12, 0.92) 0%, rgba(8, 9, 12, 0.66) 48%, rgba(8, 9, 12, 0.34) 100%),
+    url("assets/feature-images/light-home-grid.avif");
+  background-position: center;
+  background-size: cover;
   box-shadow: var(--shadow);
+}
+
+body.light-theme .chat-panel {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.58) 48%, rgba(255, 255, 255, 0.24) 100%),
+    url("assets/feature-images/light-home-grid.avif");
+  background-position: center;
+  background-size: cover;
 }
 
 .chat-status {
@@ -618,6 +628,7 @@ body.light-theme .account-panel {
   border-radius: 6px;
   background: var(--surface-2);
   font-weight: 760;
+  backdrop-filter: blur(14px);
 }
 
 .chat-messages {
@@ -640,16 +651,16 @@ body.light-theme .chat-messages {
 .chat-message {
   width: min(76%, 620px);
   padding: 13px 14px;
-  border: 1px solid var(--line);
+  color: var(--chat-text-color, #ffffff);
+  border: 1px solid color-mix(in srgb, var(--chat-color, var(--red)) 72%, #ffffff 28%);
   border-radius: 8px;
-  background: var(--surface-2);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--chat-color, var(--red)) 88%, #000000 12%), color-mix(in srgb, var(--chat-color, var(--red)) 62%, #000000 38%));
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.2);
 }
 
 .chat-message.is-mine {
   justify-self: end;
-  color: #ffffff;
-  border-color: rgba(225, 6, 0, 0.64);
-  background: linear-gradient(135deg, #e10600, #9f0703);
 }
 
 .chat-message-head {
@@ -669,13 +680,13 @@ body.light-theme .chat-messages {
 
 .chat-message-head time {
   flex: none;
-  color: var(--muted);
+  color: var(--chat-muted-color, rgba(255, 255, 255, 0.76));
   font-size: 0.78rem;
   font-weight: 720;
 }
 
 .chat-message.is-mine .chat-message-head time {
-  color: rgba(255, 255, 255, 0.76);
+  color: var(--chat-muted-color, rgba(255, 255, 255, 0.76));
 }
 
 .chat-message p {
@@ -699,6 +710,7 @@ body.light-theme .chat-messages {
   border-radius: 8px;
   background: var(--surface-2);
   font: inherit;
+  backdrop-filter: blur(14px);
 }
 
 .chat-form textarea:disabled {
@@ -759,8 +771,13 @@ body.light-theme .status-pill {
 
 body.light-theme .hero-shade {
   background:
-    linear-gradient(90deg, rgba(244, 246, 250, 0.72) 0%, rgba(244, 246, 250, 0.38) 42%, rgba(244, 246, 250, 0) 100%),
-    linear-gradient(0deg, rgba(244, 246, 250, 0.58) 0%, rgba(244, 246, 250, 0) 42%);
+    linear-gradient(90deg, rgba(244, 246, 250, 0.76) 0%, rgba(244, 246, 250, 0.46) 42%, rgba(244, 246, 250, 0.08) 100%),
+    linear-gradient(0deg, rgba(244, 246, 250, 0.5) 0%, rgba(244, 246, 250, 0.02) 46%);
+}
+
+body.light-theme .hero-image {
+  content: url("assets/feature-images/light-home-grid.avif");
+  object-position: center;
 }
 
 body.light-theme .hero-panel,
@@ -933,6 +950,21 @@ h3 {
 .hero-panel .metric-label,
 .hero-panel strong {
   color: #ffffff;
+}
+
+body.light-theme .hero-panel {
+  border-color: rgba(16, 22, 33, 0.14);
+  background: #ffffff;
+}
+
+body.light-theme .hero-panel div {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px);
+}
+
+body.light-theme .hero-panel .metric-label,
+body.light-theme .hero-panel strong {
+  color: #101621;
 }
 
 .shell {

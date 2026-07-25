@@ -1411,6 +1411,31 @@ body.light-theme .race-focus dd {
   background: rgba(0, 0, 0, 0.18);
 }
 
+.race-practice-panel {
+  margin-top: 16px;
+}
+
+.practice-session-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.practice-session-card {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.practice-session-card h4 {
+  margin: 4px 0 0;
+  font-size: 1.05rem;
+}
+
+body.light-theme .practice-session-card {
+  background: rgba(255, 255, 255, 0.64);
+}
+
 .session-table {
   width: 100%;
   min-width: 780px;

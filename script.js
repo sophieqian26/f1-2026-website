@@ -3787,7 +3787,10 @@ function renderRaceFocus(race) {
   els.raceFocus.innerHTML = `
     <div class="focus-media"></div>
     <p class="eyebrow">Next race focus</p>
-    <h3>${escapeHtml(displayRaceName(race))}</h3>
+    <div class="race-focus-title-row">
+      <h3>${escapeHtml(displayRaceName(race))}</h3>
+      <button class="practice-results-button" type="button" data-practice-round="${escapeHtml(race.round)}">See practice results</button>
+    </div>
     <p>${escapeHtml(race.Circuit?.circuitName || 'Circuit TBC')}</p>
     <dl>
       <dt>Round</dt><dd>${escapeHtml(race.round)}</dd>
@@ -3798,6 +3801,14 @@ function renderRaceFocus(race) {
     ${oddsHtml}
     <p class="odds-source">${escapeHtml(oddsSourceText(race))}</p>
   `;
+  els.raceFocus.querySelector('[data-practice-round]')?.addEventListener('click', event => {
+    const round = event.currentTarget.dataset.practiceRound;
+    state.selectedRaceRound = round;
+    renderRaceDetail(round);
+    history.pushState(null, '', `#race-${round}`);
+    setActivePage('race-detail');
+    renderSchedule();
+  });
 }
 
 function renderResultSelector() {

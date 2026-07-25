@@ -1351,6 +1351,34 @@ body.light-theme .race-focus {
   z-index: 1;
 }
 
+.race-focus-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.race-focus-title-row h3 {
+  margin: 0;
+}
+
+.practice-results-button {
+  flex: 0 0 auto;
+  min-height: 38px;
+  padding: 0 14px;
+  color: #ffffff;
+  border: 0;
+  border-radius: 6px;
+  background: #e10600;
+  font-size: 0.76rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.practice-results-button:hover {
+  background: #ff1c14;
+}
+
 .race-focus dl {
   display: grid;
   grid-template-columns: 120px 1fr;

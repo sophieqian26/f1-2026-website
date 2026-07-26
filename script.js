@@ -15,7 +15,7 @@ const THEME_STORAGE_KEY = `f1-${SEASON}-theme`;
 const FIREBASE_SDK_VERSION = '10.12.5';
 const STARTING_F1_BUCKS = 50;
 const PREDICTION_LOCK_HOLD_MS = 6 * 60 * 60 * 1000;
-const CREATOR_UID = '';
+const CREATOR_UID = 'YrzNoukdTPemV89NRE01UskKRwZ2';
 const KIMI_WIN_SETTLEMENT = {
   raceKey: `${SEASON}-round-10`,
   categoryId: 'race_winner',

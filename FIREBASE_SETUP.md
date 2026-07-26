@@ -37,7 +37,7 @@ For the creator-only dashboard:
 2. Click your creator account.
 3. Copy your **User UID**.
 4. Paste that UID into `CREATOR_UID` in `script.js`.
-5. Paste the same UID over `PASTE_YOUR_CREATOR_UID_HERE` in the rules below.
+5. Paste the same UID into the `isCreator()` rule below.
 
 If you just want the live vote board working quickly, paste this simple version:
 
@@ -70,7 +70,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function isCreator() {
       return request.auth != null
-        && request.auth.uid == "PASTE_YOUR_CREATOR_UID_HERE";
+        && request.auth.uid == "YrzNoukdTPemV89NRE01UskKRwZ2";
     }
 
     match /users/{userId} {

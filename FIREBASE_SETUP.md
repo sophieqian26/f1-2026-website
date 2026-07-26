@@ -75,7 +75,7 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow read: if (request.auth != null && request.auth.uid == userId) || isCreator();
-      allow create, update: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if (request.auth != null && request.auth.uid == userId) || isCreator();
     }
 
     match /raceVotes/{raceKey} {
@@ -98,8 +98,8 @@ service cloud.firestore {
 
       match /f1BuckStakes/{predictionId} {
         allow read: if request.auth != null;
-        allow write: if request.auth != null
-          && request.auth.uid == request.resource.data.userId;
+        allow write: if (request.auth != null
+          && request.auth.uid == request.resource.data.userId) || isCreator();
       }
     }
 

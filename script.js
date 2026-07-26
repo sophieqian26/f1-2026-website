@@ -27,6 +27,17 @@ const KIMI_WIN_SETTLEMENT = {
   oddsDenominator: 8,
   source: 'JustBookies Belgian Grand Prix odds'
 };
+const LANDO_POLE_SETTLEMENT = {
+  raceKey: `${SEASON}-round-11`,
+  categoryId: 'pole_position',
+  driverId: 'norris',
+  winnerName: 'Lando Norris',
+  raceName: 'Hungarian Grand Prix',
+  oddsLabel: '8.00',
+  oddsNumerator: 7,
+  oddsDenominator: 1,
+  source: 'BetMGM Hungarian Grand Prix qualifying winner odds'
+};
 const MANUAL_KIMI_STAKE_OVERRIDES = [
   {
     username: 'kimiantonelli12',
@@ -319,7 +330,20 @@ const EXTERNAL_ODDS_PREVIEWS = {
       { name: 'Lando Norris', percent: 11.1, odds: '9.00' },
       { name: 'Oscar Piastri', percent: 4.3, odds: '23.00' },
       { name: 'Isack Hadjar', percent: 1.5, odds: '67.00' },
-      { name: 'Arvid Lindblad', percent: 0.1, odds: '751.00' }
+      { name: 'Arvid Lindblad', percent: 0.1, odds: '751.00' },
+      { name: 'Liam Lawson', percent: 0.1, odds: '751.00' },
+      { name: 'Gabriel Bortoleto', percent: 0.1, odds: '1001.00' },
+      { name: 'Nico Hulkenberg', percent: 0.1, odds: '1001.00' },
+      { name: 'Franco Colapinto', percent: 0.1, odds: '1001.00' },
+      { name: 'Pierre Gasly', percent: 0.1, odds: '1001.00' },
+      { name: 'Fernando Alonso', percent: 0.1, odds: '1001.00' },
+      { name: 'Carlos Sainz', percent: 0.1, odds: '1501.00' },
+      { name: 'Oliver Bearman', percent: 0.1, odds: '1501.00' },
+      { name: 'Lance Stroll', percent: 0.1, odds: '1501.00' },
+      { name: 'Alexander Albon', percent: 0.1, odds: '2001.00' },
+      { name: 'Esteban Ocon', percent: 0.1, odds: '2001.00' },
+      { name: 'Sergio Perez', percent: 0.1, odds: '3001.00' },
+      { name: 'Valtteri Bottas', percent: 0.1, odds: '3001.00' }
     ]
   }
 };
@@ -866,9 +890,55 @@ const STARTING_GRID_OVERRIDES = {
     raceName: 'Hungarian Grand Prix',
     sourceUrl: 'https://www.formula1.com/en/results/2026/races/1291/hungary/qualifying',
     startingGridSourceUrl: 'https://www.formula1.com/en/results/2026/races/1291/hungary/starting-grid',
-    note: 'Official F1 qualifying and starting-grid results are pending. Practice sessions are available.',
-    rows: [],
-    startingGridRows: [],
+    note: 'Official F1 qualifying results. Starting grid reflects the published race-start order.',
+    rows: [
+      makeGridResult('1', { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '1', q1: '1:18.277', q2: '1:17.456', q3: '1:17.207', laps: '16' }),
+      makeGridResult('2', { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '44', q1: '1:18.730', q2: '1:17.803', q3: '1:17.219', laps: '15' }),
+      makeGridResult('3', { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '16', q1: '1:18.984', q2: '1:17.626', q3: '1:17.445', laps: '20' }),
+      makeGridResult('4', { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '12', q1: '1:18.726', q2: '1:18.393', q3: '1:17.479', laps: '20' }),
+      makeGridResult('5', { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '81', q1: '1:18.891', q2: '1:17.928', q3: '1:17.684', laps: '15' }),
+      makeGridResult('6', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '3', q1: '1:18.656', q2: '1:18.249', q3: '1:17.725', laps: '18' }),
+      makeGridResult('7', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '63', q1: '1:18.856', q2: '1:18.445', q3: '1:17.760', laps: '20' }),
+      makeGridResult('8', { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '6', q1: '1:18.754', q2: '1:17.872', q3: '1:17.856', laps: '14' }),
+      makeGridResult('9', { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '41', q1: '1:19.233', q2: '1:18.360', q3: '1:18.281', laps: '18' }),
+      makeGridResult('10', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, { number: '27', q1: '1:18.796', q2: '1:18.639', q3: '1:18.686', laps: '18' }),
+      makeGridResult('11', { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '30', q1: '1:19.161', q2: '1:18.765', q3: '', laps: '12' }),
+      makeGridResult('12', { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '10', q1: '1:19.741', q2: '1:18.844', q3: '', laps: '12' }),
+      makeGridResult('13', { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '43', q1: '1:19.771', q2: '1:19.027', q3: '', laps: '12' }),
+      makeGridResult('14', { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, { number: '5', q1: '1:19.069', q2: '1:19.105', q3: '', laps: '11' }),
+      makeGridResult('15', { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '31', q1: '1:20.010', q2: '1:19.734', q3: '', laps: '12' }),
+      makeGridResult('16', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '14', q1: '1:20.126', q2: '1:19.808', q3: '', laps: '15' }),
+      makeGridResult('17', { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '87', q1: '1:20.233', q2: '', q3: '', laps: '6' }),
+      makeGridResult('18', { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, { number: '55', q1: '1:20.621', q2: '', q3: '', laps: '9' }),
+      makeGridResult('19', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, { number: '23', q1: '1:20.658', q2: '', q3: '', laps: '9' }),
+      makeGridResult('20', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', q1: '1:20.659', q2: '', q3: '', laps: '8' }),
+      makeGridResult('21', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '77', q1: '1:20.886', q2: '', q3: '', laps: '10' }),
+      makeGridResult('22', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '11', q1: '1:21.322', q2: '', q3: '', laps: '9' })
+    ],
+    startingGridRows: [
+      makeGridResult('1', { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '1', q3: '1:17.207' }),
+      makeGridResult('2', { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '16', q3: '1:17.445' }),
+      makeGridResult('3', { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '81', q3: '1:17.684' }),
+      makeGridResult('4', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '3', q3: '1:17.725' }),
+      makeGridResult('5', { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '44', q3: '1:17.219' }),
+      makeGridResult('6', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '63', q3: '1:17.760' }),
+      makeGridResult('7', { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '12', q3: '1:17.479' }),
+      makeGridResult('8', { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '6', q3: '1:17.856' }),
+      makeGridResult('9', { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '41', q3: '1:18.281' }),
+      makeGridResult('10', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, { number: '27', q3: '1:18.686' }),
+      makeGridResult('11', { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '30', q3: '1:18.765' }),
+      makeGridResult('12', { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '10', q3: '1:18.844' }),
+      makeGridResult('13', { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '43', q3: '1:19.027' }),
+      makeGridResult('14', { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, { number: '5', q3: '1:19.105' }),
+      makeGridResult('15', { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '31', q3: '1:19.734' }),
+      makeGridResult('16', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '14', q3: '1:19.808' }),
+      makeGridResult('17', { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '87', q3: '1:20.233' }),
+      makeGridResult('18', { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, { number: '55', q3: '1:20.621' }),
+      makeGridResult('19', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, { number: '23', q3: '1:20.658' }),
+      makeGridResult('20', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', q3: '1:20.659' }),
+      makeGridResult('21', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '77', q3: '1:20.886' }),
+      makeGridResult('22', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '11', q3: '1:21.322' })
+    ],
     practiceSessions: [
       {
         title: 'Practice 1',
@@ -1412,6 +1482,9 @@ const state = {
   accountProfileMessage: '',
   creatorDashboardLoading: false,
   creatorDashboardError: '',
+  creatorPayoutSubmitting: false,
+  creatorPayoutMessage: '',
+  creatorPayoutError: '',
   creatorProfiles: [],
   creatorStakes: [],
   odds: {
@@ -2119,8 +2192,32 @@ function renderCreatorDashboard() {
     map[stake.userId].push(stake);
     return map;
   }, {});
+  const landoPoleStakes = state.creatorStakes.filter(stake => (
+    stake.raceKey === LANDO_POLE_SETTLEMENT.raceKey
+    && stake.categoryId === LANDO_POLE_SETTLEMENT.categoryId
+    && stake.driverId === LANDO_POLE_SETTLEMENT.driverId
+    && !stake.settledAt
+    && !stake.payoutReturn
+  ));
+  const landoStakeTotal = landoPoleStakes.reduce((total, stake) => total + (Number(stake.points) || 0), 0);
+  const landoPayoutTotal = landoPoleStakes.reduce((total, stake) => total + payoutReturnForStake(stake.points, LANDO_POLE_SETTLEMENT), 0);
+  const payoutMessage = state.creatorPayoutError || state.creatorPayoutMessage;
 
-  els.creatorDashboardBody.innerHTML = state.creatorProfiles.length ? state.creatorProfiles.map(profile => {
+  const payoutPanel = `
+    <div class="creator-payout-panel">
+      <div>
+        <span class="account-kicker">Creator payout</span>
+        <h4>${escapeHtml(LANDO_POLE_SETTLEMENT.winnerName)} pole settlement</h4>
+        <p>${escapeHtml(LANDO_POLE_SETTLEMENT.raceName)} · ${escapeHtml(LANDO_POLE_SETTLEMENT.oddsLabel)} odds · ${escapeHtml(formatF1Bucks(landoStakeTotal))} staked · ${escapeHtml(formatF1Bucks(landoPayoutTotal))} total credit</p>
+      </div>
+      <button class="account-payout-button" id="creditLandoPolePayouts" type="button" ${state.creatorPayoutSubmitting || !landoPoleStakes.length ? 'disabled' : ''}>
+        ${state.creatorPayoutSubmitting ? 'Crediting...' : `Credit ${landoPoleStakes.length} Lando pole payout${landoPoleStakes.length === 1 ? '' : 's'}`}
+      </button>
+      ${payoutMessage ? `<p class="account-error ${state.creatorPayoutMessage && !state.creatorPayoutError ? 'is-success' : ''}">${escapeHtml(payoutMessage)}</p>` : ''}
+    </div>
+  `;
+
+  const profileCards = state.creatorProfiles.length ? state.creatorProfiles.map(profile => {
     const uid = profile.id;
     const stakes = stakesByUser[uid] || [];
     return `
@@ -2151,6 +2248,8 @@ function renderCreatorDashboard() {
       </article>
     `;
   }).join('') : '<p class="empty-state">No signed-in user profiles found yet.</p>';
+
+  els.creatorDashboardBody.innerHTML = payoutPanel + profileCards;
 }
 
 function renderAccountPage() {
@@ -2496,6 +2595,69 @@ async function initializeFirebaseVotes() {
         });
       },
 
+      async settleLandoPolePayouts() {
+        const user = auth.currentUser;
+        if (!user || user.uid !== CREATOR_UID) throw new Error('Creator access only.');
+
+        const stakesSnapshot = await getDocs(collectionGroup(db, 'f1BuckStakes'));
+        const eligibleStakes = stakesSnapshot.docs
+          .map(stakeDoc => ({ id: stakeDoc.id, ref: stakeDoc.ref, data: stakeDoc.data() }))
+          .filter(stake => (
+            (stake.data.raceKey || stake.ref.parent.parent?.id || '') === LANDO_POLE_SETTLEMENT.raceKey
+            && stake.data.categoryId === LANDO_POLE_SETTLEMENT.categoryId
+            && stake.data.driverId === LANDO_POLE_SETTLEMENT.driverId
+            && !stake.data.settledAt
+            && !stake.data.payoutReturn
+          ));
+
+        if (!eligibleStakes.length) return { creditedUsers: 0, creditedTotal: 0 };
+
+        await runTransaction(db, async transaction => {
+          const walletReads = [];
+          for (const stake of eligibleStakes) {
+            const userId = stake.data.userId;
+            if (!userId) continue;
+            walletReads.push({
+              stake,
+              walletRef: doc(db, 'users', userId),
+              walletSnapshot: await transaction.get(doc(db, 'users', userId))
+            });
+          }
+
+          for (const item of walletReads) {
+            const prediction = item.stake.data;
+            const stakeAmount = Math.max(0, Math.floor(Number(prediction.points) || 0));
+            const profit = payoutProfitForStake(stakeAmount, LANDO_POLE_SETTLEMENT);
+            const payoutCredit = payoutReturnForStake(stakeAmount, LANDO_POLE_SETTLEMENT);
+            const currentBalance = item.walletSnapshot.exists()
+              ? Number(item.walletSnapshot.data().f1BucksBalance) || 0
+              : STARTING_F1_BUCKS;
+
+            transaction.set(item.walletRef, {
+              f1BucksBalance: currentBalance + payoutCredit,
+              updatedAt: serverTimestamp()
+            }, { merge: true });
+
+            transaction.set(item.stake.ref, {
+              raceKey: LANDO_POLE_SETTLEMENT.raceKey,
+              settledAt: serverTimestamp(),
+              settledResult: `${LANDO_POLE_SETTLEMENT.winnerName} pole`,
+              payoutOdds: LANDO_POLE_SETTLEMENT.oddsLabel,
+              payoutProfit: profit,
+              payoutReturn: payoutCredit,
+              payoutSource: LANDO_POLE_SETTLEMENT.source,
+              payoutNote: 'Creator-settled Lando Norris pole-position payout.',
+              updatedAt: serverTimestamp()
+            }, { merge: true });
+          }
+        });
+
+        return {
+          creditedUsers: eligibleStakes.length,
+          creditedTotal: eligibleStakes.reduce((total, stake) => total + payoutReturnForStake(stake.data.points, LANDO_POLE_SETTLEMENT), 0)
+        };
+      },
+
       async loadCreatorDashboard() {
         const user = auth.currentUser;
         if (!user || user.uid !== CREATOR_UID) throw new Error('Creator access only.');
@@ -2525,6 +2687,8 @@ async function initializeFirebaseVotes() {
             categoryId: data.categoryId || '',
             driverId: data.driverId || '',
             points: Number(data.points) || 0,
+            settledAt: data.settledAt?.toMillis?.() || 0,
+            payoutReturn: Number(data.payoutReturn) || 0,
             updatedAt: data.updatedAt?.toMillis?.() || 0
           };
         }).sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
@@ -4469,6 +4633,36 @@ els.chatForm?.addEventListener('submit', async event => {
 });
 
 els.refreshCreatorDashboard?.addEventListener('click', loadCreatorDashboard);
+
+els.creatorDashboard?.addEventListener('click', async event => {
+  if (!event.target.closest('#creditLandoPolePayouts')) return;
+  if (state.creatorPayoutSubmitting) return;
+  if (!state.authUser || !window.F1FirebaseAccount?.settleLandoPolePayouts) {
+    state.creatorPayoutError = 'Sign in with the creator account before crediting Lando pole payouts.';
+    state.creatorPayoutMessage = '';
+    renderCreatorDashboard();
+    return;
+  }
+
+  state.creatorPayoutSubmitting = true;
+  state.creatorPayoutError = '';
+  state.creatorPayoutMessage = '';
+  renderCreatorDashboard();
+
+  try {
+    const result = await window.F1FirebaseAccount.settleLandoPolePayouts();
+    state.creatorPayoutMessage = `Credited ${result.creditedUsers} Lando pole payout${result.creditedUsers === 1 ? '' : 's'} for ${formatF1Bucks(result.creditedTotal)} total.`;
+    await loadCreatorDashboard();
+  } catch (error) {
+    console.error(error);
+    state.creatorPayoutError = error?.code?.includes('permission-denied') || error?.message?.toLowerCase?.().includes('permission')
+      ? 'Firebase rules are blocking creator payouts. Publish the updated creator payout rules from FIREBASE_SETUP.md, then refresh and try again.'
+      : (error?.message || 'Lando pole payouts could not be credited. Check Firebase rules, then try again.');
+  } finally {
+    state.creatorPayoutSubmitting = false;
+    renderCreatorDashboard();
+  }
+});
 
 els.accountPage?.addEventListener('click', async event => {
   if (!event.target.closest('#claimKimiPayout')) return;

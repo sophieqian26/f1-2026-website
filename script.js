@@ -14,6 +14,7 @@ const VOTE_USER_KEY = `f1-${SEASON}-vote-user-id`;
 const THEME_STORAGE_KEY = `f1-${SEASON}-theme`;
 const FIREBASE_SDK_VERSION = '10.12.5';
 const STARTING_F1_BUCKS = 50;
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 const PREDICTION_LOCK_HOLD_MS = 6 * 60 * 60 * 1000;
 const CREATOR_UID = 'YrzNoukdTPemV89NRE01UskKRwZ2';
 const KIMI_WIN_SETTLEMENT = {
@@ -1429,24 +1430,52 @@ const RESULT_OVERRIDES = {
       makeResult('NC', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { grid: '18', laps: '19', status: 'DNF' }),
       makeResult('NC', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, 0, { grid: '3', laps: '3', status: 'DNF' })
     ]
+  },
+  '11': {
+    raceName: 'Hungarian Grand Prix',
+    Results: [
+      makeResult('1', { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, 25, { grid: '1', laps: '70', status: '1:39:56.180' }),
+      makeResult('2', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, 18, { grid: '4', laps: '70', status: '+15.080s' }),
+      makeResult('3', { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, 15, { grid: '7', laps: '70', status: '+18.728s' }),
+      makeResult('4', { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, 12, { grid: '2', laps: '70', status: '+23.840s' }),
+      makeResult('5', { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, 10, { grid: '5', laps: '70', status: '+24.540s' }),
+      makeResult('6', { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, 8, { grid: '8', laps: '70', status: '+55.488s' }),
+      makeResult('7', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, 6, { grid: '6', laps: '70', status: '+57.503s' }),
+      makeResult('8', { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, 4, { grid: '11', laps: '69', status: '+1 lap' }),
+      makeResult('9', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, 2, { grid: '10', laps: '69', status: '+1 lap' }),
+      makeResult('10', { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, 1, { grid: '9', laps: '69', status: '+1 lap' }),
+      makeResult('11', { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, 0, { grid: '14', laps: '69', status: '+1 lap' }),
+      makeResult('12', { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, 0, { grid: '12', laps: '69', status: '+1 lap' }),
+      makeResult('13', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { grid: '20', laps: '69', status: '+1 lap' }),
+      makeResult('14', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { grid: '16', laps: '69', status: '+1 lap' }),
+      makeResult('15', { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, 0, { grid: '13', laps: '68', status: '+2 laps' }),
+      makeResult('16', { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { grid: '15', laps: '68', status: '+2 laps' }),
+      makeResult('17', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, 0, { grid: '19', laps: '68', status: '+2 laps' }),
+      makeResult('18', { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, 0, { grid: '18', laps: '68', status: '+2 laps' }),
+      makeResult('19', { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { grid: '17', laps: '68', status: '+2 laps' }),
+      makeResult('NC', { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, 0, { grid: '3', laps: '55', status: 'DNF' }),
+      makeResult('NC', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { grid: '22', laps: '48', status: 'DNF' }),
+      makeResult('NC', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { grid: '21', laps: '13', status: 'DNF' })
+    ]
   }
 };
 
 const CURRENT_DRIVER_POINTS = {
-  antonelli: { points: 183, wins: 6 },
-  hamilton: { points: 141, wins: 1 },
-  russell: { points: 128, wins: 2 },
-  leclerc: { points: 105, wins: 1 },
-  max_verstappen: { points: 82, wins: 0 },
-  norris: { points: 77, wins: 0 },
+  antonelli: { points: 198, wins: 6 },
+  hamilton: { points: 151, wins: 1 },
+  russell: { points: 134, wins: 2 },
+  leclerc: { points: 117, wins: 1 },
+  norris: { points: 102, wins: 1 },
+  max_verstappen: { points: 100, wins: 0 },
   piastri: { points: 75, wins: 0 },
-  hadjar: { points: 60, wins: 0 },
+  hadjar: { points: 68, wins: 0 },
   gasly: { points: 41, wins: 0 },
-  lawson: { points: 36, wins: 0 },
-  arvid_lindblad: { points: 21, wins: 0 },
+  lawson: { points: 40, wins: 0 },
+  arvid_lindblad: { points: 22, wins: 0 },
   colapinto: { points: 19, wins: 0 },
   bearman: { points: 17, wins: 0 },
   bortoleto: { points: 10, wins: 0 },
+  hulkenberg: { points: 2, wins: 0 },
   sainz: { points: 6, wins: 0 },
   albon: { points: 5, wins: 0 },
   ocon: { points: 3, wins: 0 },
@@ -1454,15 +1483,15 @@ const CURRENT_DRIVER_POINTS = {
 };
 
 const CURRENT_CONSTRUCTOR_POINTS = {
-  mercedes: { points: 311, wins: 8 },
-  ferrari: { points: 246, wins: 2 },
-  mclaren: { points: 152, wins: 0 },
-  red_bull: { points: 142, wins: 0 },
+  mercedes: { points: 332, wins: 8 },
+  ferrari: { points: 268, wins: 2 },
+  mclaren: { points: 177, wins: 1 },
+  red_bull: { points: 168, wins: 0 },
   alpine: { points: 60, wins: 0 },
-  rb: { points: 57, wins: 0 },
+  rb: { points: 62, wins: 0 },
   haas: { points: 20, wins: 0 },
   williams: { points: 11, wins: 0 },
-  audi: { points: 10, wins: 0 },
+  audi: { points: 12, wins: 0 },
   aston_martin: { points: 1, wins: 0 },
   cadillac: { points: 0, wins: 0 }
 };
@@ -1575,6 +1604,7 @@ const els = {
   constructorLeader: document.querySelector('#constructorLeader'),
   constructorLeaderMeta: document.querySelector('#constructorLeaderMeta'),
   newsCount: document.querySelector('#newsCount'),
+  previousRaceCard: document.querySelector('#previousRaceCard'),
   raceList: document.querySelector('#raceList'),
   raceDetail: document.querySelector('#raceDetail'),
   raceFocus: document.querySelector('#raceFocus'),
@@ -1645,7 +1675,7 @@ const els = {
   lastUpdated: document.querySelector('#lastUpdated')
 };
 
-const PAGE_IDS = ['home', 'next-race', 'schedule', 'race-detail', 'standings', 'account', 'profiles', 'news', 'chat', 'wisdom'];
+const PAGE_IDS = ['home', 'next-race', 'previous-race', 'schedule', 'race-detail', 'standings', 'account', 'profiles', 'news', 'chat', 'wisdom'];
 
 function pageFromHash() {
   const hash = window.location.hash.replace('#', '');
@@ -1847,6 +1877,11 @@ function nextRace() {
   return state.races.find(race => raceBucket(race) === 'upcoming') || null;
 }
 
+function previousRace() {
+  const latestResult = [...allResultRaces()].reverse().find(race => race.Results?.length);
+  return latestResult ? raceByRound(latestResult.round) : null;
+}
+
 function activePredictionRace() {
   const now = new Date();
   return state.races.find(race => {
@@ -1857,6 +1892,25 @@ function activePredictionRace() {
 
 function racePredictionsLocked(race = activePredictionRace()) {
   return Boolean(race && dateValue(race) <= new Date());
+}
+
+function categoryPredictionsLocked(categoryId, race = activePredictionRace()) {
+  if (!race) return false;
+  if (racePredictionsLocked(race)) return true;
+  if (categoryId === 'pole_position') {
+    return dateValue(race) - Date.now() <= ONE_DAY_MS;
+  }
+  return false;
+}
+
+function predictionLockMessage(categoryId, race = activePredictionRace()) {
+  if (racePredictionsLocked(race)) {
+    return 'Stakes are closed because the race has started. Saved stakes are still visible.';
+  }
+  if (categoryId === 'pole_position' && categoryPredictionsLocked(categoryId, race)) {
+    return 'Pole position stakes close one day before race day. Saved pole stakes stay visible below.';
+  }
+  return '';
 }
 
 function normalizeName(value = '') {
@@ -3106,6 +3160,7 @@ async function loadCityImages() {
   }));
 
   renderSchedule();
+  renderPreviousRace();
   if (pageFromHash() === 'race-detail') renderRaceDetail();
 }
 
@@ -3693,14 +3748,15 @@ function practiceRowsHtml(rows = []) {
   `;
 }
 
-function practiceSessionsHtml(sessions = []) {
+function practiceSessionsHtml(sessions = [], idPrefix = 'race') {
   if (!sessions.length) return '';
+  const practiceTitleId = `${idPrefix}PracticeTitle`;
   return `
-    <section class="starting-grid-panel race-practice-panel" aria-labelledby="racePracticeTitle">
+    <section class="starting-grid-panel race-practice-panel" aria-labelledby="${escapeHtml(practiceTitleId)}">
       <div class="starting-grid-head">
         <div>
           <p class="eyebrow">Official practice tables</p>
-          <h3 id="racePracticeTitle">Practice results</h3>
+          <h3 id="${escapeHtml(practiceTitleId)}">Practice results</h3>
         </div>
         <span>${escapeHtml(sessions.length)} sessions published</span>
       </div>
@@ -3722,77 +3778,59 @@ function practiceSessionsHtml(sessions = []) {
   `;
 }
 
-function renderSchedule() {
-  const filtered = state.races.filter(race => {
-    if (state.filter === 'all') return true;
-    return raceBucket(race) === state.filter;
-  });
+function raceCardHtml(race, options = {}) {
+  const status = raceStatus(race);
+  const location = race.Circuit?.Location || {};
+  const city = location.locality || 'City TBC';
+  const country = location.country || 'Country TBC';
+  const image = raceImage(race);
+  const imageStyle = image ? ` style="--race-image: url('${escapeHtml(image)}')"` : '';
+  const podium = racePodium(race);
+  const podiumHtml = podium.length
+    ? podium.map((finisher, index) => `
+        <span class="podium-finisher" style="--team-color: ${escapeHtml(finisher.color)}">
+          <span class="podium-position">P${escapeHtml(finisher.position || index + 1)}</span>
+          <span class="podium-name">${driverIdentityHtml(finisher.driver)}</span>
+          <span class="podium-team">${escapeHtml(finisher.team)}</span>
+        </span>
+      `).join('')
+    : `<span class="podium-empty">${raceBucket(race) === 'completed' ? 'Podium pending' : 'Podium TBC'}</span>`;
+  const extraClass = options.extraClass ? ` ${options.extraClass}` : '';
+  const activeClass = race.round === state.selectedRaceRound ? ' active' : '';
 
-  if (!filtered.length) {
-    els.raceList.innerHTML = `<div class="empty-state">No ${escapeHtml(state.filter)} races are available from the live 2026 schedule yet.</div>`;
-    renderRaceFocus(null);
-    return;
-  }
+  return `
+    <button class="race-card${activeClass}${extraClass}" type="button" data-round="${escapeHtml(race.round)}"${imageStyle}>
+      <div class="race-card-top">
+        <span>Round ${escapeHtml(race.round)}</span>
+        <span class="race-status">${escapeHtml(status)}</span>
+      </div>
+      <h3>${escapeHtml(displayRaceName(race))}</h3>
+      <p>${escapeHtml(formatDate(race.date, race.time))} · ${escapeHtml(city)}, ${escapeHtml(country)}</p>
+      <span class="host-city">Host city: ${escapeHtml(city)}</span>
+      <div class="podium-list" aria-label="Podium finishers">${podiumHtml}</div>
+    </button>
+  `;
+}
 
-  els.raceList.innerHTML = filtered.map(race => {
-    const status = raceStatus(race);
-    const location = race.Circuit?.Location || {};
-    const city = location.locality || 'City TBC';
-    const country = location.country || 'Country TBC';
-    const imageKey = cityImageKey(location);
-    const cityImage = CITY_IMAGE_FALLBACKS[imageKey] || state.cityImages[imageKey];
-    const imageStyle = cityImage ? ` style="--race-image: url('${escapeHtml(cityImage)}')"` : '';
-    const podium = racePodium(race);
-    const podiumHtml = podium.length
-      ? podium.map((finisher, index) => `
-          <span class="podium-finisher" style="--team-color: ${escapeHtml(finisher.color)}">
-            <span class="podium-position">P${escapeHtml(finisher.position || index + 1)}</span>
-            <span class="podium-name">${driverIdentityHtml(finisher.driver)}</span>
-            <span class="podium-team">${escapeHtml(finisher.team)}</span>
-          </span>
-        `).join('')
-      : `<span class="podium-empty">${raceBucket(race) === 'completed' ? 'Podium pending' : 'Podium TBC'}</span>`;
-    return `
-      <button class="race-card ${race.round === state.selectedRaceRound ? 'active' : ''}" type="button" data-round="${escapeHtml(race.round)}"${imageStyle}>
-        <div class="race-card-top">
-          <span>Round ${escapeHtml(race.round)}</span>
-          <span class="race-status">${escapeHtml(status)}</span>
-        </div>
-        <h3>${escapeHtml(displayRaceName(race))}</h3>
-        <p>${escapeHtml(formatDate(race.date, race.time))} · ${escapeHtml(city)}, ${escapeHtml(country)}</p>
-        <span class="host-city">Host city: ${escapeHtml(city)}</span>
-        <div class="podium-list" aria-label="Podium finishers">${podiumHtml}</div>
-      </button>
-    `;
-  }).join('');
-
-  els.raceList.querySelectorAll('.race-card').forEach(button => {
+function bindRaceCardOpen(container) {
+  container?.querySelectorAll('.race-card').forEach(button => {
     button.addEventListener('click', () => {
       state.selectedRaceRound = button.dataset.round;
       renderRaceDetail(state.selectedRaceRound);
       history.pushState(null, '', `#race-${state.selectedRaceRound}`);
       setActivePage('race-detail');
       renderSchedule();
+      renderPreviousRace();
     });
   });
-
-  renderRaceFocus(nextRace() || filtered[0]);
 }
 
-function renderRaceDetail(roundFromHash = window.location.hash.replace('#race-', '')) {
-  if (!els.raceDetail) return;
-
-  const round = String(roundFromHash || state.selectedRaceRound || nextRace()?.round || state.races[0]?.round || '');
+function raceDetailHtml(round, options = {}) {
   const race = raceByRound(round);
+  if (!race) return '';
 
-  if (!race) {
-    els.raceDetail.innerHTML = `
-      <div class="empty-state">Select a race from the schedule to open its race page.</div>
-    `;
-    return;
-  }
-
-  state.selectedRaceRound = round;
+  const idPrefix = options.idPrefix || 'race';
+  const showBack = options.showBack !== false;
   const location = race.Circuit?.Location || {};
   const city = location.locality || 'City TBC';
   const country = location.country || 'Country TBC';
@@ -3814,12 +3852,16 @@ function renderRaceDetail(roundFromHash = window.location.hash.replace('#race-',
   const resultMeta = result?.Results?.length
     ? `${result.Results.length} classified finishers`
     : 'Race result pending';
+  const detailTitleId = idPrefix === 'race' ? 'raceDetailTitle' : `${idPrefix}RaceDetailTitle`;
+  const qualifyingTitleId = idPrefix === 'race' ? 'raceQualifyingTitle' : `${idPrefix}RaceQualifyingTitle`;
+  const startingGridTitleId = idPrefix === 'race' ? 'raceStartingGridTitle' : `${idPrefix}RaceStartingGridTitle`;
+  const resultTitleId = idPrefix === 'race' ? 'raceResultTitle' : `${idPrefix}RaceResultTitle`;
 
-  els.raceDetail.innerHTML = `
+  return `
     <div class="race-detail-hero"${imageStyle}>
-      <button class="race-detail-back" type="button" data-page-back="schedule">Back to schedule</button>
+      ${showBack ? '<button class="race-detail-back" type="button" data-page-back="schedule">Back to schedule</button>' : ''}
       <p class="eyebrow">Round ${escapeHtml(round)} race page</p>
-      <h2 id="raceDetailTitle">${escapeHtml(displayRaceName(race))}</h2>
+      <h2 id="${escapeHtml(detailTitleId)}">${escapeHtml(displayRaceName(race))}</h2>
       <p>${escapeHtml(race.Circuit?.circuitName || 'Circuit TBC')} · ${escapeHtml(city)}, ${escapeHtml(country)}</p>
       <dl>
         <dt>Date</dt><dd>${escapeHtml(formatDate(race.date, race.time))}</dd>
@@ -3828,14 +3870,14 @@ function renderRaceDetail(roundFromHash = window.location.hash.replace('#race-',
       </dl>
     </div>
 
-    ${practiceSessionsHtml(grid?.practiceSessions || [])}
+    ${practiceSessionsHtml(grid?.practiceSessions || [], idPrefix)}
 
     <div class="race-detail-grid">
-      <section class="starting-grid-panel" aria-labelledby="raceQualifyingTitle">
+      <section class="starting-grid-panel" aria-labelledby="${escapeHtml(qualifyingTitleId)}">
         <div class="starting-grid-head">
           <div>
             <p class="eyebrow">Official table</p>
-            <h3 id="raceQualifyingTitle">Qualifying results</h3>
+            <h3 id="${escapeHtml(qualifyingTitleId)}">Qualifying results</h3>
           </div>
           <span>${escapeHtml(gridMeta)}</span>
         </div>
@@ -3843,11 +3885,11 @@ function renderRaceDetail(roundFromHash = window.location.hash.replace('#race-',
         <a class="starting-grid-source" href="${escapeHtml(qualifyingSourceUrl)}" target="_blank" rel="noreferrer">Official F1 qualifying table</a>
       </section>
 
-      <section class="starting-grid-panel" aria-labelledby="raceStartingGridTitle">
+      <section class="starting-grid-panel" aria-labelledby="${escapeHtml(startingGridTitleId)}">
         <div class="starting-grid-head">
           <div>
             <p class="eyebrow">Race start</p>
-            <h3 id="raceStartingGridTitle">Starting grid</h3>
+            <h3 id="${escapeHtml(startingGridTitleId)}">Starting grid</h3>
           </div>
           <span>${escapeHtml(startingGridMeta)}</span>
         </div>
@@ -3856,11 +3898,11 @@ function renderRaceDetail(roundFromHash = window.location.hash.replace('#race-',
       </section>
     </div>
 
-    <section class="race-result-panel" aria-labelledby="raceResultTitle">
+    <section class="race-result-panel" aria-labelledby="${escapeHtml(resultTitleId)}">
       <div class="starting-grid-head">
         <div>
           <p class="eyebrow">Classified finishers</p>
-          <h3 id="raceResultTitle">Race results</h3>
+          <h3 id="${escapeHtml(resultTitleId)}">Race results</h3>
         </div>
         <span>${escapeHtml(resultMeta)}</span>
       </div>
@@ -3885,6 +3927,56 @@ function renderRaceDetail(roundFromHash = window.location.hash.replace('#race-',
       <a class="starting-grid-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noreferrer">Official F1 race result table</a>
     </section>
   `;
+}
+
+function renderPreviousRace() {
+  if (!els.previousRaceCard) return;
+  const race = previousRace();
+
+  if (!race) {
+    els.previousRaceCard.innerHTML = '<div class="empty-state">Previous race will appear once a completed result is available.</div>';
+    return;
+  }
+
+  els.previousRaceCard.innerHTML = raceDetailHtml(race.round, {
+    idPrefix: 'previous',
+    showBack: false
+  });
+}
+
+function renderSchedule() {
+  const filtered = state.races.filter(race => {
+    if (state.filter === 'all') return true;
+    return raceBucket(race) === state.filter;
+  });
+
+  if (!filtered.length) {
+    els.raceList.innerHTML = `<div class="empty-state">No ${escapeHtml(state.filter)} races are available from the live 2026 schedule yet.</div>`;
+    renderRaceFocus(null);
+    return;
+  }
+
+  els.raceList.innerHTML = filtered.map(race => raceCardHtml(race)).join('');
+  bindRaceCardOpen(els.raceList);
+
+  renderRaceFocus(nextRace() || filtered[0]);
+}
+
+function renderRaceDetail(roundFromHash = window.location.hash.replace('#race-', '')) {
+  if (!els.raceDetail) return;
+
+  const round = String(roundFromHash || state.selectedRaceRound || nextRace()?.round || state.races[0]?.round || '');
+  const race = raceByRound(round);
+
+  if (!race) {
+    els.raceDetail.innerHTML = `
+      <div class="empty-state">Select a race from the schedule to open its race page.</div>
+    `;
+    return;
+  }
+
+  state.selectedRaceRound = round;
+  els.raceDetail.innerHTML = raceDetailHtml(round);
 
   els.raceDetail.querySelector('[data-page-back="schedule"]')?.addEventListener('click', () => {
     history.pushState(null, '', '#schedule');
@@ -4018,7 +4110,7 @@ function resultRowsHtml(results = []) {
 }
 
 function voteCategoryCard(category) {
-  const locked = racePredictionsLocked();
+  const locked = categoryPredictionsLocked(category.id);
   const data = getVoteCategory(category.id);
   const results = voteResults(category.id);
   const userDriver = data.userVote
@@ -4101,11 +4193,7 @@ function renderVotePicker() {
 function renderPointPredictionPanel() {
   if (!els.pointsPredictionForm) return;
   const race = activePredictionRace();
-  const locked = racePredictionsLocked(race);
   const drivers = voteDrivers();
-  const modeLabel = locked
-    ? 'Stakes locked - race started'
-    : (state.voteMode === 'firebase' ? 'Live Firebase F1 Bucks board' : 'Local preview F1 Bucks board');
   const needsSignIn = state.voteMode === 'firebase' && !state.authUser;
   const predictions = racePointPredictions()
     .map(item => {
@@ -4116,9 +4204,19 @@ function renderPointPredictionPanel() {
     .sort((a, b) => Number(b.points) - Number(a.points) || Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
   const selectedCategory = els.pointsPredictionCategory.value || POINT_PREDICTION_CATEGORIES[0]?.id || '';
   const selectedDriver = els.pointsPredictionDriver.value || drivers[0]?.Driver?.driverId || '';
+  const raceLocked = racePredictionsLocked(race);
+  const selectedCategoryLocked = categoryPredictionsLocked(selectedCategory, race);
+  const selectedLockMessage = predictionLockMessage(selectedCategory, race);
+  const modeLabel = raceLocked
+    ? 'Stakes locked - race started'
+    : (selectedCategoryLocked ? 'Pole position stakes closed' : (state.voteMode === 'firebase' ? 'Live Firebase F1 Bucks board' : 'Local preview F1 Bucks board'));
 
   els.pointsPredictionCategory.innerHTML = POINT_PREDICTION_CATEGORIES
-    .map(category => `<option value="${escapeHtml(category.id)}">${escapeHtml(category.title)}</option>`)
+    .map(category => {
+      const categoryLocked = categoryPredictionsLocked(category.id, race);
+      const label = categoryLocked && !raceLocked ? `${category.title} (closed)` : category.title;
+      return `<option value="${escapeHtml(category.id)}">${escapeHtml(label)}</option>`;
+    })
     .join('');
   els.pointsPredictionDriver.innerHTML = drivers.length
     ? drivers.map(row => `<option value="${escapeHtml(row.Driver.driverId)}">${driverFlag(row.Driver)} ${escapeHtml(driverName(row.Driver))} · ${escapeHtml(constructorName(row.Constructors?.[0]))}</option>`).join('')
@@ -4126,14 +4224,14 @@ function renderPointPredictionPanel() {
   els.pointsPredictionCategory.value = selectedCategory;
   els.pointsPredictionDriver.value = selectedDriver;
 
-  els.pointsPredictionCategory.disabled = locked || state.pointPredictionSubmitting;
-  els.pointsPredictionDriver.disabled = locked || state.pointPredictionSubmitting;
-  els.pointsPredictionPoints.disabled = locked || state.pointPredictionSubmitting;
+  els.pointsPredictionCategory.disabled = raceLocked || state.pointPredictionSubmitting;
+  els.pointsPredictionDriver.disabled = selectedCategoryLocked || state.pointPredictionSubmitting;
+  els.pointsPredictionPoints.disabled = selectedCategoryLocked || state.pointPredictionSubmitting;
 
-  els.pointsPredictionForm.querySelector('.points-prediction-submit').disabled = state.pointPredictionSubmitting || !drivers.length || needsSignIn || locked;
+  els.pointsPredictionForm.querySelector('.points-prediction-submit').disabled = state.pointPredictionSubmitting || !drivers.length || needsSignIn || selectedCategoryLocked;
   els.pointsPredictionForm.querySelector('.points-prediction-submit').textContent = state.pointPredictionSubmitting
     ? 'Saving...'
-    : (locked ? 'Stakes closed' : (needsSignIn ? 'Sign in to stake' : 'Submit F1 Bucks'));
+    : (selectedCategoryLocked ? 'Stakes closed' : (needsSignIn ? 'Sign in to stake' : 'Submit F1 Bucks'));
 
   els.pointsPredictionError.hidden = !state.pointPredictionError;
   els.pointsPredictionError.textContent = state.pointPredictionError;
@@ -4161,7 +4259,7 @@ function renderPointPredictionPanel() {
 
   els.pointsPredictionList.innerHTML = `
     <div class="points-prediction-status">${escapeHtml(modeLabel)}</div>
-    ${locked && race ? `<p class="empty-state">Stakes closed when ${escapeHtml(displayRaceName(race))} started. Saved stakes stay visible below.</p>` : ''}
+    ${selectedLockMessage ? `<p class="empty-state">${escapeHtml(selectedLockMessage)}</p>` : ''}
     ${needsSignIn ? '<p class="empty-state">Sign in with email to use your F1 Bucks wallet.</p>' : ''}
     ${groupedHtml}
   `;
@@ -4179,10 +4277,11 @@ function renderVotingPanel() {
   }
 
   const locked = racePredictionsLocked(race);
+  const poleLocked = categoryPredictionsLocked('pole_position', race);
   const modeLabel = locked
     ? 'Predictions locked - race started'
-    : (state.voteMode === 'firebase' ? 'Shared live voting' : 'Local preview voting');
-  if (locked) {
+    : (poleLocked ? 'Pole position locked - one day before race' : (state.voteMode === 'firebase' ? 'Shared live voting' : 'Local preview voting'));
+  if (locked || (state.activeVoteCategory && categoryPredictionsLocked(state.activeVoteCategory, race))) {
     state.activeVoteCategory = null;
     state.pendingVoteDriverId = null;
   }
@@ -4470,6 +4569,7 @@ function renderAll() {
   renderSummary();
   renderStartingGrid();
   renderSchedule();
+  renderPreviousRace();
   renderRaceDetail();
   renderResultSelector();
   renderVotingPanel();
@@ -4743,12 +4843,13 @@ els.refreshNews.addEventListener('click', loadNews);
 els.nextRaceVotePanel?.addEventListener('click', async event => {
   const openButton = event.target.closest('[data-vote-category]');
   if (openButton) {
-    if (racePredictionsLocked()) {
-      state.voteError = 'Predictions are locked because the race has started.';
+    const categoryId = openButton.dataset.voteCategory;
+    if (categoryPredictionsLocked(categoryId)) {
+      state.voteError = predictionLockMessage(categoryId) || 'Predictions are locked.';
       renderVotingPanel();
       return;
     }
-    state.activeVoteCategory = openButton.dataset.voteCategory;
+    state.activeVoteCategory = categoryId;
     state.pendingVoteDriverId = getVoteCategory(state.activeVoteCategory).userVote;
     state.voteError = '';
     state.voteSubmitting = false;
@@ -4767,8 +4868,8 @@ els.nextRaceVotePanel?.addEventListener('click', async event => {
 
   if (event.target.closest('.vote-submit')) {
     if (!state.activeVoteCategory || !state.pendingVoteDriverId || state.voteSubmitting) return;
-    if (racePredictionsLocked()) {
-      state.voteError = 'Predictions are locked because the race has started.';
+    if (categoryPredictionsLocked(state.activeVoteCategory)) {
+      state.voteError = predictionLockMessage(state.activeVoteCategory) || 'Predictions are locked.';
       renderVotingPanel();
       return;
     }
@@ -4792,6 +4893,11 @@ els.nextRaceVotePanel?.addEventListener('click', async event => {
 });
 
 els.nextRaceVotePanel?.addEventListener('change', event => {
+  if (event.target === els.pointsPredictionCategory) {
+    state.pointPredictionError = '';
+    renderPointPredictionPanel();
+    return;
+  }
   if (event.target.name !== 'vote-driver') return;
   state.pendingVoteDriverId = event.target.value;
   state.voteError = '';
@@ -4807,12 +4913,6 @@ els.pointsPredictionForm?.addEventListener('submit', async event => {
   const driverId = els.pointsPredictionDriver.value;
   const points = normalizePredictionPoints(els.pointsPredictionPoints.value);
 
-  if (racePredictionsLocked()) {
-    state.pointPredictionError = 'Stakes are closed because the race has started. Saved stakes are still visible.';
-    renderPointPredictionPanel();
-    return;
-  }
-
   if (state.voteMode === 'firebase' && !state.authUser) {
     state.pointPredictionError = 'Sign in before staking F1 Bucks live.';
     renderPointPredictionPanel();
@@ -4821,6 +4921,12 @@ els.pointsPredictionForm?.addEventListener('submit', async event => {
 
   if (!categoryId || !driverId || !points) {
     state.pointPredictionError = 'Choose a driver and add at least 1 F1 Buck.';
+    renderPointPredictionPanel();
+    return;
+  }
+
+  if (categoryPredictionsLocked(categoryId)) {
+    state.pointPredictionError = predictionLockMessage(categoryId) || 'Stakes are closed. Saved stakes are still visible.';
     renderPointPredictionPanel();
     return;
   }

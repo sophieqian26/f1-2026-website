@@ -6,7 +6,7 @@
     <title>F1 2026 Season Hub</title>
     <link rel="preconnect" href="https://api.jolpi.ca">
     <link rel="preconnect" href="https://api.allorigins.win">
-    <link rel="stylesheet" href="styles.css?v=20260726-creator-uid-payout">
+    <link rel="stylesheet" href="styles.css?v=20260727-home-leader-solid-cards">
   </head>
   <body>
     <header class="site-header">
@@ -17,6 +17,7 @@
       <nav class="nav" aria-label="Primary navigation">
         <a href="#home">Home</a>
         <a href="#next-race">Next race</a>
+        <a href="#previous-race">Previous race</a>
         <a href="#schedule">Schedule</a>
         <a href="#standings">Standings</a>
         <a href="#profiles">Profiles</a>
@@ -174,6 +175,16 @@
             <div class="points-prediction-list" id="pointsPredictionList"></div>
           </section>
         </section>
+      </section>
+
+      <section class="section shell page-section" id="previous-race">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Latest completed round</p>
+            <h2>Previous race</h2>
+          </div>
+        </div>
+        <div class="previous-race-list" id="previousRaceCard" aria-live="polite"></div>
       </section>
 
       <section class="section shell split page-section" id="schedule">
@@ -374,6 +385,6 @@
     </footer>
 
     <script src="firebase-config.js?v=20260705-firebase-config"></script>
-    <script src="script.js?v=20260726-creator-uid-payout"></script>
+    <script src="script.js?v=20260727-previous-race-detail"></script>
   </body>
 </html>

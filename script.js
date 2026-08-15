@@ -4608,14 +4608,6 @@ function revealPaddockdleField(fieldId) {
   }
 }
 
-function revealRandomPaddockdleField() {
-  const hidden = PADDOCKDLE_FIELDS
-    .map(field => field.id)
-    .filter(fieldId => !state.paddockdle.revealed.includes(fieldId));
-  if (!hidden.length) return;
-  revealPaddockdleField(hidden[Math.floor(Math.random() * hidden.length)]);
-}
-
 function renderPaddockdle() {
   if (!els.paddockdleClues) return;
   if (!state.paddockdle) resetPaddockdle();
@@ -4864,7 +4856,6 @@ els.paddockdleForm?.addEventListener('submit', async event => {
     .filter(field => paddockdleValue(guess, field.id) === paddockdleValue(target, field.id))
     .map(field => field.id);
   matches.forEach(revealPaddockdleField);
-  if (!matches.length) revealRandomPaddockdleField();
 
   state.paddockdle.guesses.push({ driverId: guess.id, matches });
   const attempts = state.paddockdle.guesses.length;
@@ -4876,7 +4867,7 @@ els.paddockdleForm?.addEventListener('submit', async event => {
   } else {
     state.paddockdle.message = matches.length
       ? `${guess.name} matched ${matches.length} block${matches.length === 1 ? '' : 's'}.`
-      : `${guess.name} is wrong, so one extra clue opened.`;
+      : `${guess.name} is wrong. No clues opened.`;
   }
   renderPaddockdle();
 });

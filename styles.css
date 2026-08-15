@@ -2596,6 +2596,190 @@ body.light-theme .vote-card {
   padding: 10px 0 28px;
 }
 
+.paddockdle-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 18px;
+  align-items: start;
+}
+
+.paddockdle-board,
+.paddockdle-history {
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.paddockdle-board {
+  display: grid;
+  gap: 18px;
+}
+
+.paddockdle-hero {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.paddockdle-hero h3 {
+  margin: 4px 0 6px;
+  font-size: 1.7rem;
+}
+
+.paddockdle-hero p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.paddockdle-mystery {
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 176px;
+  color: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #171c25;
+  overflow: hidden;
+  font-size: 3rem;
+  font-weight: 900;
+}
+
+.paddockdle-mystery.is-hidden {
+  background:
+    linear-gradient(135deg, rgba(225, 6, 0, 0.92), rgba(16, 22, 33, 0.96));
+}
+
+.paddockdle-clues {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.paddockdle-clue {
+  min-height: 96px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+}
+
+.paddockdle-clue.is-revealed {
+  border-color: color-mix(in srgb, var(--red) 58%, #ffffff 42%);
+  background: color-mix(in srgb, var(--red) 12%, var(--surface-2) 88%);
+}
+
+.paddockdle-clue span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 840;
+  text-transform: uppercase;
+}
+
+.paddockdle-clue strong {
+  display: block;
+  margin-top: 14px;
+  font-size: 1.18rem;
+}
+
+.paddockdle-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 130px;
+  gap: 10px;
+}
+
+.paddockdle-form input {
+  min-height: 46px;
+  padding: 0 14px;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-2);
+  font-weight: 760;
+}
+
+.paddockdle-form button {
+  min-height: 46px;
+  color: #ffffff;
+  border: 1px solid var(--red);
+  border-radius: 6px;
+  background: var(--red);
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.paddockdle-form button:disabled {
+  cursor: default;
+  opacity: 0.65;
+}
+
+.paddockdle-message {
+  margin: 0;
+  color: #ffb4aa;
+  font-weight: 800;
+}
+
+.paddockdle-message.is-success {
+  color: #73e6aa;
+}
+
+.paddockdle-history {
+  display: grid;
+  gap: 12px;
+}
+
+.paddockdle-guess {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--team-color, var(--red)) 52%, #ffffff 48%);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--team-color, var(--red)) 14%, var(--surface-2) 86%);
+}
+
+.paddockdle-guess strong,
+.paddockdle-guess span {
+  display: block;
+}
+
+.paddockdle-guess span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.paddockdle-portrait {
+  display: inline-grid;
+  place-items: center;
+  width: 54px;
+  height: 132px;
+  color: #ffffff;
+  border: 1px solid color-mix(in srgb, var(--team-color, var(--red)) 62%, #ffffff 38%);
+  border-radius: 8px;
+  background-color: var(--team-color, var(--red));
+  background-image: url("assets/feature-images/paddockdle-drivers.png");
+  background-position: var(--sprite-x, 0%) var(--sprite-y, 0%);
+  background-size: 800% auto;
+  background-repeat: no-repeat;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+}
+
+.paddockdle-portrait-fallback {
+  background-image: none;
+  font-weight: 900;
+}
+
+.paddockdle-target-portrait {
+  width: 68px;
+  height: 166px;
+}
+
 .profile-card,
 .news-card {
   min-height: 190px;
@@ -3028,6 +3212,7 @@ body.light-theme .quote-card {
   .points-prediction-form,
   .points-prediction-list,
   .account-page,
+  .paddockdle-shell,
   .payout-summary-grid,
   .creator-profile-grid {
     grid-template-columns: 1fr;
@@ -3088,5 +3273,14 @@ body.light-theme .quote-card {
 
   .chat-message {
     width: 100%;
+  }
+
+  .paddockdle-clues {
+    grid-template-columns: 1fr;
+  }
+
+  .paddockdle-form,
+  .paddockdle-hero {
+    grid-template-columns: 1fr;
   }
 }

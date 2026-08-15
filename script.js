@@ -1496,6 +1496,52 @@ const CURRENT_CONSTRUCTOR_POINTS = {
   cadillac: { points: 0, wins: 0 }
 };
 
+const PADDOCKDLE_MAX_GUESSES = 6;
+const PADDOCKDLE_IMAGE = 'assets/feature-images/paddockdle-drivers.png';
+const PADDOCKDLE_REWARDS = {
+  1: 80,
+  2: 50,
+  3: 35,
+  4: 20,
+  5: 10,
+  6: 5
+};
+const PADDOCKDLE_FIELDS = [
+  { id: 'championships', label: 'World championships' },
+  { id: 'nationality', label: 'Nationality' },
+  { id: 'podiums', label: 'Career podiums' },
+  { id: 'wins', label: 'Career wins' },
+  { id: 'team', label: 'Team' },
+  { id: 'number', label: 'Number' },
+  { id: 'debut', label: 'Debut year' }
+];
+const PADDOCKDLE_OPENING_FIELD_IDS = ['championships', 'podiums', 'wins', 'debut'];
+
+const PADDOCKDLE_DRIVER_BASE = [
+  { id: 'norris', name: 'Lando Norris', nationality: 'United Kingdom', team: 'McLaren', teamId: 'mclaren', number: '1', championships: 1, wins: 12, podiums: 47, debut: 2019, sprite: [0, 0] },
+  { id: 'piastri', name: 'Oscar Piastri', nationality: 'Australia', team: 'McLaren', teamId: 'mclaren', number: '81', championships: 0, wins: 9, podiums: 28, debut: 2023, sprite: [1, 0] },
+  { id: 'leclerc', name: 'Charles Leclerc', nationality: 'Monaco', team: 'Ferrari', teamId: 'ferrari', number: '16', championships: 0, wins: 9, podiums: 54, debut: 2018, sprite: [2, 0] },
+  { id: 'hamilton', name: 'Lewis Hamilton', nationality: 'United Kingdom', team: 'Ferrari', teamId: 'ferrari', number: '44', championships: 7, wins: 106, podiums: 207, debut: 2007, sprite: [3, 0] },
+  { id: 'max_verstappen', name: 'Max Verstappen', nationality: 'Netherlands', team: 'Red Bull Racing', teamId: 'red_bull', number: '3', championships: 4, wins: 71, podiums: 131, debut: 2015, sprite: [4, 0] },
+  { id: 'lawson', name: 'Liam Lawson', nationality: 'New Zealand', team: 'Racing Bulls', teamId: 'rb', number: '30', championships: 0, wins: 0, podiums: 0, debut: 2023, sprite: [5, 0] },
+  { id: 'russell', name: 'George Russell', nationality: 'United Kingdom', team: 'Mercedes', teamId: 'mercedes', number: '63', championships: 0, wins: 7, podiums: 29, debut: 2019, sprite: [6, 0] },
+  { id: 'antonelli', name: 'Kimi Antonelli', nationality: 'Italy', team: 'Mercedes', teamId: 'mercedes', number: '12', championships: 0, wins: 6, podiums: 12, debut: 2025, sprite: [7, 0] },
+  { id: 'alonso', name: 'Fernando Alonso', nationality: 'Spain', team: 'Aston Martin', teamId: 'aston_martin', number: '14', championships: 2, wins: 32, podiums: 106, debut: 2001, sprite: [0, 1] },
+  { id: 'stroll', name: 'Lance Stroll', nationality: 'Canada', team: 'Aston Martin', teamId: 'aston_martin', number: '18', championships: 0, wins: 0, podiums: 3, debut: 2017, sprite: [1, 1] },
+  { id: 'gasly', name: 'Pierre Gasly', nationality: 'France', team: 'Alpine', teamId: 'alpine', number: '10', championships: 0, wins: 1, podiums: 6, debut: 2017, sprite: [2, 1] },
+  { id: 'colapinto', name: 'Franco Colapinto', nationality: 'Argentina', team: 'Alpine', teamId: 'alpine', number: '43', championships: 0, wins: 0, podiums: 0, debut: 2024, sprite: [3, 1] },
+  { id: 'ocon', name: 'Esteban Ocon', nationality: 'France', team: 'Haas F1 Team', teamId: 'haas', number: '31', championships: 0, wins: 1, podiums: 4, debut: 2016, sprite: [4, 1] },
+  { id: 'bearman', name: 'Oliver Bearman', nationality: 'United Kingdom', team: 'Haas F1 Team', teamId: 'haas', number: '87', championships: 0, wins: 0, podiums: 0, debut: 2024, sprite: [5, 1] },
+  { id: 'hadjar', name: 'Isack Hadjar', nationality: 'France', team: 'Red Bull Racing', teamId: 'red_bull', number: '6', championships: 0, wins: 0, podiums: 1, debut: 2025, sprite: [1, 2] },
+  { id: 'sainz', name: 'Carlos Sainz', nationality: 'Spain', team: 'Williams', teamId: 'williams', number: '55', championships: 0, wins: 4, podiums: 29, debut: 2015, sprite: [2, 2] },
+  { id: 'albon', name: 'Alexander Albon', nationality: 'Thailand', team: 'Williams', teamId: 'williams', number: '23', championships: 0, wins: 0, podiums: 2, debut: 2019, sprite: [3, 2] },
+  { id: 'hulkenberg', name: 'Nico Hulkenberg', nationality: 'Germany', team: 'Audi', teamId: 'audi', number: '27', championships: 0, wins: 0, podiums: 1, debut: 2010, sprite: [4, 2] },
+  { id: 'bortoleto', name: 'Gabriel Bortoleto', nationality: 'Brazil', team: 'Audi', teamId: 'audi', number: '5', championships: 0, wins: 0, podiums: 0, debut: 2025, sprite: [5, 2] },
+  { id: 'arvid_lindblad', name: 'Arvid Lindblad', nationality: 'United Kingdom', team: 'Racing Bulls', teamId: 'rb', number: '41', championships: 0, wins: 0, podiums: 0, debut: 2026, sprite: [0, 2] },
+  { id: 'perez', name: 'Sergio Perez', nationality: 'Mexico', team: 'Cadillac', teamId: 'cadillac', number: '11', championships: 0, wins: 6, podiums: 39, debut: 2011, sprite: null },
+  { id: 'bottas', name: 'Valtteri Bottas', nationality: 'Finland', team: 'Cadillac', teamId: 'cadillac', number: '77', championships: 0, wins: 10, podiums: 67, debut: 2013, sprite: null }
+];
+
 const state = {
   races: [],
   results: [],
@@ -1540,6 +1586,7 @@ const state = {
   chatMessages: [],
   chatSubmitting: false,
   chatError: '',
+  paddockdle: null,
   chatReady: false,
   authReady: false,
   authUser: null,
@@ -1662,6 +1709,16 @@ const els = {
   leaderboard: document.querySelector('#leaderboard'),
   profileGrid: document.querySelector('#profileGrid'),
   teamProfileGrid: document.querySelector('#teamProfileGrid'),
+  paddockdleReset: document.querySelector('#paddockdleReset'),
+  paddockdleMystery: document.querySelector('#paddockdleMystery'),
+  paddockdleStatus: document.querySelector('#paddockdleStatus'),
+  paddockdleClues: document.querySelector('#paddockdleClues'),
+  paddockdleForm: document.querySelector('#paddockdleForm'),
+  paddockdleInput: document.querySelector('#paddockdleInput'),
+  paddockdleDrivers: document.querySelector('#paddockdleDrivers'),
+  paddockdleMessage: document.querySelector('#paddockdleMessage'),
+  paddockdleAttempts: document.querySelector('#paddockdleAttempts'),
+  paddockdleGuesses: document.querySelector('#paddockdleGuesses'),
   quoteGrid: document.querySelector('#quoteGrid'),
   newsGrid: document.querySelector('#newsGrid'),
   refreshNews: document.querySelector('#refreshNews'),
@@ -1675,7 +1732,7 @@ const els = {
   lastUpdated: document.querySelector('#lastUpdated')
 };
 
-const PAGE_IDS = ['home', 'next-race', 'previous-race', 'schedule', 'race-detail', 'standings', 'account', 'profiles', 'news', 'chat', 'wisdom'];
+const PAGE_IDS = ['home', 'next-race', 'previous-race', 'schedule', 'race-detail', 'standings', 'account', 'profiles', 'paddockdle', 'news', 'chat', 'wisdom'];
 
 function pageFromHash() {
   const hash = window.location.hash.replace('#', '');
@@ -2589,6 +2646,34 @@ async function initializeFirebaseVotes() {
           favoriteDriverId,
           favoriteTeamColor,
           createdAt: serverTimestamp()
+        });
+      },
+
+      async creditPaddockdleWin({ reward, attempts, driverName }) {
+        const user = auth.currentUser;
+        if (!user) throw new Error('Sign in to collect Paddockdle F1 Bucks.');
+        const cleanReward = Math.max(0, Math.floor(Number(reward) || 0));
+        if (!cleanReward) throw new Error('No Paddockdle reward to credit.');
+        const walletRef = doc(db, 'users', user.uid);
+
+        await runTransaction(db, async transaction => {
+          const walletSnapshot = await transaction.get(walletRef);
+          const currentBalance = walletSnapshot.exists()
+            ? Number(walletSnapshot.data().f1BucksBalance) || 0
+            : STARTING_F1_BUCKS;
+
+          transaction.set(walletRef, {
+            email: user.email || '',
+            displayName: user.displayName || authUserName(),
+            f1BucksBalance: currentBalance + cleanReward,
+            lastPaddockdleWin: {
+              reward: cleanReward,
+              attempts: Math.max(1, Math.floor(Number(attempts) || 1)),
+              driverName: String(driverName || 'F1 driver').slice(0, 60),
+              creditedAt: serverTimestamp()
+            },
+            updatedAt: serverTimestamp()
+          }, { merge: true });
         });
       },
 
@@ -4469,6 +4554,125 @@ function renderTeamProfiles() {
   `;
 }
 
+function paddockdleDrivers() {
+  return PADDOCKDLE_DRIVER_BASE.map(driver => ({ ...driver }));
+}
+
+function paddockdleValue(driver, fieldId) {
+  const value = driver?.[fieldId];
+  return value === undefined || value === null || value === '' ? 'TBC' : String(value);
+}
+
+function paddockdleFindDriver(name = '') {
+  const normalized = normalizeName(name);
+  const drivers = paddockdleDrivers();
+  return drivers.find(driver => normalizeName(driver.name) === normalized)
+    || drivers.find(driver => normalizeName(driver.name).includes(normalized));
+}
+
+function paddockdlePortraitHtml(driver, className = '') {
+  const color = teamColor(driver.teamId);
+  const style = [`--team-color: ${color}`];
+  if (driver.sprite) {
+    const [column, row] = driver.sprite;
+    const x = column ? (column / 7) * 100 : 0;
+    const y = row ? (row / 2) * 100 : 0;
+    style.push(`--sprite-x: ${x.toFixed(2)}%`);
+    style.push(`--sprite-y: ${y.toFixed(2)}%`);
+    return `<span class="paddockdle-portrait ${className}" style="${escapeHtml(style.join('; '))}" aria-label="${escapeHtml(driver.name)}"></span>`;
+  }
+  const initials = driver.name.split(' ').map(part => part[0]).join('').slice(0, 2);
+  return `<span class="paddockdle-portrait paddockdle-portrait-fallback ${className}" style="${escapeHtml(style.join('; '))}" aria-label="${escapeHtml(driver.name)}">${escapeHtml(initials)}</span>`;
+}
+
+function resetPaddockdle() {
+  const drivers = paddockdleDrivers();
+  const target = drivers[Math.floor(Math.random() * drivers.length)];
+  const revealed = [...PADDOCKDLE_OPENING_FIELD_IDS]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 2);
+
+  state.paddockdle = {
+    targetId: target.id,
+    revealed,
+    guesses: [],
+    done: false,
+    won: false,
+    message: ''
+  };
+}
+
+function revealPaddockdleField(fieldId) {
+  if (!state.paddockdle.revealed.includes(fieldId)) {
+    state.paddockdle.revealed.push(fieldId);
+  }
+}
+
+function revealRandomPaddockdleField() {
+  const hidden = PADDOCKDLE_FIELDS
+    .map(field => field.id)
+    .filter(fieldId => !state.paddockdle.revealed.includes(fieldId));
+  if (!hidden.length) return;
+  revealPaddockdleField(hidden[Math.floor(Math.random() * hidden.length)]);
+}
+
+function renderPaddockdle() {
+  if (!els.paddockdleClues) return;
+  if (!state.paddockdle) resetPaddockdle();
+
+  const drivers = paddockdleDrivers();
+  const target = drivers.find(driver => driver.id === state.paddockdle.targetId) || drivers[0];
+  const attempts = state.paddockdle.guesses.length;
+  const locked = state.paddockdle.done || attempts >= PADDOCKDLE_MAX_GUESSES;
+
+  els.paddockdleMystery.innerHTML = state.paddockdle.done
+    ? paddockdlePortraitHtml(target, 'paddockdle-target-portrait')
+    : '<span>?</span>';
+  els.paddockdleMystery.className = `paddockdle-mystery ${state.paddockdle.done ? 'is-revealed' : 'is-hidden'}`;
+  els.paddockdleStatus.textContent = state.paddockdle.done
+    ? (state.paddockdle.won ? `You found ${target.name}.` : `The driver was ${target.name}.`)
+    : `${PADDOCKDLE_MAX_GUESSES - attempts} guesses left. Matching categories reveal hidden blocks.`;
+  els.paddockdleAttempts.textContent = `${attempts} / ${PADDOCKDLE_MAX_GUESSES}`;
+
+  els.paddockdleDrivers.innerHTML = drivers
+    .map(driver => `<option value="${escapeHtml(driver.name)}"></option>`)
+    .join('');
+  els.paddockdleClues.innerHTML = PADDOCKDLE_FIELDS.map(field => {
+    const revealed = state.paddockdle.revealed.includes(field.id) || state.paddockdle.done;
+    return `
+      <article class="paddockdle-clue ${revealed ? 'is-revealed' : ''}">
+        <span>${escapeHtml(field.label)}</span>
+        <strong>${revealed ? escapeHtml(paddockdleValue(target, field.id)) : '???'}</strong>
+      </article>
+    `;
+  }).join('');
+
+  els.paddockdleGuesses.innerHTML = state.paddockdle.guesses.length
+    ? state.paddockdle.guesses.map(guess => {
+      const driver = drivers.find(item => item.id === guess.driverId);
+      const matchedLabels = guess.matches
+        .map(fieldId => PADDOCKDLE_FIELDS.find(field => field.id === fieldId)?.label)
+        .filter(Boolean);
+      return `
+        <article class="paddockdle-guess" style="--team-color: ${teamColor(driver.teamId)}">
+          ${paddockdlePortraitHtml(driver, 'paddockdle-guess-portrait')}
+          <div>
+            <strong>${escapeHtml(driver.name)}</strong>
+            <span>${matchedLabels.length ? `Matched: ${escapeHtml(matchedLabels.join(', '))}` : 'Wrong answer'}</span>
+          </div>
+        </article>
+      `;
+    }).join('')
+    : '<p class="empty-state">Wrong guesses will appear here.</p>';
+
+  els.paddockdleInput.disabled = locked;
+  els.paddockdleForm.querySelector('button').disabled = locked;
+  els.paddockdleForm.querySelector('button').textContent = locked ? 'Game over' : 'Guess';
+  els.paddockdleMessage.hidden = !state.paddockdle.message;
+  els.paddockdleMessage.textContent = state.paddockdle.message;
+  els.paddockdleMessage.classList.toggle('is-success', state.paddockdle.won);
+}
+
 function renderProfiles() {
   const profiles = state.drivers.length ? state.drivers : [];
   els.profileGrid.innerHTML = profiles.length ? profiles.map(row => {
@@ -4575,6 +4779,7 @@ function renderAll() {
   renderVotingPanel();
   renderStandings();
   renderProfiles();
+  renderPaddockdle();
   renderQuotes();
   renderChat();
 }
@@ -4603,6 +4808,85 @@ window.addEventListener('hashchange', () => {
 });
 applyTheme();
 els.themeToggle?.addEventListener('click', toggleTheme);
+
+els.paddockdleForm?.addEventListener('submit', async event => {
+  event.preventDefault();
+  if (!state.paddockdle) resetPaddockdle();
+  if (state.paddockdle.done) return;
+
+  const guess = paddockdleFindDriver(els.paddockdleInput.value);
+  const target = paddockdleDrivers().find(driver => driver.id === state.paddockdle.targetId);
+
+  if (!guess) {
+    state.paddockdle.message = 'Pick a 2026 driver from the list.';
+    renderPaddockdle();
+    return;
+  }
+
+  if (state.paddockdle.guesses.some(item => item.driverId === guess.id)) {
+    state.paddockdle.message = `${guess.name} is already on your wrong-answer list.`;
+    renderPaddockdle();
+    return;
+  }
+
+  els.paddockdleInput.value = '';
+
+  if (guess.id === target.id) {
+    const attempts = state.paddockdle.guesses.length + 1;
+    const reward = PADDOCKDLE_REWARDS[attempts] || 0;
+    state.paddockdle.done = true;
+    state.paddockdle.won = true;
+    state.paddockdle.message = `${guess.name} is correct. Crediting ${reward} F1 Bucks...`;
+    PADDOCKDLE_FIELDS.forEach(field => revealPaddockdleField(field.id));
+    renderPaddockdle();
+    if (!state.authUser || !window.F1FirebaseAccount?.creditPaddockdleWin) {
+      state.paddockdle.message = `${guess.name} is correct. Sign in to collect Paddockdle F1 Bucks.`;
+      renderPaddockdle();
+      return;
+    }
+    try {
+      await window.F1FirebaseAccount.creditPaddockdleWin({
+        reward,
+        attempts,
+        driverName: guess.name
+      });
+      state.paddockdle.message = `${guess.name} is correct. ${reward} F1 Bucks added to your account.`;
+    } catch (error) {
+      state.paddockdle.message = error?.code?.includes('permission-denied') || error?.message?.toLowerCase?.().includes('permission')
+        ? 'Paddockdle win saved, but Firebase rules blocked the F1 Bucks credit.'
+        : (error?.message || 'Paddockdle win saved, but F1 Bucks could not be credited.');
+    }
+    renderPaddockdle();
+    return;
+  }
+
+  const matches = PADDOCKDLE_FIELDS
+    .filter(field => paddockdleValue(guess, field.id) === paddockdleValue(target, field.id))
+    .map(field => field.id);
+  matches.forEach(revealPaddockdleField);
+  if (!matches.length) revealRandomPaddockdleField();
+
+  state.paddockdle.guesses.push({ driverId: guess.id, matches });
+  const attempts = state.paddockdle.guesses.length;
+  if (attempts >= PADDOCKDLE_MAX_GUESSES) {
+    state.paddockdle.done = true;
+    state.paddockdle.won = false;
+    state.paddockdle.message = `Out of guesses. The driver was ${target.name}.`;
+    PADDOCKDLE_FIELDS.forEach(field => revealPaddockdleField(field.id));
+  } else {
+    state.paddockdle.message = matches.length
+      ? `${guess.name} matched ${matches.length} block${matches.length === 1 ? '' : 's'}.`
+      : `${guess.name} is wrong, so one extra clue opened.`;
+  }
+  renderPaddockdle();
+});
+
+els.paddockdleReset?.addEventListener('click', () => {
+  resetPaddockdle();
+  renderPaddockdle();
+  els.paddockdleInput?.focus();
+});
+
 els.accountToggle?.addEventListener('click', () => {
   if (!els.accountPanel) return;
   if (state.authUser) {

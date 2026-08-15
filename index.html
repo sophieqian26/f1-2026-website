@@ -6,7 +6,7 @@
     <title>F1 2026 Season Hub</title>
     <link rel="preconnect" href="https://api.jolpi.ca">
     <link rel="preconnect" href="https://api.allorigins.win">
-    <link rel="stylesheet" href="styles.css?v=20260727-home-leader-solid-cards">
+    <link rel="stylesheet" href="styles.css?v=20260815-paddockdle-career-stats">
   </head>
   <body>
     <header class="site-header">
@@ -21,6 +21,7 @@
         <a href="#schedule">Schedule</a>
         <a href="#standings">Standings</a>
         <a href="#profiles">Profiles</a>
+        <a href="#paddockdle">Paddockdle</a>
         <a href="#news">News</a>
         <a href="#chat">Race chat</a>
         <a href="#wisdom">Wisdom</a>
@@ -335,6 +336,45 @@
         <div class="team-profile-grid" id="teamProfileGrid"></div>
       </section>
 
+      <section class="section shell page-section" id="paddockdle">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Guessing game</p>
+            <h2>Paddockdle</h2>
+          </div>
+          <button class="refresh-button" id="paddockdleReset" type="button">New driver</button>
+        </div>
+        <div class="paddockdle-shell">
+          <section class="paddockdle-board" aria-labelledby="paddockdleTitle">
+            <div class="paddockdle-hero">
+              <div class="paddockdle-mystery" id="paddockdleMystery" aria-hidden="true"></div>
+              <div>
+                <p class="eyebrow">Six guesses</p>
+                <h3 id="paddockdleTitle">Find the 2026 driver</h3>
+                <p id="paddockdleStatus">Two clue blocks are already open.</p>
+              </div>
+            </div>
+            <div class="paddockdle-clues" id="paddockdleClues" aria-live="polite"></div>
+            <form class="paddockdle-form" id="paddockdleForm">
+              <input id="paddockdleInput" type="text" list="paddockdleDrivers" autocomplete="off" placeholder="Type a driver name" required>
+              <datalist id="paddockdleDrivers"></datalist>
+              <button type="submit">Guess</button>
+            </form>
+            <p class="paddockdle-message" id="paddockdleMessage" hidden></p>
+          </section>
+          <section class="paddockdle-history" aria-labelledby="paddockdleHistoryTitle">
+            <div class="starting-grid-head">
+              <div>
+                <p class="eyebrow">Wrong answers</p>
+                <h3 id="paddockdleHistoryTitle">Guess history</h3>
+              </div>
+              <span id="paddockdleAttempts">0 / 6</span>
+            </div>
+            <div id="paddockdleGuesses"></div>
+          </section>
+        </div>
+      </section>
+
       <section class="section shell page-section" id="news">
         <div class="section-head compact">
           <div>
@@ -385,6 +425,6 @@
     </footer>
 
     <script src="firebase-config.js?v=20260705-firebase-config"></script>
-    <script src="script.js?v=20260727-previous-race-detail"></script>
+    <script src="script.js?v=20260815-paddockdle-career-stats"></script>
   </body>
 </html>

@@ -1498,13 +1498,27 @@ const CURRENT_CONSTRUCTOR_POINTS = {
 
 const PADDOCKDLE_MAX_GUESSES = 6;
 const PADDOCKDLE_IMAGE = 'assets/feature-images/paddockdle-drivers.png';
-const PADDOCKDLE_REWARDS = {
-  1: 80,
-  2: 50,
-  3: 35,
-  4: 20,
-  5: 10,
-  6: 5
+const PADDOCKDLE_REWARDS_BY_LEVEL = {
+  1: {
+    1: 15,
+    2: 10,
+    3: 8,
+    4: 5,
+    5: 3,
+    6: 1
+  },
+  2: {
+    1: 80,
+    2: 50,
+    3: 35,
+    4: 20,
+    5: 10,
+    6: 5
+  }
+};
+const PADDOCKDLE_LEVEL_LABELS = {
+  1: '2026 grid',
+  2: 'Last ten years'
 };
 const PADDOCKDLE_FIELDS = [
   { id: 'championships', label: 'World championships' },
@@ -1515,7 +1529,7 @@ const PADDOCKDLE_FIELDS = [
   { id: 'number', label: 'Number' },
   { id: 'debut', label: 'Debut year' }
 ];
-const PADDOCKDLE_OPENING_FIELD_IDS = ['championships', 'podiums', 'wins', 'debut'];
+const PADDOCKDLE_SAFE_OPENING_FIELD_IDS = ['championships', 'podiums', 'wins', 'debut'];
 
 const PADDOCKDLE_DRIVER_BASE = [
   { id: 'norris', name: 'Lando Norris', nationality: 'United Kingdom', team: 'McLaren', teamId: 'mclaren', number: '1', championships: 1, wins: 12, podiums: 47, debut: 2019, sprite: [0, 0] },
@@ -1540,6 +1554,38 @@ const PADDOCKDLE_DRIVER_BASE = [
   { id: 'arvid_lindblad', name: 'Arvid Lindblad', nationality: 'United Kingdom', team: 'Racing Bulls', teamId: 'rb', number: '41', championships: 0, wins: 0, podiums: 0, debut: 2026, sprite: [0, 2] },
   { id: 'perez', name: 'Sergio Perez', nationality: 'Mexico', team: 'Cadillac', teamId: 'cadillac', number: '11', championships: 0, wins: 6, podiums: 39, debut: 2011, sprite: null },
   { id: 'bottas', name: 'Valtteri Bottas', nationality: 'Finland', team: 'Cadillac', teamId: 'cadillac', number: '77', championships: 0, wins: 10, podiums: 67, debut: 2013, sprite: null }
+];
+
+const PADDOCKDLE_LEVEL_TWO_EXTRA_DRIVERS = [
+  { id: 'sebastian_vettel', name: 'Sebastian Vettel', nationality: 'Germany', team: 'Aston Martin', teamId: 'aston_martin', number: '5', championships: 4, wins: 53, podiums: 122, debut: 2007, sprite: null },
+  { id: 'kimi_raikkonen', name: 'Kimi Raikkonen', nationality: 'Finland', team: 'Alfa Romeo', teamId: 'audi', number: '7', championships: 1, wins: 21, podiums: 103, debut: 2001, sprite: null },
+  { id: 'nico_rosberg', name: 'Nico Rosberg', nationality: 'Germany', team: 'Mercedes', teamId: 'mercedes', number: '6', championships: 1, wins: 23, podiums: 57, debut: 2006, sprite: null },
+  { id: 'jenson_button', name: 'Jenson Button', nationality: 'United Kingdom', team: 'McLaren', teamId: 'mclaren', number: '22', championships: 1, wins: 15, podiums: 50, debut: 2000, sprite: null },
+  { id: 'felipe_massa', name: 'Felipe Massa', nationality: 'Brazil', team: 'Williams', teamId: 'williams', number: '19', championships: 0, wins: 11, podiums: 41, debut: 2002, sprite: null },
+  { id: 'daniel_ricciardo', name: 'Daniel Ricciardo', nationality: 'Australia', team: 'Racing Bulls', teamId: 'rb', number: '3', championships: 0, wins: 8, podiums: 32, debut: 2011, sprite: null },
+  { id: 'romain_grosjean', name: 'Romain Grosjean', nationality: 'France', team: 'Haas F1 Team', teamId: 'haas', number: '8', championships: 0, wins: 0, podiums: 10, debut: 2009, sprite: null },
+  { id: 'kevin_magnussen', name: 'Kevin Magnussen', nationality: 'Denmark', team: 'Haas F1 Team', teamId: 'haas', number: '20', championships: 0, wins: 0, podiums: 1, debut: 2014, sprite: null },
+  { id: 'daniil_kvyat', name: 'Daniil Kvyat', nationality: 'Russia', team: 'AlphaTauri', teamId: 'rb', number: '26', championships: 0, wins: 0, podiums: 3, debut: 2014, sprite: null },
+  { id: 'robert_kubica', name: 'Robert Kubica', nationality: 'Poland', team: 'Alfa Romeo', teamId: 'audi', number: '88', championships: 0, wins: 1, podiums: 12, debut: 2006, sprite: null },
+  { id: 'felipe_nasr', name: 'Felipe Nasr', nationality: 'Brazil', team: 'Sauber', teamId: 'audi', number: '12', championships: 0, wins: 0, podiums: 0, debut: 2015, sprite: null },
+  { id: 'marcus_ericsson', name: 'Marcus Ericsson', nationality: 'Sweden', team: 'Sauber', teamId: 'audi', number: '9', championships: 0, wins: 0, podiums: 0, debut: 2014, sprite: null },
+  { id: 'pascal_wehrlein', name: 'Pascal Wehrlein', nationality: 'Germany', team: 'Sauber', teamId: 'audi', number: '94', championships: 0, wins: 0, podiums: 0, debut: 2016, sprite: null },
+  { id: 'rio_haryanto', name: 'Rio Haryanto', nationality: 'Indonesia', team: 'Manor Racing', teamId: 'cadillac', number: '88', championships: 0, wins: 0, podiums: 0, debut: 2016, sprite: null },
+  { id: 'esteban_gutierrez', name: 'Esteban Gutierrez', nationality: 'Mexico', team: 'Haas F1 Team', teamId: 'haas', number: '21', championships: 0, wins: 0, podiums: 0, debut: 2013, sprite: null },
+  { id: 'jolyon_palmer', name: 'Jolyon Palmer', nationality: 'United Kingdom', team: 'Renault', teamId: 'alpine', number: '30', championships: 0, wins: 0, podiums: 0, debut: 2016, sprite: null },
+  { id: 'stoffel_vandoorne', name: 'Stoffel Vandoorne', nationality: 'Belgium', team: 'McLaren', teamId: 'mclaren', number: '2', championships: 0, wins: 0, podiums: 0, debut: 2016, sprite: null },
+  { id: 'brendon_hartley', name: 'Brendon Hartley', nationality: 'New Zealand', team: 'Toro Rosso', teamId: 'rb', number: '28', championships: 0, wins: 0, podiums: 0, debut: 2017, sprite: null },
+  { id: 'sergey_sirotkin', name: 'Sergey Sirotkin', nationality: 'Russia', team: 'Williams', teamId: 'williams', number: '35', championships: 0, wins: 0, podiums: 0, debut: 2018, sprite: null },
+  { id: 'antonio_giovinazzi', name: 'Antonio Giovinazzi', nationality: 'Italy', team: 'Alfa Romeo', teamId: 'audi', number: '99', championships: 0, wins: 0, podiums: 0, debut: 2017, sprite: null },
+  { id: 'nicholas_latifi', name: 'Nicholas Latifi', nationality: 'Canada', team: 'Williams', teamId: 'williams', number: '6', championships: 0, wins: 0, podiums: 0, debut: 2020, sprite: null },
+  { id: 'nikita_mazepin', name: 'Nikita Mazepin', nationality: 'Russia', team: 'Haas F1 Team', teamId: 'haas', number: '9', championships: 0, wins: 0, podiums: 0, debut: 2021, sprite: null },
+  { id: 'mick_schumacher', name: 'Mick Schumacher', nationality: 'Germany', team: 'Haas F1 Team', teamId: 'haas', number: '47', championships: 0, wins: 0, podiums: 0, debut: 2021, sprite: null },
+  { id: 'yuki_tsunoda', name: 'Yuki Tsunoda', nationality: 'Japan', team: 'Racing Bulls', teamId: 'rb', number: '22', championships: 0, wins: 0, podiums: 0, debut: 2021, sprite: null },
+  { id: 'zhou_guanyu', name: 'Zhou Guanyu', nationality: 'China', team: 'Kick Sauber', teamId: 'audi', number: '24', championships: 0, wins: 0, podiums: 0, debut: 2022, sprite: null },
+  { id: 'nyck_de_vries', name: 'Nyck de Vries', nationality: 'Netherlands', team: 'AlphaTauri', teamId: 'rb', number: '21', championships: 0, wins: 0, podiums: 0, debut: 2023, sprite: null },
+  { id: 'logan_sargeant', name: 'Logan Sargeant', nationality: 'United States', team: 'Williams', teamId: 'williams', number: '2', championships: 0, wins: 0, podiums: 0, debut: 2023, sprite: null },
+  { id: 'pietro_fittipaldi', name: 'Pietro Fittipaldi', nationality: 'Brazil', team: 'Haas F1 Team', teamId: 'haas', number: '51', championships: 0, wins: 0, podiums: 0, debut: 2020, sprite: null },
+  { id: 'jack_doohan', name: 'Jack Doohan', nationality: 'Australia', team: 'Alpine', teamId: 'alpine', number: '7', championships: 0, wins: 0, podiums: 0, debut: 2024, sprite: null }
 ];
 
 const state = {
@@ -1586,6 +1632,7 @@ const state = {
   chatMessages: [],
   chatSubmitting: false,
   chatError: '',
+  paddockdleLevel: 1,
   paddockdle: null,
   chatReady: false,
   authReady: false,
@@ -1709,6 +1756,8 @@ const els = {
   leaderboard: document.querySelector('#leaderboard'),
   profileGrid: document.querySelector('#profileGrid'),
   teamProfileGrid: document.querySelector('#teamProfileGrid'),
+  paddockdleLevel1: document.querySelector('#paddockdleLevel1'),
+  paddockdleLevel2: document.querySelector('#paddockdleLevel2'),
   paddockdleReset: document.querySelector('#paddockdleReset'),
   paddockdleMystery: document.querySelector('#paddockdleMystery'),
   paddockdleStatus: document.querySelector('#paddockdleStatus'),
@@ -2649,7 +2698,7 @@ async function initializeFirebaseVotes() {
         });
       },
 
-      async creditPaddockdleWin({ reward, attempts, driverName }) {
+      async creditPaddockdleWin({ reward, attempts, level, driverName }) {
         const user = auth.currentUser;
         if (!user) throw new Error('Sign in to collect Paddockdle F1 Bucks.');
         const cleanReward = Math.max(0, Math.floor(Number(reward) || 0));
@@ -2669,6 +2718,7 @@ async function initializeFirebaseVotes() {
             lastPaddockdleWin: {
               reward: cleanReward,
               attempts: Math.max(1, Math.floor(Number(attempts) || 1)),
+              level: Math.max(1, Math.floor(Number(level) || 1)),
               driverName: String(driverName || 'F1 driver').slice(0, 60),
               creditedAt: serverTimestamp()
             },
@@ -4554,8 +4604,23 @@ function renderTeamProfiles() {
   `;
 }
 
-function paddockdleDrivers() {
-  return PADDOCKDLE_DRIVER_BASE.map(driver => ({ ...driver }));
+function paddockdleRewards() {
+  return PADDOCKDLE_REWARDS_BY_LEVEL[state.paddockdleLevel] || PADDOCKDLE_REWARDS_BY_LEVEL[1];
+}
+
+function paddockdleDrivers(level = state.paddockdleLevel) {
+  const drivers = level === 2
+    ? [...PADDOCKDLE_DRIVER_BASE, ...PADDOCKDLE_LEVEL_TWO_EXTRA_DRIVERS]
+    : PADDOCKDLE_DRIVER_BASE;
+  return drivers.map(driver => ({ ...driver }));
+}
+
+function paddockdleOpeningFieldIds(target) {
+  const isLevelTwoHistoricalDriver = state.paddockdleLevel === 2
+    && !PADDOCKDLE_DRIVER_BASE.some(driver => driver.id === target?.id);
+  return isLevelTwoHistoricalDriver
+    ? [...PADDOCKDLE_SAFE_OPENING_FIELD_IDS, 'nationality', 'team']
+    : [...PADDOCKDLE_SAFE_OPENING_FIELD_IDS];
 }
 
 function paddockdleValue(driver, fieldId) {
@@ -4585,14 +4650,16 @@ function paddockdlePortraitHtml(driver, className = '') {
   return `<span class="paddockdle-portrait paddockdle-portrait-fallback ${className}" style="${escapeHtml(style.join('; '))}" aria-label="${escapeHtml(driver.name)}">${escapeHtml(initials)}</span>`;
 }
 
-function resetPaddockdle() {
+function resetPaddockdle(level = state.paddockdleLevel) {
+  state.paddockdleLevel = level === 2 ? 2 : 1;
   const drivers = paddockdleDrivers();
   const target = drivers[Math.floor(Math.random() * drivers.length)];
-  const revealed = [...PADDOCKDLE_OPENING_FIELD_IDS]
+  const revealed = paddockdleOpeningFieldIds(target)
     .sort(() => Math.random() - 0.5)
     .slice(0, 2);
 
   state.paddockdle = {
+    level: state.paddockdleLevel,
     targetId: target.id,
     revealed,
     guesses: [],
@@ -4616,6 +4683,7 @@ function renderPaddockdle() {
   const target = drivers.find(driver => driver.id === state.paddockdle.targetId) || drivers[0];
   const attempts = state.paddockdle.guesses.length;
   const locked = state.paddockdle.done || attempts >= PADDOCKDLE_MAX_GUESSES;
+  const levelLabel = PADDOCKDLE_LEVEL_LABELS[state.paddockdleLevel] || PADDOCKDLE_LEVEL_LABELS[1];
 
   els.paddockdleMystery.innerHTML = state.paddockdle.done
     ? paddockdlePortraitHtml(target, 'paddockdle-target-portrait')
@@ -4623,8 +4691,10 @@ function renderPaddockdle() {
   els.paddockdleMystery.className = `paddockdle-mystery ${state.paddockdle.done ? 'is-revealed' : 'is-hidden'}`;
   els.paddockdleStatus.textContent = state.paddockdle.done
     ? (state.paddockdle.won ? `You found ${target.name}.` : `The driver was ${target.name}.`)
-    : `${PADDOCKDLE_MAX_GUESSES - attempts} guesses left. Matching categories reveal hidden blocks.`;
+    : `${levelLabel} · ${PADDOCKDLE_MAX_GUESSES - attempts} guesses left. Matching categories reveal hidden blocks.`;
   els.paddockdleAttempts.textContent = `${attempts} / ${PADDOCKDLE_MAX_GUESSES}`;
+  els.paddockdleLevel1?.classList.toggle('is-active', state.paddockdleLevel === 1);
+  els.paddockdleLevel2?.classList.toggle('is-active', state.paddockdleLevel === 2);
 
   els.paddockdleDrivers.innerHTML = drivers
     .map(driver => `<option value="${escapeHtml(driver.name)}"></option>`)
@@ -4810,7 +4880,7 @@ els.paddockdleForm?.addEventListener('submit', async event => {
   const target = paddockdleDrivers().find(driver => driver.id === state.paddockdle.targetId);
 
   if (!guess) {
-    state.paddockdle.message = 'Pick a 2026 driver from the list.';
+    state.paddockdle.message = `Pick a driver from ${PADDOCKDLE_LEVEL_LABELS[state.paddockdleLevel]}.`;
     renderPaddockdle();
     return;
   }
@@ -4825,7 +4895,7 @@ els.paddockdleForm?.addEventListener('submit', async event => {
 
   if (guess.id === target.id) {
     const attempts = state.paddockdle.guesses.length + 1;
-    const reward = PADDOCKDLE_REWARDS[attempts] || 0;
+    const reward = paddockdleRewards()[attempts] || 0;
     state.paddockdle.done = true;
     state.paddockdle.won = true;
     state.paddockdle.message = `${guess.name} is correct. Crediting ${reward} F1 Bucks...`;
@@ -4840,6 +4910,7 @@ els.paddockdleForm?.addEventListener('submit', async event => {
       await window.F1FirebaseAccount.creditPaddockdleWin({
         reward,
         attempts,
+        level: state.paddockdleLevel,
         driverName: guess.name
       });
       state.paddockdle.message = `${guess.name} is correct. ${reward} F1 Bucks added to your account.`;
@@ -4874,6 +4945,18 @@ els.paddockdleForm?.addEventListener('submit', async event => {
 
 els.paddockdleReset?.addEventListener('click', () => {
   resetPaddockdle();
+  renderPaddockdle();
+  els.paddockdleInput?.focus();
+});
+
+els.paddockdleLevel1?.addEventListener('click', () => {
+  resetPaddockdle(1);
+  renderPaddockdle();
+  els.paddockdleInput?.focus();
+});
+
+els.paddockdleLevel2?.addEventListener('click', () => {
+  resetPaddockdle(2);
   renderPaddockdle();
   els.paddockdleInput?.focus();
 });

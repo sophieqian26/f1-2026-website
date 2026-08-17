@@ -12,6 +12,26 @@ const KALSHI_MARKETS_API = 'https://api.elections.kalshi.com/trade-api/v2/market
 const VOTE_STORAGE_KEY = `f1-${SEASON}-race-votes`;
 const VOTE_USER_KEY = `f1-${SEASON}-vote-user-id`;
 const THEME_STORAGE_KEY = `f1-${SEASON}-theme`;
+const FLAPPY_HIGH_SCORE_STORAGE_KEY = `f1-${SEASON}-flappy-high-score`;
+const NEXT_RACE_MASCOT_ASSET_VERSION = '20260817-click-rotate';
+const NEXT_RACE_MASCOT_MIN_DELAY_MS = 15 * 1000;
+const NEXT_RACE_MASCOT_MAX_DELAY_MS = 60 * 1000;
+const NEXT_RACE_MASCOTS = [
+  'mascot-01.png',
+  'mascot-02.png',
+  'mascot-03-fixed.png',
+  'mascot-04.png',
+  'mascot-05.png',
+  'mascot-06.png'
+].map(fileName => `assets/site-mascots/${fileName}?v=${NEXT_RACE_MASCOT_ASSET_VERSION}`);
+const STATIC_MASCOT_BANNERS = [
+  'banner-01.png',
+  'banner-02.png',
+  'banner-03.png',
+  'banner-04.png',
+  'banner-05.png',
+  'banner-06.png'
+].map(fileName => `assets/mascot-banners/${fileName}?v=${NEXT_RACE_MASCOT_ASSET_VERSION}`);
 const FIREBASE_SDK_VERSION = '10.12.5';
 const STARTING_F1_BUCKS = 50;
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
@@ -1588,6 +1608,21 @@ const PADDOCKDLE_LEVEL_TWO_EXTRA_DRIVERS = [
   { id: 'jack_doohan', name: 'Jack Doohan', nationality: 'Australia', team: 'Alpine', teamId: 'alpine', number: '7', championships: 0, wins: 0, podiums: 0, debut: 2024, sprite: null }
 ];
 
+const FLAPPY_RACERS = [
+  { id: 'lando', name: 'Lando Norris', team: 'McLaren', color: TEAM_COLORS.mclaren, src: 'assets/flappy-f1/lando-norris.png?v=20260816-right' },
+  { id: 'lewis', name: 'Lewis Hamilton', team: 'Ferrari', color: TEAM_COLORS.ferrari, src: 'assets/flappy-f1/lewis-hamilton.png?v=20260816-original' },
+  { id: 'kimi', name: 'Kimi Antonelli', team: 'Mercedes', color: TEAM_COLORS.mercedes, src: 'assets/flappy-f1/kimi-antonelli.png?v=20260816-right' },
+  { id: 'max', name: 'Max Verstappen', team: 'Red Bull Racing', color: TEAM_COLORS.red_bull, src: 'assets/flappy-f1/max-verstappen.png?v=20260816-right' },
+  { id: 'charles', name: 'Charles Leclerc', team: 'Ferrari', color: TEAM_COLORS.ferrari, src: 'assets/flappy-f1/charles-leclerc.png?v=20260816-right' },
+  { id: 'george', name: 'George Russell', team: 'Mercedes', color: TEAM_COLORS.mercedes, src: 'assets/flappy-f1/george-russell.png?v=20260816-right' }
+];
+const FLAPPY_GRAVITY = 0.42;
+const FLAPPY_JUMP = -7.8;
+const FLAPPY_OBSTACLE_SPEED = 3.4;
+const FLAPPY_OBSTACLE_GAP = 168;
+const FLAPPY_OBSTACLE_WIDTH = 78;
+const FLAPPY_RACER_WIDTH = 118;
+
 const state = {
   races: [],
   results: [],
@@ -1632,8 +1667,24 @@ const state = {
   chatMessages: [],
   chatSubmitting: false,
   chatError: '',
+  flappyLeaderboard: [],
+  flappyLeaderboardReady: false,
+  flappyLeaderboardError: '',
+  flappyScoreSubmitting: false,
   paddockdleLevel: 1,
   paddockdle: null,
+  flappy: {
+    racerId: 'lando',
+    y: 230,
+    velocity: 0,
+    obstacles: [],
+    score: 0,
+    running: false,
+    crashed: false,
+    started: false,
+    animationId: null,
+    lastTime: 0
+  },
   chatReady: false,
   authReady: false,
   authUser: null,
@@ -1644,7 +1695,8 @@ const state = {
   firebaseUnsubscribers: [],
   walletUnsubscribe: null,
   payoutUnsubscribe: null,
-  chatUnsubscribe: null
+  chatUnsubscribe: null,
+  flappyLeaderboardUnsubscribe: null
 };
 
 function makeResult(position, driver, constructor, points, details = {}) {
@@ -1768,6 +1820,14 @@ const els = {
   paddockdleMessage: document.querySelector('#paddockdleMessage'),
   paddockdleAttempts: document.querySelector('#paddockdleAttempts'),
   paddockdleGuesses: document.querySelector('#paddockdleGuesses'),
+  flappyReset: document.querySelector('#flappyReset'),
+  flappyScore: document.querySelector('#flappyScore'),
+  flappyHighScore: document.querySelector('#flappyHighScore'),
+  flappyRacerSelect: document.querySelector('#flappyRacerSelect'),
+  flappyCanvas: document.querySelector('#flappyCanvas'),
+  flappyOverlay: document.querySelector('#flappyOverlay'),
+  flappyLeaderboard: document.querySelector('#flappyLeaderboard'),
+  flappyLeaderboardStatus: document.querySelector('#flappyLeaderboardStatus'),
   quoteGrid: document.querySelector('#quoteGrid'),
   newsGrid: document.querySelector('#newsGrid'),
   refreshNews: document.querySelector('#refreshNews'),
@@ -1778,10 +1838,21 @@ const els = {
   chatCount: document.querySelector('#chatCount'),
   chatSubmit: document.querySelector('#chatSubmit'),
   chatError: document.querySelector('#chatError'),
+  nextRaceMascot: document.querySelector('#nextRaceMascot'),
+  nextRaceMascotImage: document.querySelector('#nextRaceMascotImage'),
   lastUpdated: document.querySelector('#lastUpdated')
 };
 
-const PAGE_IDS = ['home', 'next-race', 'previous-race', 'schedule', 'race-detail', 'standings', 'account', 'profiles', 'paddockdle', 'news', 'chat', 'wisdom'];
+const PAGE_IDS = ['home', 'next-race', 'previous-race', 'schedule', 'race-detail', 'standings', 'account', 'profiles', 'games', 'news', 'chat', 'wisdom'];
+const flappyImages = {};
+let nextRaceMascotTimer = null;
+let nextRaceMascotHideTimer = null;
+let nextRaceMascotRepositionFrame = null;
+let nextRaceMascotScheduled = false;
+let nextRaceMascotVisible = false;
+let staticMascotRenderFrame = null;
+const staticMascotAssignments = new Map();
+const staticBannerAssignments = new Map();
 
 function pageFromHash() {
   const hash = window.location.hash.replace('#', '');
@@ -1789,6 +1860,7 @@ function pageFromHash() {
   if (!hash || hash === 'top') return 'home';
   if (hash === 'prediction') return 'next-race';
   if (hash === 'results') return 'schedule';
+  if (hash === 'paddockdle') return 'games';
   return PAGE_IDS.includes(hash) ? hash : 'home';
 }
 
@@ -1814,6 +1886,334 @@ function setActivePage(pageId = pageFromHash()) {
   });
 
   window.scrollTo(0, 0);
+  handleNextRaceMascotPageChange(activePage);
+  scheduleStaticMascotRender(activePage);
+}
+
+function staticMascotAssignment(pageId) {
+  if (!staticMascotAssignments.has(pageId)) {
+    staticMascotAssignments.set(pageId, {
+      src: NEXT_RACE_MASCOTS[Math.floor(Math.random() * NEXT_RACE_MASCOTS.length)],
+      rotation: -4 + Math.random() * 8,
+      scale: 0.92 + Math.random() * 0.16,
+      top: Math.round(10 + Math.random() * 10),
+      homeRight: 29 + Math.random() * 8
+    });
+  }
+  return staticMascotAssignments.get(pageId);
+}
+
+function staticBannerAssignment(pageId) {
+  if (!staticBannerAssignments.has(pageId)) {
+    staticBannerAssignments.set(
+      pageId,
+      STATIC_MASCOT_BANNERS[Math.floor(Math.random() * STATIC_MASCOT_BANNERS.length)]
+    );
+  }
+  return staticBannerAssignments.get(pageId);
+}
+
+function addIndividualStaticMascot(anchor, assignmentKey, className = 'inline-static-mascot') {
+  if (!anchor) return;
+  const assignment = staticMascotAssignment(assignmentKey);
+  const mascot = document.createElement('img');
+  mascot.className = className;
+  mascot.src = assignment.src;
+  mascot.alt = '';
+  mascot.loading = 'eager';
+  mascot.draggable = false;
+  mascot.tabIndex = 0;
+  mascot.role = 'button';
+  mascot.dataset.staticMascotKey = assignmentKey;
+  mascot.setAttribute('aria-label', 'Change cartoon F1 driver');
+  mascot.style.setProperty('--static-mascot-rotate', `${assignment.rotation.toFixed(2)}deg`);
+  mascot.style.setProperty('--static-mascot-scale', assignment.scale.toFixed(2));
+  mascot.style.setProperty('--static-mascot-top', `${assignment.top}px`);
+  if (className === 'page-static-mascot') {
+    mascot.style.setProperty('--static-mascot-right', `${assignment.homeRight.toFixed(2)}%`);
+  }
+  anchor.append(mascot);
+}
+
+document.addEventListener('click', event => {
+  const mascot = event.target.closest('.page-static-mascot, .inline-static-mascot');
+  if (!mascot?.dataset.staticMascotKey) return;
+  rotateStaticMascot(mascot, mascot.dataset.staticMascotKey);
+});
+
+document.addEventListener('keydown', event => {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  const mascot = event.target.closest('.page-static-mascot, .inline-static-mascot');
+  if (!mascot?.dataset.staticMascotKey) return;
+  event.preventDefault();
+  rotateStaticMascot(mascot, mascot.dataset.staticMascotKey);
+});
+
+function rotateStaticMascot(mascot, assignmentKey) {
+  const assignment = staticMascotAssignment(assignmentKey);
+  const choices = NEXT_RACE_MASCOTS.filter(src => src !== assignment.src);
+  assignment.src = (choices.length ? choices : NEXT_RACE_MASCOTS)[Math.floor(Math.random() * (choices.length || NEXT_RACE_MASCOTS.length))];
+  assignment.rotation = -4 + Math.random() * 8;
+  assignment.scale = 0.92 + Math.random() * 0.16;
+  mascot.src = assignment.src;
+  mascot.style.setProperty('--static-mascot-rotate', `${assignment.rotation.toFixed(2)}deg`);
+  mascot.style.setProperty('--static-mascot-scale', assignment.scale.toFixed(2));
+  mascot.classList.remove('is-changing');
+  void mascot.offsetWidth;
+  mascot.classList.add('is-changing');
+}
+
+function inlineStaticMascotAnchors(root) {
+  const anchors = [];
+  const addAnchor = anchor => {
+    if (anchor && !anchors.includes(anchor) && anchors.length < 2) anchors.push(anchor);
+  };
+
+  addAnchor(root.querySelector('.points-prediction-head'));
+  addAnchor(root.querySelector('.vote-panel-head'));
+  root.querySelectorAll('.game-subhead').forEach(addAnchor);
+  root.querySelectorAll('.starting-grid-head').forEach(addAnchor);
+  return anchors;
+}
+
+function renderStaticMascot(pageId = pageFromHash()) {
+  document.querySelectorAll('.page-static-mascot, .page-static-banner, .inline-static-mascot').forEach(mascot => mascot.remove());
+  document.querySelectorAll('.has-static-banner, .has-inline-static-mascot, .has-home-static-mascot').forEach(anchor => {
+    anchor.classList.remove('has-static-banner', 'has-inline-static-mascot', 'has-home-static-mascot');
+  });
+
+  const root = pageId === 'home'
+    ? document.querySelector('.hero')
+    : document.querySelector(`#${pageId}`);
+  if (!root) return;
+
+  if (pageId === 'home') {
+    root.classList.add('has-home-static-mascot');
+    addIndividualStaticMascot(root, 'home', 'page-static-mascot');
+    return;
+  }
+
+  const bannerAnchor = root.querySelector('.section-head');
+  if (bannerAnchor) {
+    const banner = document.createElement('img');
+    banner.className = 'page-static-banner';
+    banner.src = staticBannerAssignment(pageId);
+    banner.alt = '';
+    banner.loading = 'eager';
+    banner.draggable = false;
+    banner.setAttribute('aria-hidden', 'true');
+    bannerAnchor.classList.add('has-static-banner');
+    bannerAnchor.append(banner);
+  }
+
+  inlineStaticMascotAnchors(root).forEach((anchor, index) => {
+    anchor.classList.add('has-inline-static-mascot');
+    addIndividualStaticMascot(anchor, `${pageId}:inline:${index}`);
+  });
+}
+
+function scheduleStaticMascotRender(pageId = pageFromHash()) {
+  if (staticMascotRenderFrame) cancelAnimationFrame(staticMascotRenderFrame);
+  staticMascotRenderFrame = requestAnimationFrame(() => {
+    staticMascotRenderFrame = null;
+    renderStaticMascot(pageId);
+  });
+}
+
+function randomNextRaceMascotDelay() {
+  return NEXT_RACE_MASCOT_MIN_DELAY_MS
+    + Math.random() * (NEXT_RACE_MASCOT_MAX_DELAY_MS - NEXT_RACE_MASCOT_MIN_DELAY_MS);
+}
+
+function scheduleNextRaceMascotAfterHide() {
+  window.setTimeout(() => {
+    if (pageFromHash() !== 'games') scheduleNextRaceMascot();
+  }, 1100);
+}
+
+function rectanglesOverlap(first, second, padding = 0) {
+  return first.left < second.right + padding
+    && first.right > second.left - padding
+    && first.top < second.bottom + padding
+    && first.bottom > second.top - padding;
+}
+
+function mascotBlockerRects() {
+  const blockers = [];
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  let textNode = walker.nextNode();
+
+  while (textNode) {
+    const parent = textNode.parentElement;
+    if (textNode.textContent.trim()
+      && parent
+      && !parent.closest('#nextRaceMascot, [hidden], script, style, template, [aria-hidden="true"]')) {
+      const style = window.getComputedStyle(parent);
+      if (style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity) !== 0) {
+        const range = document.createRange();
+        range.selectNodeContents(textNode);
+        Array.from(range.getClientRects()).forEach(rect => {
+          if (rect.width > 0
+            && rect.height > 0
+            && rect.bottom > 0
+            && rect.right > 0
+            && rect.top < window.innerHeight
+            && rect.left < window.innerWidth) {
+            blockers.push(rect);
+          }
+        });
+      }
+    }
+    textNode = walker.nextNode();
+  }
+
+  document.querySelectorAll('.site-header, .page-static-mascot, .page-static-banner, .inline-static-mascot, input, select, textarea, iframe, video, [role="dialog"]').forEach(element => {
+    if (element.closest('#nextRaceMascot')) return;
+    const rect = element.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < window.innerHeight) {
+      blockers.push(rect);
+    }
+  });
+
+  return blockers;
+}
+
+function mascotPlacementIsSafe(rect, blockers = mascotBlockerRects()) {
+  const movementRect = {
+    left: rect.left,
+    right: rect.right,
+    top: rect.top,
+    bottom: rect.bottom + 34
+  };
+  return !blockers.some(blocker => rectanglesOverlap(movementRect, blocker, 10));
+}
+
+function findSafeMascotPlacement() {
+  const mascot = els.nextRaceMascot;
+  if (!mascot) return null;
+
+  const width = mascot.offsetWidth;
+  const height = mascot.offsetHeight;
+  const headerBottom = document.querySelector('.site-header')?.getBoundingClientRect().bottom || 0;
+  const minX = 12;
+  const maxX = window.innerWidth - width - 12;
+  const minY = Math.max(headerBottom + 12, 12);
+  const maxY = window.innerHeight - height - 12;
+  if (maxX < minX || maxY < minY) return null;
+
+  const blockers = mascotBlockerRects();
+  const candidates = Array.from({ length: 100 }, () => ({
+    left: minX + Math.random() * (maxX - minX),
+    top: minY + Math.random() * (maxY - minY)
+  }));
+
+  candidates.push(
+    { left: minX, top: minY },
+    { left: maxX, top: minY },
+    { left: minX, top: maxY },
+    { left: maxX, top: maxY }
+  );
+
+  for (const candidate of candidates) {
+    const rect = {
+      left: candidate.left,
+      top: candidate.top,
+      right: candidate.left + width,
+      bottom: candidate.top + height
+    };
+    if (mascotPlacementIsSafe(rect, blockers)) return candidate;
+  }
+  return null;
+}
+
+function placeNextRaceMascot() {
+  const placement = findSafeMascotPlacement();
+  if (!placement || !els.nextRaceMascot) return false;
+  els.nextRaceMascot.style.left = `${Math.round(placement.left)}px`;
+  els.nextRaceMascot.style.top = `${Math.round(placement.top)}px`;
+  return true;
+}
+
+function hideNextRaceMascot({ reschedule = true } = {}) {
+  if (!els.nextRaceMascot) return;
+  window.clearTimeout(nextRaceMascotHideTimer);
+  els.nextRaceMascot.classList.remove('is-visible');
+  nextRaceMascotVisible = false;
+  window.setTimeout(() => {
+    if (!els.nextRaceMascot.classList.contains('is-visible')) {
+      els.nextRaceMascot.hidden = true;
+    }
+  }, 1100);
+  if (reschedule) scheduleNextRaceMascotAfterHide();
+}
+
+function showNextRaceMascot() {
+  nextRaceMascotScheduled = false;
+  nextRaceMascotTimer = null;
+  if (!els.nextRaceMascot
+    || !els.nextRaceMascotImage
+    || pageFromHash() === 'games'
+    || document.hidden) {
+    return;
+  }
+
+  const randomMascot = NEXT_RACE_MASCOTS[Math.floor(Math.random() * NEXT_RACE_MASCOTS.length)];
+  els.nextRaceMascotImage.src = randomMascot;
+  els.nextRaceMascot.hidden = false;
+  els.nextRaceMascot.classList.remove('is-visible');
+
+  requestAnimationFrame(() => {
+    if (pageFromHash() === 'games') {
+      els.nextRaceMascot.hidden = true;
+      return;
+    }
+    if (!placeNextRaceMascot()) {
+      els.nextRaceMascot.hidden = true;
+      scheduleNextRaceMascot(2600);
+      return;
+    }
+    nextRaceMascotVisible = true;
+    els.nextRaceMascot.classList.add('is-visible');
+    nextRaceMascotHideTimer = window.setTimeout(hideNextRaceMascot, 12000);
+  });
+}
+
+function scheduleNextRaceMascot(delay = randomNextRaceMascotDelay()) {
+  if (!els.nextRaceMascot
+    || nextRaceMascotScheduled
+    || nextRaceMascotVisible
+    || pageFromHash() === 'games') {
+    return;
+  }
+  nextRaceMascotScheduled = true;
+  nextRaceMascotTimer = window.setTimeout(showNextRaceMascot, delay);
+}
+
+function handleNextRaceMascotPageChange(activePage = pageFromHash()) {
+  if (activePage === 'games') {
+    window.clearTimeout(nextRaceMascotTimer);
+    nextRaceMascotTimer = null;
+    nextRaceMascotScheduled = false;
+    if (nextRaceMascotVisible) hideNextRaceMascot({ reschedule: false });
+    return;
+  }
+  if (nextRaceMascotVisible) {
+    protectNextRaceMascotPlacement();
+    return;
+  }
+  scheduleNextRaceMascot();
+}
+
+function protectNextRaceMascotPlacement() {
+  if (!nextRaceMascotVisible || !els.nextRaceMascot || pageFromHash() === 'games') return;
+  if (nextRaceMascotRepositionFrame) cancelAnimationFrame(nextRaceMascotRepositionFrame);
+  nextRaceMascotRepositionFrame = requestAnimationFrame(() => {
+    nextRaceMascotRepositionFrame = null;
+    const rect = els.nextRaceMascot.getBoundingClientRect();
+    if (!mascotPlacementIsSafe(rect) && !placeNextRaceMascot()) {
+      hideNextRaceMascot();
+    }
+  });
 }
 
 function currentTheme() {
@@ -2727,6 +3127,49 @@ async function initializeFirebaseVotes() {
         });
       },
 
+      async saveFlappyHighScore(score, racer) {
+        const user = auth.currentUser;
+        if (!user) throw new Error('Sign in to save a live Flappy F1 score.');
+        const cleanScore = Math.max(0, Math.floor(Number(score) || 0));
+        if (!cleanScore) return;
+        const userRef = doc(db, 'users', user.uid);
+        const leaderboardRef = doc(db, 'flappyHighScores', user.uid);
+
+        await runTransaction(db, async transaction => {
+          const [userSnapshot, leaderboardSnapshot] = await Promise.all([
+            transaction.get(userRef),
+            transaction.get(leaderboardRef)
+          ]);
+          const currentLiveBest = Math.max(
+            Number(userSnapshot.data()?.flappyHighScore) || 0,
+            Number(leaderboardSnapshot.data()?.score) || 0
+          );
+          if (cleanScore <= currentLiveBest) return;
+
+          const displayName = authUserName().slice(0, 40);
+          const racerName = String(racer?.name || 'Flappy racer').slice(0, 60);
+          const racerId = String(racer?.id || '').slice(0, 40);
+          const payload = {
+            userId: user.uid,
+            displayName,
+            score: cleanScore,
+            racerId,
+            racerName,
+            updatedAt: serverTimestamp()
+          };
+
+          transaction.set(userRef, {
+            email: user.email || '',
+            displayName,
+            flappyHighScore: cleanScore,
+            flappyHighScoreRacerId: racerId,
+            flappyHighScoreRacerName: racerName,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+          transaction.set(leaderboardRef, payload, { merge: true });
+        });
+      },
+
       async settleKimiWinPayout() {
         const user = auth.currentUser;
         if (!user) throw new Error('Sign in to claim your payout.');
@@ -2901,6 +3344,10 @@ async function initializeFirebaseVotes() {
         state.chatUnsubscribe();
         state.chatUnsubscribe = null;
       }
+      if (state.flappyLeaderboardUnsubscribe) {
+        state.flappyLeaderboardUnsubscribe();
+        state.flappyLeaderboardUnsubscribe = null;
+      }
 
       state.authReady = true;
       state.authError = '';
@@ -2913,6 +3360,10 @@ async function initializeFirebaseVotes() {
       state.kimiPayoutStake = null;
       state.chatMessages = [];
       state.chatReady = false;
+      state.flappyLeaderboard = [];
+      state.flappyLeaderboardReady = false;
+      state.flappyLeaderboardError = '';
+      listenFlappyLeaderboard();
 
       if (!user) {
         window.F1FirebaseVotes?.listen(voteRaceKey());
@@ -2932,6 +3383,8 @@ async function initializeFirebaseVotes() {
           renderAccountPage();
           renderVotingPanel();
           renderChat();
+          updateFlappyHud();
+          renderFlappyLeaderboard();
           if (isCreator()) loadCreatorDashboard();
         }, error => {
           console.warn('Firebase wallet unavailable.', error);
@@ -2967,6 +3420,7 @@ async function initializeFirebaseVotes() {
           state.chatError = 'Race chat could not load. Publish the raceChat Firestore rules from FIREBASE_SETUP.md, then refresh.';
           renderChat();
         });
+        listenFlappyLeaderboard();
       } catch (error) {
         console.warn('Firebase wallet setup failed.', error);
         state.authError = 'Wallet could not be created. Check Firebase users rules.';
@@ -2975,6 +3429,30 @@ async function initializeFirebaseVotes() {
         renderChat();
       }
     });
+
+    function listenFlappyLeaderboard() {
+      if (state.flappyLeaderboardUnsubscribe) {
+        state.flappyLeaderboardUnsubscribe();
+        state.flappyLeaderboardUnsubscribe = null;
+      }
+
+      const leaderboardQuery = query(collection(db, 'flappyHighScores'), orderBy('score', 'desc'), limit(10));
+      state.flappyLeaderboardUnsubscribe = onSnapshot(leaderboardQuery, snapshot => {
+        state.flappyLeaderboard = snapshot.docs.map(scoreDoc => ({
+          id: scoreDoc.id,
+          ...scoreDoc.data()
+        }));
+        state.flappyLeaderboardReady = true;
+        state.flappyLeaderboardError = '';
+        renderFlappyLeaderboard();
+        updateFlappyHud();
+      }, error => {
+        console.warn('Flappy F1 leaderboard unavailable.', error);
+        state.flappyLeaderboardReady = false;
+        state.flappyLeaderboardError = 'Flappy F1 leaderboard could not load. Publish the flappyHighScores rules from FIREBASE_SETUP.md, then refresh.';
+        renderFlappyLeaderboard();
+      });
+    }
 
     window.F1FirebaseVotes = {
       listen(raceKey) {
@@ -4735,6 +5213,339 @@ function renderPaddockdle() {
   els.paddockdleMessage.classList.toggle('is-success', state.paddockdle.won);
 }
 
+function selectedFlappyRacer() {
+  return FLAPPY_RACERS.find(racer => racer.id === state.flappy.racerId) || FLAPPY_RACERS[0];
+}
+
+function loadFlappyImages() {
+  FLAPPY_RACERS.forEach(racer => {
+    if (flappyImages[racer.id]) return;
+    const image = new Image();
+    image.onload = drawFlappyFrame;
+    image.src = racer.src;
+    flappyImages[racer.id] = image;
+  });
+}
+
+function localFlappyHighScore() {
+  return Math.max(0, Math.floor(Number(localStorage.getItem(FLAPPY_HIGH_SCORE_STORAGE_KEY)) || 0));
+}
+
+function savedFlappyHighScore() {
+  return Math.max(localFlappyHighScore(), Number(state.wallet?.flappyHighScore) || 0);
+}
+
+function setLocalFlappyHighScore(score) {
+  localStorage.setItem(FLAPPY_HIGH_SCORE_STORAGE_KEY, String(Math.max(0, Math.floor(Number(score) || 0))));
+}
+
+function flappyLeaderboardDisplayName(entry) {
+  return entry?.displayName || entry?.userName || 'F1 fan';
+}
+
+async function saveFlappyHighScore(score) {
+  const cleanScore = Math.max(0, Math.floor(Number(score) || 0));
+  if (!cleanScore || cleanScore <= savedFlappyHighScore()) return;
+  setLocalFlappyHighScore(cleanScore);
+  if (!state.authUser || !window.F1FirebaseAccount?.saveFlappyHighScore) {
+    renderFlappyLeaderboard();
+    updateFlappyHud();
+    return;
+  }
+
+  state.flappyScoreSubmitting = true;
+  state.flappyLeaderboardError = '';
+  renderFlappyLeaderboard();
+  updateFlappyHud();
+  try {
+    await window.F1FirebaseAccount.saveFlappyHighScore(cleanScore, selectedFlappyRacer());
+  } catch (error) {
+    console.warn('Flappy F1 high score could not save live.', error);
+    state.flappyLeaderboardError = error?.code?.includes('permission-denied') || error?.message?.toLowerCase?.().includes('permission')
+      ? 'Firebase rules are blocking Flappy F1 scores. Publish the updated rules from FIREBASE_SETUP.md, then refresh.'
+      : (error?.message || 'High score saved locally, but could not sync live.');
+  } finally {
+    state.flappyScoreSubmitting = false;
+    renderFlappyLeaderboard();
+    updateFlappyHud();
+  }
+}
+
+function resetFlappyGame() {
+  if (state.flappy.animationId) cancelAnimationFrame(state.flappy.animationId);
+  state.flappy.y = 230;
+  state.flappy.velocity = 0;
+  state.flappy.obstacles = [
+    makeFlappyObstacle(820),
+    makeFlappyObstacle(1180)
+  ];
+  state.flappy.score = 0;
+  state.flappy.running = false;
+  state.flappy.crashed = false;
+  state.flappy.started = false;
+  state.flappy.animationId = null;
+  state.flappy.lastTime = 0;
+  renderFlappyGame();
+  drawFlappyFrame();
+}
+
+function makeFlappyObstacle(x) {
+  const canvas = els.flappyCanvas;
+  const height = canvas?.height || 540;
+  const gapY = 128 + Math.random() * (height - 284);
+  return {
+    x,
+    gapY,
+    gapHeight: FLAPPY_OBSTACLE_GAP,
+    passed: false
+  };
+}
+
+function startFlappyGame() {
+  if (state.flappy.running) return;
+  if (state.flappy.crashed) resetFlappyGame();
+  state.flappy.started = true;
+  state.flappy.running = true;
+  state.flappy.lastTime = performance.now();
+  state.flappy.animationId = requestAnimationFrame(stepFlappyGame);
+  renderFlappyGame();
+}
+
+function flapFlappyRacer() {
+  if (!els.flappyCanvas) return;
+  if (state.flappy.crashed) resetFlappyGame();
+  if (!state.flappy.started) startFlappyGame();
+  state.flappy.velocity = FLAPPY_JUMP;
+}
+
+function stepFlappyGame(time) {
+  const canvas = els.flappyCanvas;
+  if (!canvas || !state.flappy.running) return;
+  const dt = Math.min(2, (time - state.flappy.lastTime) / 16.67 || 1);
+  state.flappy.lastTime = time;
+
+  state.flappy.velocity += FLAPPY_GRAVITY * dt;
+  state.flappy.y += state.flappy.velocity * dt;
+  state.flappy.obstacles.forEach(obstacle => {
+    obstacle.x -= FLAPPY_OBSTACLE_SPEED * dt;
+    if (!obstacle.passed && obstacle.x + FLAPPY_OBSTACLE_WIDTH < 150) {
+      obstacle.passed = true;
+      state.flappy.score += 1;
+    }
+  });
+  state.flappy.obstacles = state.flappy.obstacles.filter(obstacle => obstacle.x > -FLAPPY_OBSTACLE_WIDTH - 20);
+  const lastObstacle = state.flappy.obstacles[state.flappy.obstacles.length - 1];
+  if (!lastObstacle || lastObstacle.x < canvas.width - 330) {
+    state.flappy.obstacles.push(makeFlappyObstacle(canvas.width + 90));
+  }
+
+  if (flappyHasCrashed()) {
+    crashFlappyGame();
+    return;
+  }
+
+  drawFlappyFrame();
+  updateFlappyHud();
+  state.flappy.animationId = requestAnimationFrame(stepFlappyGame);
+}
+
+function flappyRacerBox() {
+  const racer = selectedFlappyRacer();
+  const image = flappyImages[racer.id];
+  const width = FLAPPY_RACER_WIDTH;
+  const height = image?.naturalWidth
+    ? width * (image.naturalHeight / image.naturalWidth)
+    : 60;
+  return {
+    x: 150,
+    y: state.flappy.y,
+    width,
+    height
+  };
+}
+
+function flappyHasCrashed() {
+  const canvas = els.flappyCanvas;
+  if (!canvas) return false;
+  const box = flappyRacerBox();
+  if (box.y < 0 || box.y + box.height > canvas.height - 42) return true;
+  return state.flappy.obstacles.some(obstacle => {
+    const inX = box.x + box.width * 0.88 > obstacle.x && box.x + box.width * 0.12 < obstacle.x + FLAPPY_OBSTACLE_WIDTH;
+    if (!inX) return false;
+    const safeTop = obstacle.gapY;
+    const safeBottom = obstacle.gapY + obstacle.gapHeight;
+    return box.y + box.height * 0.16 < safeTop || box.y + box.height * 0.84 > safeBottom;
+  });
+}
+
+function crashFlappyGame() {
+  state.flappy.running = false;
+  state.flappy.crashed = true;
+  state.flappy.animationId = null;
+  saveFlappyHighScore(state.flappy.score);
+  drawFlappyFrame();
+  updateFlappyHud();
+}
+
+function drawPixelText(ctx, text, x, y, size = 20, color = '#ffffff') {
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  ctx.fillStyle = color;
+  ctx.font = `900 ${size}px monospace`;
+  ctx.textAlign = 'center';
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetX = 3;
+  ctx.shadowOffsetY = 3;
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
+function drawTire(ctx, x, y, size, accent) {
+  ctx.save();
+  ctx.fillStyle = '#171717';
+  ctx.fillRect(x, y + 4, size, size - 8);
+  ctx.fillStyle = '#2c2f35';
+  ctx.fillRect(x + 4, y, size - 8, size);
+  ctx.fillStyle = '#08090d';
+  ctx.fillRect(x + 9, y + 9, size - 18, size - 18);
+  ctx.fillStyle = accent;
+  ctx.fillRect(x + 14, y + 14, size - 28, size - 28);
+  ctx.fillStyle = '#0f1117';
+  ctx.fillRect(x + 19, y + 19, size - 38, size - 38);
+  ctx.restore();
+}
+
+function drawTireStack(ctx, obstacle, topStack) {
+  const tireSize = 38;
+  const startY = topStack ? -6 : obstacle.gapY + obstacle.gapHeight;
+  const endY = topStack ? obstacle.gapY : ctx.canvas.height - 42;
+  const accent = topStack ? '#f6d33c' : '#e10600';
+  for (let y = startY; y < endY; y += tireSize - 4) {
+    const offset = Math.floor((y / tireSize) % 2) * 10;
+    drawTire(ctx, obstacle.x + offset, y, tireSize, accent);
+    drawTire(ctx, obstacle.x + 34 - offset, y + 4, tireSize, accent);
+  }
+}
+
+function drawFlappyFrame() {
+  const canvas = els.flappyCanvas;
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const racer = selectedFlappyRacer();
+  const image = flappyImages[racer.id];
+  ctx.imageSmoothingEnabled = false;
+
+  const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  sky.addColorStop(0, '#7fd7ff');
+  sky.addColorStop(0.62, '#dff8ff');
+  sky.addColorStop(1, '#5ec66a');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+  for (let i = 0; i < 7; i += 1) {
+    const x = (i * 170 + state.flappy.score * 17) % (canvas.width + 120) - 80;
+    ctx.fillRect(x, 54 + (i % 3) * 34, 64, 14);
+    ctx.fillRect(x + 22, 40 + (i % 3) * 34, 82, 14);
+  }
+
+  state.flappy.obstacles.forEach(obstacle => {
+    drawTireStack(ctx, obstacle, true);
+    drawTireStack(ctx, obstacle, false);
+  });
+
+  ctx.fillStyle = '#3b3f44';
+  ctx.fillRect(0, canvas.height - 42, canvas.width, 42);
+  ctx.fillStyle = '#ffffff';
+  for (let x = 0; x < canvas.width; x += 76) {
+    ctx.fillRect(x, canvas.height - 24, 38, 5);
+  }
+
+  const box = flappyRacerBox();
+  ctx.save();
+  ctx.translate(box.x + box.width / 2, box.y + box.height / 2);
+  ctx.rotate(Math.max(-0.18, Math.min(0.28, state.flappy.velocity / 28)));
+  if (image?.complete && image.naturalWidth) {
+    ctx.drawImage(image, -box.width / 2, -box.height / 2, box.width, box.height);
+  } else {
+    ctx.fillStyle = racer.color;
+    ctx.fillRect(-box.width / 2, -box.height / 2, box.width, box.height);
+  }
+  ctx.restore();
+
+  drawPixelText(ctx, String(state.flappy.score), canvas.width / 2, 70, 44, '#ffffff');
+  if (!state.flappy.started && !state.flappy.crashed) {
+    drawPixelText(ctx, 'TAP / SPACE', canvas.width / 2, canvas.height / 2, 28, '#ffffff');
+  }
+  if (state.flappy.crashed) {
+    drawPixelText(ctx, 'You are stupid', canvas.width / 2, canvas.height / 2, 34, '#ff2b21');
+  }
+}
+
+function renderFlappyGame() {
+  if (!els.flappyRacerSelect) return;
+  loadFlappyImages();
+  if (!state.flappy.obstacles.length && !state.flappy.started) {
+    state.flappy.obstacles = [
+      makeFlappyObstacle(820),
+      makeFlappyObstacle(1180)
+    ];
+  }
+  els.flappyRacerSelect.innerHTML = FLAPPY_RACERS.map(racer => `
+    <button class="${racer.id === state.flappy.racerId ? 'is-active' : ''}" type="button" data-racer-id="${escapeHtml(racer.id)}" style="--racer-color: ${escapeHtml(racer.color)}">
+      <img src="${escapeHtml(racer.src)}" alt="${escapeHtml(racer.name)}">
+      <span>${escapeHtml(racer.name)}</span>
+    </button>
+  `).join('');
+  updateFlappyHud();
+  renderFlappyLeaderboard();
+  drawFlappyFrame();
+}
+
+function updateFlappyHud() {
+  if (els.flappyScore) els.flappyScore.textContent = String(state.flappy.score);
+  if (els.flappyHighScore) els.flappyHighScore.textContent = String(savedFlappyHighScore());
+  if (els.flappyOverlay) {
+    els.flappyOverlay.hidden = state.flappy.running;
+    els.flappyOverlay.innerHTML = state.flappy.crashed
+      ? `<strong>You are stupid</strong><span>${state.flappyScoreSubmitting ? 'Saving score...' : 'Tap or press space to restart.'}</span>`
+      : '<strong>FLAPPY F1</strong><span>Tap or press space to launch.</span>';
+  }
+}
+
+function renderFlappyLeaderboard() {
+  if (!els.flappyLeaderboard) return;
+  const liveRows = state.flappyLeaderboard.slice(0, 10);
+  const localScore = localFlappyHighScore();
+  const rows = liveRows.length
+    ? liveRows
+    : (localScore ? [{ id: 'local', displayName: 'You', score: localScore, racerName: selectedFlappyRacer().name, local: true }] : []);
+
+  els.flappyLeaderboard.innerHTML = rows.length ? rows.map((entry, index) => `
+    <article class="flappy-leader-item ${entry.userId === state.authUser?.uid ? 'is-mine' : ''}">
+      <span class="rank">${index + 1}</span>
+      <div>
+        <strong>${escapeHtml(flappyLeaderboardDisplayName(entry))}</strong>
+        <span>${escapeHtml(entry.racerName || 'Flappy racer')}</span>
+      </div>
+      <b>${escapeHtml(entry.score || 0)}</b>
+    </article>
+  `).join('') : '<p class="empty-state">Crash beautifully once and your best score will appear here.</p>';
+
+  if (els.flappyLeaderboardStatus) {
+    if (state.flappyLeaderboardError) {
+      els.flappyLeaderboardStatus.textContent = state.flappyLeaderboardError;
+    } else if (state.flappyScoreSubmitting) {
+      els.flappyLeaderboardStatus.textContent = 'Saving high score...';
+    } else if (state.flappyLeaderboardReady) {
+      els.flappyLeaderboardStatus.textContent = state.authUser ? 'Live top 10 synced.' : 'Sign in to join the live top 10.';
+    } else {
+      els.flappyLeaderboardStatus.textContent = localScore ? 'Local best saved here.' : 'Play once to set a best score.';
+    }
+  }
+}
+
 function renderProfiles() {
   const profiles = state.drivers.length ? state.drivers : [];
   els.profileGrid.innerHTML = profiles.length ? profiles.map(row => {
@@ -4842,14 +5653,19 @@ function renderAll() {
   renderStandings();
   renderProfiles();
   renderPaddockdle();
+  renderFlappyGame();
+  renderFlappyLeaderboard();
   renderQuotes();
   renderChat();
+  scheduleStaticMascotRender();
 }
 
 document.querySelectorAll('a[href^="#"]').forEach(link => {
   link.addEventListener('click', event => {
     const targetId = link.getAttribute('href').slice(1);
-    const pageId = targetId === 'top' ? 'home' : (PAGE_IDS.includes(targetId) ? targetId : 'home');
+    const pageId = targetId === 'top'
+      ? 'home'
+      : (targetId === 'paddockdle' ? 'games' : (PAGE_IDS.includes(targetId) ? targetId : 'home'));
 
     event.preventDefault();
     if (window.location.hash !== `#${pageId}`) {
@@ -4870,6 +5686,15 @@ window.addEventListener('hashchange', () => {
 });
 applyTheme();
 els.themeToggle?.addEventListener('click', toggleTheme);
+els.nextRaceMascot?.addEventListener('click', () => hideNextRaceMascot());
+window.addEventListener('scroll', protectNextRaceMascotPlacement, { passive: true });
+window.addEventListener('resize', () => {
+  protectNextRaceMascotPlacement();
+  scheduleStaticMascotRender();
+});
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) scheduleNextRaceMascot();
+});
 
 els.paddockdleForm?.addEventListener('submit', async event => {
   event.preventDefault();
@@ -4959,6 +5784,36 @@ els.paddockdleLevel2?.addEventListener('click', () => {
   resetPaddockdle(2);
   renderPaddockdle();
   els.paddockdleInput?.focus();
+});
+
+els.flappyRacerSelect?.addEventListener('click', event => {
+  const button = event.target.closest('button[data-racer-id]');
+  if (!button) return;
+  state.flappy.racerId = button.dataset.racerId;
+  resetFlappyGame();
+});
+
+els.flappyReset?.addEventListener('click', () => {
+  resetFlappyGame();
+});
+
+els.flappyCanvas?.addEventListener('pointerdown', event => {
+  event.preventDefault();
+  flapFlappyRacer();
+});
+
+els.flappyOverlay?.addEventListener('pointerdown', event => {
+  event.preventDefault();
+  flapFlappyRacer();
+});
+
+window.addEventListener('keydown', event => {
+  if (event.code !== 'Space') return;
+  if (pageFromHash() !== 'games') return;
+  const tagName = document.activeElement?.tagName?.toLowerCase();
+  if (['input', 'textarea', 'select'].includes(tagName)) return;
+  event.preventDefault();
+  flapFlappyRacer();
 });
 
 els.accountToggle?.addEventListener('click', () => {

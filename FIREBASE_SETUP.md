@@ -54,6 +54,11 @@ service cloud.firestore {
       allow read, create: if request.auth != null;
     }
 
+    match /flappyHighScores/{userId} {
+      allow read: if true;
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+    }
+
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
@@ -124,6 +129,25 @@ service cloud.firestore {
         && request.resource.data.favoriteTeamColor.size() > 0
         && request.resource.data.favoriteTeamColor.size() <= 20
         && request.resource.data.createdAt == request.time;
+    }
+
+    match /flappyHighScores/{userId} {
+      allow read: if true;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly(['userId', 'displayName', 'score', 'racerId', 'racerName', 'updatedAt'])
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() > 0
+        && request.resource.data.displayName.size() <= 40
+        && request.resource.data.score is int
+        && request.resource.data.score >= 0
+        && request.resource.data.racerId is string
+        && request.resource.data.racerId.size() <= 40
+        && request.resource.data.racerName is string
+        && request.resource.data.racerName.size() > 0
+        && request.resource.data.racerName.size() <= 60
+        && request.resource.data.updatedAt == request.time;
     }
   }
 }

@@ -2635,6 +2635,12 @@ body.light-theme .vote-card {
   background: var(--red);
 }
 
+.game-subhead {
+  margin-top: 28px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+
 .paddockdle-board,
 .paddockdle-history {
   padding: 22px;
@@ -2810,6 +2816,239 @@ body.light-theme .vote-card {
 .paddockdle-target-portrait {
   width: 68px;
   height: 166px;
+}
+
+.flappy-f1-shell {
+  margin-bottom: 34px;
+}
+
+.flappy-f1-panel {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.flappy-f1-topline {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flappy-f1-topline > div:first-child {
+  margin-right: auto;
+}
+
+.flappy-f1-topline h4 {
+  margin: 4px 0 0;
+  font-family: "Courier New", ui-monospace, monospace;
+  font-size: 1.45rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.flappy-f1-score {
+  min-width: 118px;
+  padding: 10px 14px;
+  color: #ffffff;
+  border: 3px solid #111111;
+  border-radius: 0;
+  background: var(--red);
+  box-shadow: 5px 5px 0 #111111;
+  font-family: "Courier New", ui-monospace, monospace;
+  text-align: center;
+}
+
+.flappy-high-score {
+  background: #111111;
+  box-shadow: 5px 5px 0 var(--red);
+}
+
+.flappy-f1-score span,
+.flappy-f1-score strong {
+  display: block;
+}
+
+.flappy-f1-score span {
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.flappy-f1-score strong {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.flappy-racer-select {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.flappy-racer-select button {
+  display: grid;
+  gap: 8px;
+  min-height: 116px;
+  padding: 10px;
+  color: var(--text);
+  border: 2px solid var(--line);
+  border-radius: 0;
+  background: var(--surface-2);
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--racer-color, var(--red)) 55%, #000000 45%);
+  cursor: pointer;
+  font-family: "Courier New", ui-monospace, monospace;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.flappy-racer-select button.is-active {
+  color: #ffffff;
+  border-color: #111111;
+  background: var(--racer-color, var(--red));
+}
+
+.flappy-racer-select img {
+  width: 100%;
+  height: 62px;
+  object-fit: contain;
+  image-rendering: auto;
+}
+
+.flappy-racer-select span {
+  align-self: end;
+  font-size: 0.72rem;
+}
+
+.flappy-canvas-wrap {
+  position: relative;
+  overflow: hidden;
+  border: 4px solid #111111;
+  border-radius: 0;
+  background: #7fd7ff;
+  box-shadow: 8px 8px 0 color-mix(in srgb, var(--red) 62%, #000000 38%);
+}
+
+#flappyCanvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  image-rendering: pixelated;
+  cursor: pointer;
+}
+
+.flappy-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  color: #ffffff;
+  background: rgba(9, 13, 20, 0.24);
+  font-family: "Courier New", ui-monospace, monospace;
+  text-align: center;
+  text-transform: uppercase;
+  pointer-events: auto;
+}
+
+.flappy-overlay[hidden] {
+  display: none;
+}
+
+.flappy-overlay strong {
+  font-size: clamp(2.2rem, 7vw, 5.2rem);
+  line-height: 0.95;
+  text-shadow: 5px 5px 0 #111111;
+}
+
+.flappy-overlay span {
+  font-size: clamp(0.92rem, 2vw, 1.2rem);
+  font-weight: 900;
+  text-shadow: 3px 3px 0 #111111;
+}
+
+.flappy-leaderboard {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 3px solid #111111;
+  background: var(--surface-2);
+  box-shadow: 5px 5px 0 color-mix(in srgb, var(--red) 62%, #000000 38%);
+}
+
+.flappy-leaderboard-head {
+  display: flex;
+  gap: 14px;
+  align-items: end;
+  justify-content: space-between;
+}
+
+.flappy-leaderboard-head h4 {
+  margin: 4px 0 0;
+  font-family: "Courier New", ui-monospace, monospace;
+  font-size: 1.18rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.flappy-leaderboard-head span {
+  max-width: 360px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 820;
+  text-align: right;
+}
+
+.flappy-leader-item {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.flappy-leader-item:first-child {
+  border-top: 0;
+}
+
+.flappy-leader-item .rank {
+  color: #ffffff;
+  border: 2px solid #111111;
+  border-radius: 0;
+  background: var(--red);
+  font-family: "Courier New", ui-monospace, monospace;
+  font-weight: 900;
+}
+
+.flappy-leader-item strong,
+.flappy-leader-item b {
+  font-family: "Courier New", ui-monospace, monospace;
+  font-weight: 900;
+}
+
+.flappy-leader-item span:not(.rank) {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 780;
+}
+
+.flappy-leader-item.is-mine {
+  color: #ffffff;
+  padding-inline: 10px;
+  background: var(--red);
+}
+
+.flappy-leader-item.is-mine span:not(.rank) {
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .profile-card,
@@ -3213,6 +3452,189 @@ body.light-theme .quote-card {
   font-weight: 760;
 }
 
+.section-head.has-static-banner {
+  position: relative;
+  min-height: 230px;
+  padding-top: 160px;
+}
+
+.section-head.has-static-banner > :not(.page-static-banner),
+.has-inline-static-mascot > :not(.inline-static-mascot) {
+  position: relative;
+  z-index: 2;
+}
+
+.page-static-banner {
+  position: absolute;
+  z-index: 1;
+  top: 4px;
+  left: 50%;
+  display: block;
+  width: min(1040px, 82%);
+  height: 158px;
+  object-fit: contain;
+  object-position: center;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 9px 12px rgba(0, 0, 0, 0.12));
+  pointer-events: none;
+  user-select: none;
+}
+
+.page-static-mascot {
+  position: absolute;
+  z-index: 1;
+  top: var(--static-mascot-top, 0);
+  right: var(--static-mascot-right, 0);
+  display: block;
+  width: 132px;
+  height: 146px;
+  object-fit: contain;
+  object-position: center bottom;
+  transform: rotate(var(--static-mascot-rotate, 0deg)) scale(var(--static-mascot-scale, 1));
+  transform-origin: bottom center;
+  filter: drop-shadow(0 9px 12px rgba(0, 0, 0, 0.18));
+  cursor: pointer;
+  user-select: none;
+  pointer-events: auto;
+  transition: filter 180ms ease, transform 180ms ease;
+}
+
+.hero.has-home-static-mascot > .page-static-mascot {
+  top: calc(28px + var(--static-mascot-top, 0px));
+  width: 126px;
+  height: 154px;
+  z-index: 4;
+}
+
+.has-inline-static-mascot {
+  position: relative;
+  min-height: 126px;
+  padding-right: 140px;
+}
+
+.inline-static-mascot {
+  position: absolute;
+  z-index: 1;
+  top: 8px;
+  right: clamp(14px, 12vw, 180px);
+  display: block;
+  width: 96px;
+  height: 94px;
+  object-fit: contain;
+  object-position: center;
+  transform: rotate(var(--static-mascot-rotate, 0deg)) scale(var(--static-mascot-scale, 1));
+  transform-origin: center bottom;
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.16));
+  cursor: pointer;
+  user-select: none;
+  pointer-events: auto;
+  transition: filter 180ms ease, transform 180ms ease;
+}
+
+.page-static-mascot:hover,
+.page-static-mascot:focus-visible,
+.inline-static-mascot:hover,
+.inline-static-mascot:focus-visible {
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.22)) saturate(1.08);
+}
+
+.page-static-mascot:focus-visible,
+.inline-static-mascot:focus-visible {
+  outline: 3px solid #e10600;
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+
+.page-static-mascot.is-changing,
+.inline-static-mascot.is-changing {
+  animation: mascot-click-pop 260ms ease;
+}
+
+@keyframes mascot-click-pop {
+  50% {
+    transform: rotate(var(--static-mascot-rotate, 0deg)) scale(calc(var(--static-mascot-scale, 1) * 1.08));
+  }
+}
+
+.next-race-mascot {
+  position: fixed;
+  z-index: 18;
+  display: grid;
+  width: 248px;
+  min-height: 220px;
+  justify-items: center;
+  align-content: end;
+  color: #08090c;
+  opacity: 0;
+  transform: translateY(30px) scale(0.82);
+  transform-origin: bottom center;
+  transition: opacity 900ms ease, transform 1100ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.3));
+}
+
+.next-race-mascot[hidden] {
+  display: none;
+}
+
+.next-race-mascot.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.next-race-mascot:hover,
+.next-race-mascot:focus-visible {
+  transform: translateY(-5px) scale(1.03);
+}
+
+.next-race-mascot:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 5px;
+}
+
+.next-race-mascot img {
+  display: block;
+  width: auto;
+  max-width: 172px;
+  height: 164px;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.next-race-mascot-bubble {
+  position: relative;
+  z-index: 1;
+  width: min(218px, 100%);
+  margin-bottom: -8px;
+  padding: 12px 14px;
+  color: #08090c;
+  border: 3px solid #08090c;
+  border-radius: 2px;
+  background: #ffffff;
+  box-shadow: 6px 6px 0 var(--red);
+  font-family: "Courier New", ui-monospace, monospace;
+  font-size: 0.92rem;
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: none;
+}
+
+.next-race-mascot-bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -15px;
+  width: 18px;
+  height: 18px;
+  border-right: 3px solid #08090c;
+  border-bottom: 3px solid #08090c;
+  background: #ffffff;
+  transform: translateX(-50%) rotate(45deg);
+}
+
 .footer {
   display: flex;
   justify-content: space-between;
@@ -3314,5 +3736,60 @@ body.light-theme .quote-card {
   .paddockdle-form,
   .paddockdle-hero {
     grid-template-columns: 1fr;
+  }
+
+  .flappy-f1-topline {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .flappy-racer-select {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .section-head.has-static-banner {
+    min-height: 184px;
+    padding-top: 112px;
+  }
+
+  .page-static-banner {
+    top: 2px;
+    width: 96%;
+    height: 108px;
+  }
+
+  .has-inline-static-mascot {
+    min-height: 104px;
+    padding-right: 94px;
+  }
+
+  .inline-static-mascot {
+    right: 8px;
+    width: 68px;
+    height: 76px;
+  }
+
+  .hero.has-home-static-mascot > .page-static-mascot {
+    top: calc(16px + var(--static-mascot-top, 0px));
+    right: 14px;
+    width: 78px;
+    height: 96px;
+  }
+
+  .next-race-mascot {
+    width: 188px;
+    min-height: 178px;
+  }
+
+  .next-race-mascot img {
+    max-width: 132px;
+    height: 126px;
+  }
+
+  .next-race-mascot-bubble {
+    width: 176px;
+    padding: 10px 11px;
+    font-size: 0.76rem;
+    box-shadow: 4px 4px 0 var(--red);
   }
 }

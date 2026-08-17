@@ -6,7 +6,7 @@
     <title>F1 2026 Season Hub</title>
     <link rel="preconnect" href="https://api.jolpi.ca">
     <link rel="preconnect" href="https://api.allorigins.win">
-    <link rel="stylesheet" href="styles.css?v=20260816-paddockdle-opening-rules">
+    <link rel="stylesheet" href="styles.css?v=20260817-clickable-mascots">
   </head>
   <body>
     <header class="site-header">
@@ -21,7 +21,7 @@
         <a href="#schedule">Schedule</a>
         <a href="#standings">Standings</a>
         <a href="#profiles">Profiles</a>
-        <a href="#paddockdle">Paddockdle</a>
+        <a href="#games">Games</a>
         <a href="#news">News</a>
         <a href="#chat">Race chat</a>
         <a href="#wisdom">Wisdom</a>
@@ -336,11 +336,18 @@
         <div class="team-profile-grid" id="teamProfileGrid"></div>
       </section>
 
-      <section class="section shell page-section" id="paddockdle">
+      <section class="section shell page-section" id="games">
         <div class="section-head compact">
           <div>
+            <p class="eyebrow">Arcade garage</p>
+            <h2>Games</h2>
+          </div>
+        </div>
+
+        <div class="section-head compact game-subhead">
+          <div>
             <p class="eyebrow">Guessing game</p>
-            <h2>Paddockdle</h2>
+            <h3>Paddockdle</h3>
           </div>
           <div class="paddockdle-actions">
             <div class="paddockdle-levels" aria-label="Paddockdle level">
@@ -379,6 +386,50 @@
             <div id="paddockdleGuesses"></div>
           </section>
         </div>
+
+        <div class="section-head compact game-subhead">
+          <div>
+            <p class="eyebrow">Pixel racer</p>
+            <h3>Flappy F1</h3>
+          </div>
+          <button class="refresh-button" id="flappyReset" type="button">Restart</button>
+        </div>
+        <section class="flappy-f1-shell" aria-labelledby="flappyF1Title">
+          <div class="flappy-f1-panel">
+            <div class="flappy-f1-topline">
+              <div>
+                <p class="eyebrow">Tap or press space</p>
+                <h4 id="flappyF1Title">Choose your flappy racer</h4>
+              </div>
+              <div class="flappy-f1-score">
+                <span>Score</span>
+                <strong id="flappyScore">0</strong>
+              </div>
+              <div class="flappy-f1-score flappy-high-score">
+                <span>Best</span>
+                <strong id="flappyHighScore">0</strong>
+              </div>
+            </div>
+            <div class="flappy-racer-select" id="flappyRacerSelect" aria-label="Select racer"></div>
+            <div class="flappy-canvas-wrap">
+              <canvas id="flappyCanvas" width="960" height="540" aria-label="Flappy F1 game canvas"></canvas>
+              <div class="flappy-overlay" id="flappyOverlay">
+                <strong>FLAPPY F1</strong>
+                <span>Tap or press space to launch.</span>
+              </div>
+            </div>
+            <section class="flappy-leaderboard" aria-labelledby="flappyLeaderboardTitle">
+              <div class="flappy-leaderboard-head">
+                <div>
+                  <p class="eyebrow">High scores</p>
+                  <h4 id="flappyLeaderboardTitle">Flappy F1 leaderboard</h4>
+                </div>
+                <span id="flappyLeaderboardStatus">Local best saved here.</span>
+              </div>
+              <div id="flappyLeaderboard"></div>
+            </section>
+          </div>
+        </section>
       </section>
 
       <section class="section shell page-section" id="news">
@@ -430,7 +481,12 @@
       <span id="lastUpdated">Last updated: --</span>
     </footer>
 
+    <a class="next-race-mascot" id="nextRaceMascot" href="#next-race" aria-label="Check out the next race" hidden>
+      <span class="next-race-mascot-bubble">check out the next race!</span>
+      <img id="nextRaceMascotImage" src="assets/site-mascots/mascot-01.png" alt="Cartoon F1 racer">
+    </a>
+
     <script src="firebase-config.js?v=20260705-firebase-config"></script>
-    <script src="script.js?v=20260816-paddockdle-opening-rules"></script>
+    <script src="script.js?v=20260817-clickable-mascots"></script>
   </body>
 </html>

@@ -2673,10 +2673,15 @@ function isCreator() {
 function authErrorMessage(error) {
   const code = error?.code || '';
   if (code.includes('email-already-in-use')) return 'That email already has an account. Try signing in.';
-  if (code.includes('invalid-credential') || code.includes('wrong-password') || code.includes('user-not-found')) return 'Email or password is incorrect.';
+  if (code.includes('user-not-found')) return 'No account exists for that email yet. Use Create account first.';
+  if (code.includes('wrong-password') || code.includes('invalid-credential')) return 'Email or password is incorrect.';
   if (code.includes('weak-password')) return 'Password needs at least 6 characters.';
-  if (code.includes('invalid-email')) return 'Enter a valid email address.';
+  if (code.includes('invalid-email')) return 'Enter a valid email address. It can be Gmail, school email, iCloud, Outlook, Yahoo, or any normal email provider.';
   if (code.includes('operation-not-allowed')) return 'Enable Email/Password sign-in in Firebase Authentication.';
+  if (code.includes('configuration-not-found')) return 'Firebase Auth is not enabled for this project yet. In Firebase Console, go to Authentication > Sign-in method and enable Email/Password.';
+  if (code.includes('unauthorized-domain')) return 'This website domain is not allowed in Firebase Auth. Add your GitHub Pages domain in Authentication > Settings > Authorized domains.';
+  if (code.includes('network-request-failed')) return 'Firebase could not connect. Check internet, then try again.';
+  if (code.includes('too-many-requests')) return 'Too many login attempts. Wait a little, then try again.';
   return error?.message || 'Account action failed. Try again.';
 }
 
@@ -5831,7 +5836,7 @@ els.accountToggle?.addEventListener('click', () => {
 
 els.accountForm?.addEventListener('submit', async event => {
   event.preventDefault();
-  const email = els.accountEmail.value.trim();
+  const email = els.accountEmail.value.trim().toLowerCase();
   const password = els.accountPassword.value;
 
   if (!window.F1FirebaseAccount?.signIn) {
@@ -5855,7 +5860,7 @@ els.accountForm?.addEventListener('submit', async event => {
 });
 
 els.accountSignUp?.addEventListener('click', async () => {
-  const email = els.accountEmail.value.trim();
+  const email = els.accountEmail.value.trim().toLowerCase();
   const password = els.accountPassword.value;
   const displayName = sanitizePredictionName(els.accountName.value);
 

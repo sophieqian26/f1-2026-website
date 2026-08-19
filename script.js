@@ -32,6 +32,13 @@ const STATIC_MASCOT_BANNERS = [
   'banner-05.png',
   'banner-06.png'
 ].map(fileName => `assets/mascot-banners/${fileName}?v=${NEXT_RACE_MASCOT_ASSET_VERSION}`);
+const SCHEDULE_WINNER_STICKERS = {
+  russell: 'assets/schedule-winners/george-russell.png',
+  antonelli: 'assets/schedule-winners/kimi-antonelli.png',
+  hamilton: 'assets/schedule-winners/lewis-hamilton.png',
+  leclerc: 'assets/schedule-winners/charles-leclerc.png',
+  norris: 'assets/schedule-winners/lando-norris.png'
+};
 const FIREBASE_SDK_VERSION = '10.12.5';
 const STARTING_F1_BUCKS = 50;
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
@@ -1966,12 +1973,13 @@ function rotateStaticMascot(mascot, assignmentKey) {
 function inlineStaticMascotAnchors(root) {
   const anchors = [];
   const addAnchor = anchor => {
-    if (anchor && !anchors.includes(anchor) && anchors.length < 2) anchors.push(anchor);
+    if (!anchor || anchors.includes(anchor) || anchors.length >= 2) return;
+    if (anchor.querySelector('button, a, input, select, textarea, .segmented')) return;
+    anchors.push(anchor);
   };
 
   addAnchor(root.querySelector('.points-prediction-head'));
   addAnchor(root.querySelector('.vote-panel-head'));
-  root.querySelectorAll('.game-subhead').forEach(addAnchor);
   root.querySelectorAll('.starting-grid-head').forEach(addAnchor);
   return anchors;
 }
@@ -2067,7 +2075,29 @@ function mascotBlockerRects() {
     textNode = walker.nextNode();
   }
 
-  document.querySelectorAll('.site-header, .page-static-mascot, .page-static-banner, .inline-static-mascot, input, select, textarea, iframe, video, [role="dialog"]').forEach(element => {
+  document.querySelectorAll([
+    '.site-header',
+    '.page-static-mascot',
+    '.page-static-banner',
+    '.inline-static-mascot',
+    'button',
+    'a',
+    'input',
+    'select',
+    'textarea',
+    'label',
+    'iframe',
+    'video',
+    '[role="button"]',
+    '[role="tab"]',
+    '[role="group"]',
+    '[role="dialog"]',
+    '.segmented',
+    '.vote-category',
+    '.paddockdle-levels',
+    '.flappy-racer-select',
+    '.points-prediction-submit'
+  ].join(', ')).forEach(element => {
     if (element.closest('#nextRaceMascot')) return;
     const rect = element.getBoundingClientRect();
     if (rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < window.innerHeight) {
@@ -2080,12 +2110,12 @@ function mascotBlockerRects() {
 
 function mascotPlacementIsSafe(rect, blockers = mascotBlockerRects()) {
   const movementRect = {
-    left: rect.left,
-    right: rect.right,
-    top: rect.top,
-    bottom: rect.bottom + 34
+    left: rect.left - 8,
+    right: rect.right + 8,
+    top: rect.top - 8,
+    bottom: rect.bottom + 42
   };
-  return !blockers.some(blocker => rectanglesOverlap(movementRect, blocker, 10));
+  return !blockers.some(blocker => rectanglesOverlap(movementRect, blocker, 18));
 }
 
 function findSafeMascotPlacement() {
@@ -4226,6 +4256,12 @@ function racePodium(race) {
   })) || [];
 }
 
+function scheduleWinnerSticker(race) {
+  if (raceBucket(race) !== 'completed') return null;
+  const winnerId = raceResult(race.round)?.Results?.[0]?.Driver?.driverId;
+  return winnerId ? SCHEDULE_WINNER_STICKERS[winnerId] || null : null;
+}
+
 function renderSummary() {
   const completed = state.races.filter(race => raceBucket(race) === 'completed');
   const upcoming = state.races.filter(race => raceBucket(race) === 'upcoming');
@@ -4404,6 +4440,12 @@ function raceCardHtml(race, options = {}) {
   const image = raceImage(race);
   const imageStyle = image ? ` style="--race-image: url('${escapeHtml(image)}')"` : '';
   const podium = racePodium(race);
+  const winnerId = raceResult(race.round)?.Results?.[0]?.Driver?.driverId || '';
+  const winnerSticker = scheduleWinnerSticker(race);
+  const winnerStickerModifier = winnerId ? ` is-${escapeHtml(winnerId)}` : '';
+  const winnerStickerHtml = winnerSticker
+    ? `<img class="race-winner-sticker${winnerStickerModifier}" src="${escapeHtml(winnerSticker)}" alt="" loading="lazy" aria-hidden="true">`
+    : '';
   const podiumHtml = podium.length
     ? podium.map((finisher, index) => `
         <span class="podium-finisher" style="--team-color: ${escapeHtml(finisher.color)}">
@@ -4414,10 +4456,11 @@ function raceCardHtml(race, options = {}) {
       `).join('')
     : `<span class="podium-empty">${raceBucket(race) === 'completed' ? 'Podium pending' : 'Podium TBC'}</span>`;
   const extraClass = options.extraClass ? ` ${options.extraClass}` : '';
+  const winnerStickerClass = winnerSticker ? ' has-winner-sticker' : '';
   const activeClass = race.round === state.selectedRaceRound ? ' active' : '';
 
   return `
-    <button class="race-card${activeClass}${extraClass}" type="button" data-round="${escapeHtml(race.round)}"${imageStyle}>
+    <button class="race-card${activeClass}${extraClass}${winnerStickerClass}" type="button" data-round="${escapeHtml(race.round)}"${imageStyle}>
       <div class="race-card-top">
         <span>Round ${escapeHtml(race.round)}</span>
         <span class="race-status">${escapeHtml(status)}</span>
@@ -4426,6 +4469,7 @@ function raceCardHtml(race, options = {}) {
       <p>${escapeHtml(formatDate(race.date, race.time))} · ${escapeHtml(city)}, ${escapeHtml(country)}</p>
       <span class="host-city">Host city: ${escapeHtml(city)}</span>
       <div class="podium-list" aria-label="Podium finishers">${podiumHtml}</div>
+      ${winnerStickerHtml}
     </button>
   `;
 }

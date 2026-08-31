@@ -2618,6 +2618,160 @@ body.light-theme .vote-card {
   font-size: 1.45rem;
 }
 
+.game-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.game-launch-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 42%);
+  min-height: 330px;
+  padding: 30px;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.game-launch-card:hover,
+.game-launch-card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.24);
+  outline: 3px solid #ffffff;
+  outline-offset: 3px;
+}
+
+.game-launch-copy {
+  position: relative;
+  z-index: 2;
+  align-self: end;
+  font-family: "Courier New", ui-monospace, monospace;
+}
+
+.game-launch-copy .eyebrow {
+  color: inherit;
+}
+
+.game-launch-copy strong {
+  display: block;
+  margin-top: 8px;
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  line-height: 0.95;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.paddockdle-launch-card {
+  background: #d80700;
+}
+
+.paddockdle-launch-art {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+}
+
+.paddockdle-launch-art img {
+  position: absolute;
+  right: -8px;
+  bottom: -22px;
+  width: min(190px, 100%);
+  max-height: 250px;
+  object-fit: contain;
+}
+
+.paddockdle-question-card {
+  display: grid;
+  place-items: center;
+  width: 126px;
+  aspect-ratio: 0.7;
+  margin: 0 35px 42px 0;
+  color: #ffffff;
+  border: 5px solid #ffffff;
+  border-radius: 8px;
+  background: #9f0500;
+  box-shadow: 12px 14px 0 rgba(41, 0, 0, 0.28);
+  font: 900 5rem/1 "Courier New", ui-monospace, monospace;
+  transform: rotate(-7deg);
+}
+
+.flappy-launch-card {
+  background:
+    radial-gradient(ellipse at 22% 30%, #ffffff 0 8%, transparent 8.5%),
+    radial-gradient(ellipse at 31% 31%, #ffffff 0 11%, transparent 11.5%),
+    radial-gradient(ellipse at 74% 17%, rgba(255, 255, 255, 0.95) 0 8%, transparent 8.5%),
+    radial-gradient(ellipse at 84% 18%, rgba(255, 255, 255, 0.95) 0 11%, transparent 11.5%),
+    linear-gradient(#55bdf3 0 68%, #8dd77d 68% 100%);
+}
+
+.flappy-launch-racer-button {
+  position: relative;
+  z-index: 2;
+  align-self: center;
+  width: 100%;
+  min-height: 220px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.flappy-launch-racer-button img {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  filter: drop-shadow(10px 14px 0 rgba(21, 61, 92, 0.2));
+}
+
+.game-detail-view {
+  display: none;
+}
+
+body[data-game-view="hub"] .game-hub-grid {
+  display: grid;
+}
+
+body[data-game-view="paddockdle"] .game-hub-grid,
+body[data-game-view="flappy-f1"] .game-hub-grid {
+  display: none;
+}
+
+body[data-game-view="paddockdle"] .paddockdle-view,
+body[data-game-view="flappy-f1"] .flappy-view {
+  display: block;
+}
+
+.game-back-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 15px;
+  color: #ffffff;
+  border-radius: 6px;
+  background: var(--red);
+  font-weight: 850;
+  text-decoration: none;
+}
+
+@media (max-width: 780px) {
+  .game-hub-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .game-launch-card {
+    min-height: 280px;
+    padding: 22px;
+  }
+}
+
 .team-profile-grid {
   display: flex;
   flex-direction: column;

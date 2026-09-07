@@ -2060,6 +2060,12 @@ function staticMascotAssignment(pageId) {
 }
 
 function staticBannerAssignment(pageId) {
+  const fixedPageBanners = {
+    chat: 'assets/mascot-banners/banner-02-face-fixed.png?v=20260906-face-repair',
+    wisdom: 'assets/mascot-banners/banner-04-face-fixed.png?v=20260906-face-repair'
+  };
+  if (fixedPageBanners[pageId]) return fixedPageBanners[pageId];
+
   if (!staticBannerAssignments.has(pageId)) {
     staticBannerAssignments.set(
       pageId,
@@ -2155,7 +2161,7 @@ function renderStaticMascot(pageId = pageFromHash()) {
   const bannerAnchor = root.querySelector('.section-head');
   if (bannerAnchor) {
     const banner = document.createElement('img');
-    banner.className = 'page-static-banner';
+    banner.className = `page-static-banner page-static-banner--${pageId}`;
     banner.src = staticBannerAssignment(pageId);
     banner.alt = '';
     banner.loading = 'eager';

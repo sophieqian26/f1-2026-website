@@ -17,6 +17,7 @@ const NEXT_RACE_MASCOT_ASSET_VERSION = '20260817-click-rotate';
 const NEXT_RACE_MASCOT_MIN_DELAY_MS = 15 * 1000;
 const NEXT_RACE_MASCOT_MAX_DELAY_MS = 60 * 1000;
 const LIVE_QUALIFYING_REFRESH_MS = 60 * 1000;
+const LIVE_RACE_RESULTS_REFRESH_MS = 2 * 60 * 1000;
 const LIVE_QUALIFYING_ROUND = '13';
 const NEXT_RACE_MASCOTS = [
   'mascot-01.png',
@@ -1620,6 +1621,35 @@ const RESULT_OVERRIDES = {
       makeResult('NC', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, 0, { grid: '7', laps: '0', status: 'DNF' })
     ]
   }
+};
+
+// Official F1 classification fallback while the public results API catches up.
+RESULT_OVERRIDES['13'] = {
+  raceName: 'Italian Grand Prix',
+  Results: [
+    makeResult('1', { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, 25, { grid: '20', laps: '53', status: '1:51:15.281' }),
+    makeResult('2', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, 18, { grid: '2', laps: '53', status: '+3.857s' }),
+    makeResult('3', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, 15, { grid: '5', laps: '53', status: '+14.718s' }),
+    makeResult('4', { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, 12, { grid: '8', laps: '53', status: '+19.056s' }),
+    makeResult('5', { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, 10, { grid: '6', laps: '53', status: '+19.253s' }),
+    makeResult('6', { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, 8, { grid: '4', laps: '53', status: '+24.655s' }),
+    makeResult('7', { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, 6, { grid: '1', laps: '53', status: '+27.351s' }),
+    makeResult('8', { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, 4, { grid: '9', laps: '53', status: '+45.136s' }),
+    makeResult('9', { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, 2, { grid: '7', laps: '53', status: '+47.353s' }),
+    makeResult('10', { driverId: 'tsunoda', givenName: 'Yuki', familyName: 'Tsunoda', nationality: 'Japanese' }, { constructorId: 'rb', name: 'Racing Bulls' }, 1, { grid: '15', laps: '53', status: '+58.187s' }),
+    makeResult('11', { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, 0, { grid: '10', laps: '53', status: '+65.187s' }),
+    makeResult('12', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, 0, { grid: '12', laps: '53', status: '+66.187s' }),
+    makeResult('13', { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, 0, { grid: '13', laps: '53', status: '+74.117s' }),
+    makeResult('14', { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, 0, { grid: '21', laps: '53', status: '+75.609s' }),
+    makeResult('15', { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { grid: '11', laps: '53', status: '+78.958s' }),
+    makeResult('16', { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { grid: '14', laps: '52', status: '+1 lap' }),
+    makeResult('17', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, 0, { grid: '22', laps: '52', status: '+1 lap' }),
+    makeResult('18', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { grid: '17', laps: '52', status: '+1 lap' }),
+    makeResult('19', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { grid: '16', laps: '51', status: '+2 laps' }),
+    makeResult('NC', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { grid: '19', laps: '26', status: 'DNF' }),
+    makeResult('NC', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { grid: '18', laps: '23', status: 'DNF' }),
+    makeResult('NC', { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, 0, { grid: '3', laps: '1', status: 'DNF' })
+  ]
 };
 
 const CURRENT_DRIVER_POINTS = {
@@ -3884,6 +3914,36 @@ async function refreshLiveQualifyingResults() {
     els.dataStatus.textContent = 'Live qualifying';
   } catch (error) {
     console.warn('Live Italian qualifying refresh is waiting for published results.', error);
+  }
+}
+
+let raceResultsRefreshPending = false;
+
+async function refreshLiveRaceResults() {
+  if (raceResultsRefreshPending || document.hidden) return;
+  raceResultsRefreshPending = true;
+
+  try {
+    const data = await fetchJson(`${API_BASE}/results/?limit=1000`);
+    const publishedResults = data?.MRData?.RaceTable?.Races || [];
+    if (!publishedResults.some(race => race.Results?.length)) return;
+
+    const previousLatestRound = allResultRaces().at(-1)?.round || '';
+    state.results = publishedResults;
+    const latestRound = allResultRaces().at(-1)?.round || '';
+
+    renderSummary();
+    renderSchedule();
+    renderPreviousRace();
+    if (state.selectedRaceRound) renderRaceDetail(state.selectedRaceRound);
+
+    els.dataStatus.textContent = latestRound !== previousLatestRound
+      ? 'New race result'
+      : 'Live data';
+  } catch (error) {
+    console.warn('Live race results refresh is waiting for published data.', error);
+  } finally {
+    raceResultsRefreshPending = false;
   }
 }
 
@@ -6445,6 +6505,11 @@ loadSeasonData()
 loadNews();
 
 window.setInterval(refreshLiveQualifyingResults, LIVE_QUALIFYING_REFRESH_MS);
+window.setInterval(refreshLiveRaceResults, LIVE_RACE_RESULTS_REFRESH_MS);
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) refreshLiveRaceResults();
+});
 
 window.setInterval(() => {
   renderVotingPanel();

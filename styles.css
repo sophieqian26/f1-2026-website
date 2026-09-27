@@ -2270,7 +2270,8 @@ tr:last-child td {
   font-weight: 780;
 }
 
-.driver-nationality {
+.driver-nationality,
+.prediction-driver-meta {
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 650;
@@ -2526,6 +2527,7 @@ body.light-theme .vote-card {
 
 .vote-driver-option .driver-name,
 .vote-driver-option .driver-nationality,
+.vote-driver-option .prediction-driver-meta,
 .vote-driver-option small {
   color: #ffffff;
 }
@@ -4179,3 +4181,5 @@ body.light-theme .quote-card {
 .winner-percentages-table th[scope="row"] { font-weight: 500; }
 .winner-percentages-table td:nth-child(2) { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .winner-percentages-table a { color: inherit; text-decoration: underline; }
+
+.prediction-driver-meta { white-space: normal; }

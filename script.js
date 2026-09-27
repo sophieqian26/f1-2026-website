@@ -3003,6 +3003,21 @@ function driverIdentityHtml(driver = {}) {
   `;
 }
 
+function predictionDriverNumber(driver = {}) {
+  const latestGrid = Object.entries(STARTING_GRID_OVERRIDES)
+    .sort(([a], [b]) => Number(b) - Number(a))
+    .flatMap(([, grid]) => grid.rows || [])
+    .find(row => row.Driver?.driverId === driver.driverId && row.number);
+  return latestGrid?.number || driver.permanentNumber || '—';
+}
+
+function predictionDriverIdentityHtml(driver = {}, team = {}) {
+  return `<span class="driver-identity">
+    <span class="driver-name">${escapeHtml(driverName(driver))}</span>
+    <span class="prediction-driver-meta">#${escapeHtml(predictionDriverNumber(driver))} · ${escapeHtml(constructorName(team))}</span>
+  </span>`;
+}
+
 function driverAge(driver = {}) {
   if (!driver.dateOfBirth) return 'TBC';
   const birth = new Date(`${driver.dateOfBirth}T00:00:00Z`);
@@ -5572,8 +5587,7 @@ function renderVotePicker() {
         return `
           <label class="vote-driver-option ${checked ? 'is-selected' : ''}" style="--team-color: ${teamColor(team.constructorId)}">
             <input type="radio" name="vote-driver" value="${escapeHtml(driver.driverId)}" ${checked ? 'checked' : ''}>
-            <span>${driverIdentityHtml(driver)}</span>
-            <small>${escapeHtml(constructorName(team))}</small>
+            <span>${predictionDriverIdentityHtml(driver, team)}</span>
           </label>
         `;
       }).join('')}
@@ -5615,7 +5629,7 @@ function renderPointPredictionPanel() {
     })
     .join('');
   els.pointsPredictionDriver.innerHTML = drivers.length
-    ? drivers.map(row => `<option value="${escapeHtml(row.Driver.driverId)}">${driverFlag(row.Driver)} ${escapeHtml(driverName(row.Driver))} · ${escapeHtml(constructorName(row.Constructors?.[0]))}</option>`).join('')
+    ? drivers.map(row => `<option value="${escapeHtml(row.Driver.driverId)}">${escapeHtml(driverName(row.Driver))} · #${escapeHtml(predictionDriverNumber(row.Driver))} · ${escapeHtml(constructorName(row.Constructors?.[0]))}</option>`).join('')
     : '<option value="">Drivers loading</option>';
   els.pointsPredictionCategory.value = selectedCategory;
   els.pointsPredictionDriver.value = selectedDriver;
@@ -5643,7 +5657,7 @@ function renderPointPredictionPanel() {
             <div class="points-prediction-row" style="--team-color: ${teamColor(team.constructorId)}">
               <span>
                 <strong>${escapeHtml(item.voterName || authUserName())}</strong>
-                <small>${driverIdentityHtml(item.row.Driver)} · ${escapeHtml(constructorName(team))}</small>
+                <small>${predictionDriverIdentityHtml(item.row.Driver, team)}</small>
               </span>
               <b>${escapeHtml(item.points)} F1 Bucks</b>
             </div>

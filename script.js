@@ -4913,7 +4913,6 @@ function renderRaceFocus(race) {
   }
   const location = race.Circuit?.Location || {};
   const oddsRows = state.odds.raceRound === race.round ? state.odds.rows : [];
-  const topPick = oddsRows[0];
   const imageKey = cityImageKey(location);
   const cityImage = CITY_IMAGE_FALLBACKS[imageKey] || state.cityImages[imageKey];
   const focusImage = location.country === 'UK' ? SILVERSTONE_IMAGE : RACE_FOCUS_IMAGE;
@@ -4922,39 +4921,29 @@ function renderRaceFocus(race) {
   } else {
     els.raceFocus.style.removeProperty('--focus-image');
   }
-  const oddsHtml = oddsRows.length ? `
-    <div class="odds-chart-wrap" aria-label="Next winner odds pie chart">
-      <div class="odds-pie" style="${escapeHtml(oddsPieStyle(oddsRows))}">
-        ${oddsSliceMarkers(oddsRows).map(marker => `
-          <span class="odds-slice-marker" style="--marker-x: ${marker.x.toFixed(2)}%; --marker-y: ${marker.y.toFixed(2)}%; --slice-color: ${oddsSliceColor(marker.row, marker.index)}">
-            ${marker.row.driver ? driverPhotoHtml(marker.row.driver, 'odds-slice-photo') : '<span class="odds-slice-photo odds-photo-fallback" aria-hidden="true">F1</span>'}
-          </span>
-        `).join('')}
-        <div class="odds-pie-center">
-          ${topPick?.driver ? driverPhotoHtml(topPick.driver, 'odds-center-photo') : ''}
-          <strong>${escapeHtml(topPick?.name || 'Top pick')}</strong>
-          <span>${escapeHtml(topPick ? `${topPick.average.toFixed(1)}%${topPick.oddsLabel ? ` · ${topPick.oddsLabel}` : ''}` : '--')}</span>
-        </div>
+  const percentageRows = [...oddsRows];
+  state.drivers.forEach(({ Driver: driver }) => {
+    if (!percentageRows.some(row => row.driver?.driverId === driver.driverId)) {
+      percentageRows.push({ name: driverName(driver), driver, average: null, sources: {} });
+    }
+  });
+  const oddsHtml = `
+    <div class="winner-percentages">
+      <h4>Race winner percentages</h4>
+      <p class="odds-source">Market-implied chances, averaged when multiple sources are available. Percentages may not total 100%.</p>
+      ${!oddsRows.length ? `<p class="odds-empty" role="status">${state.odds.status === 'loading' ? 'Checking winner markets…' : 'Winner odds awaiting publication. No verified percentages available yet.'}</p>` : ''}
+      <div class="winner-percentages-scroll" tabindex="0" role="region" aria-label="Race winner percentages">
+        <table class="winner-percentages-table">
+          <caption>${escapeHtml(displayRaceName(race))} — race winner market</caption>
+          <thead><tr><th scope="col">Driver</th><th scope="col">Win %</th><th scope="col">Source</th></tr></thead>
+          <tbody>${percentageRows.length ? percentageRows.map(row => `
+            <tr>
+              <th scope="row">${escapeHtml(row.name)}</th>
+              <td>${Number.isFinite(row.average) ? `${row.average.toFixed(1)}%` : '<span aria-label="Percentage unavailable">—</span>'}</td>
+              <td>${Object.entries(row.sources || {}).map(([source, url]) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(({ polymarket: 'Polymarket', kalshi: 'Kalshi', external: 'Bookmaker' })[source] || source)}</a>`).join(' · ') || 'Awaiting odds'}</td>
+            </tr>`).join('') : '<tr><td colspan="3">Driver list loading…</td></tr>'}</tbody>
+        </table>
       </div>
-      <div class="odds-legend">
-        ${oddsRows.map((row, index) => {
-          const constructor = row.driver ? driverTeam(row.driver) : {};
-          return `
-            <div class="odds-legend-row ${row === topPick ? 'top-pick' : ''}" style="--slice-color: ${oddsSliceColor(row, index)}">
-              ${row.driver ? driverPhotoHtml(row.driver) : '<span class="odds-photo odds-photo-fallback" aria-hidden="true">F1</span>'}
-              <span class="odds-legend-driver">
-                ${row.driver ? driverIdentityHtml(row.driver) : escapeHtml(row.name)}
-              </span>
-              <span class="team-chip" style="--team-color: ${teamColor(constructor.constructorId)}">${escapeHtml(constructorName(constructor))}</span>
-              <strong>${row.average.toFixed(1)}%${row.oddsLabel ? ` · ${escapeHtml(row.oddsLabel)}` : ''}</strong>
-            </div>
-          `;
-        }).join('')}
-      </div>
-    </div>
-  ` : `
-    <div class="odds-empty">
-      ${state.odds.status === 'loading' ? 'Searching Polymarket and Kalshi winner markets...' : 'No matching live winner market found from Polymarket or Kalshi.'}
     </div>
   `;
   els.raceFocus.innerHTML = `

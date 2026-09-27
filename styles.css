@@ -4166,3 +4166,16 @@ body.light-theme .quote-card {
     box-shadow: 4px 4px 0 var(--red);
   }
 }
+
+
+.winner-percentages { margin-top: 24px; min-width: 0; }
+.winner-percentages h4 { margin: 0 0 8px; font-size: 1.1rem; }
+.winner-percentages-scroll { overflow-x: auto; }
+.winner-percentages-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.winner-percentages-table caption { text-align: left; padding: 8px 0 12px; opacity: 0.7; }
+.winner-percentages-table th,
+.winner-percentages-table td { padding: 11px 8px; text-align: left; border-bottom: 1px solid rgba(128, 128, 128, 0.25); }
+.winner-percentages-table thead th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.winner-percentages-table th[scope="row"] { font-weight: 500; }
+.winner-percentages-table td:nth-child(2) { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.winner-percentages-table a { color: inherit; text-decoration: underline; }

@@ -2158,7 +2158,31 @@ STARTING_GRID_OVERRIDES['16'] = {
     {"position":"21","number":"77","Driver":{"driverId":"bottas","givenName":"Valtteri","familyName":"Bottas","nationality":"Finnish"},"Constructor":{"constructorId":"cadillac","name":"Cadillac"},"q1":"1:38.611","q2":"","q3":"","laps":"6","note":""},
     {"position":"22","number":"11","Driver":{"driverId":"perez","givenName":"Sergio","familyName":"Perez","nationality":"Mexican"},"Constructor":{"constructorId":"cadillac","name":"Cadillac"},"q1":"1:38.933","q2":"","q3":"","laps":"6","note":""}
   ],
-  "startingGridRows": [],
+  "startingGridSourceUrl": "https://www.formula1.com/en/results/2026/races/1308/bahrain/starting-grid",
+  "startingGridRows": [
+    {"position":"1","number":"3","Driver":{"driverId":"max_verstappen","givenName":"Max","familyName":"Verstappen","nationality":"Dutch"},"Constructor":{"constructorId":"red_bull","name":"Red Bull Racing"},"q1":"","q2":"","q3":"1:35.130","laps":"","note":""},
+    {"position":"2","number":"44","Driver":{"driverId":"hamilton","givenName":"Lewis","familyName":"Hamilton","nationality":"British"},"Constructor":{"constructorId":"ferrari","name":"Ferrari"},"q1":"","q2":"","q3":"1:35.428","laps":"","note":""},
+    {"position":"3","number":"12","Driver":{"driverId":"antonelli","givenName":"Kimi","familyName":"Antonelli","nationality":"Italian"},"Constructor":{"constructorId":"mercedes","name":"Mercedes"},"q1":"","q2":"","q3":"1:35.631","laps":"","note":""},
+    {"position":"4","number":"16","Driver":{"driverId":"leclerc","givenName":"Charles","familyName":"Leclerc","nationality":"Monegasque"},"Constructor":{"constructorId":"ferrari","name":"Ferrari"},"q1":"","q2":"","q3":"1:35.666","laps":"","note":""},
+    {"position":"5","number":"1","Driver":{"driverId":"norris","givenName":"Lando","familyName":"Norris","nationality":"British"},"Constructor":{"constructorId":"mclaren","name":"McLaren"},"q1":"","q2":"","q3":"1:35.757","laps":"","note":""},
+    {"position":"6","number":"81","Driver":{"driverId":"piastri","givenName":"Oscar","familyName":"Piastri","nationality":"Australian"},"Constructor":{"constructorId":"mclaren","name":"McLaren"},"q1":"","q2":"","q3":"1:35.762","laps":"","note":""},
+    {"position":"7","number":"63","Driver":{"driverId":"russell","givenName":"George","familyName":"Russell","nationality":"British"},"Constructor":{"constructorId":"mercedes","name":"Mercedes"},"q1":"","q2":"","q3":"1:35.871","laps":"","note":""},
+    {"position":"8","number":"6","Driver":{"driverId":"hadjar","givenName":"Isack","familyName":"Hadjar","nationality":"French"},"Constructor":{"constructorId":"red_bull","name":"Red Bull Racing"},"q1":"","q2":"","q3":"1:35.558","laps":"","note":"Five-place penalty for an additional power unit element."},
+    {"position":"9","number":"10","Driver":{"driverId":"gasly","givenName":"Pierre","familyName":"Gasly","nationality":"French"},"Constructor":{"constructorId":"alpine","name":"Alpine"},"q1":"","q2":"","q3":"1:37.210","laps":"","note":""},
+    {"position":"10","number":"5","Driver":{"driverId":"bortoleto","givenName":"Gabriel","familyName":"Bortoleto","nationality":"Brazilian"},"Constructor":{"constructorId":"audi","name":"Audi"},"q1":"","q2":"","q3":"1:37.673","laps":"","note":""},
+    {"position":"11","number":"30","Driver":{"driverId":"lawson","givenName":"Liam","familyName":"Lawson","nationality":"New Zealander"},"Constructor":{"constructorId":"rb","name":"Racing Bulls"},"q1":"","q2":"","q3":"1:37.023","laps":"","note":""},
+    {"position":"12","number":"14","Driver":{"driverId":"alonso","givenName":"Fernando","familyName":"Alonso","nationality":"Spanish"},"Constructor":{"constructorId":"aston_martin","name":"Aston Martin"},"q1":"","q2":"","q3":"1:37.220","laps":"","note":""},
+    {"position":"13","number":"55","Driver":{"driverId":"sainz","givenName":"Carlos","familyName":"Sainz","nationality":"Spanish"},"Constructor":{"constructorId":"williams","name":"Williams"},"q1":"","q2":"","q3":"1:37.527","laps":"","note":""},
+    {"position":"14","number":"18","Driver":{"driverId":"stroll","givenName":"Lance","familyName":"Stroll","nationality":"Canadian"},"Constructor":{"constructorId":"aston_martin","name":"Aston Martin"},"q1":"","q2":"","q3":"1:37.566","laps":"","note":""},
+    {"position":"15","number":"27","Driver":{"driverId":"hulkenberg","givenName":"Nico","familyName":"Hulkenberg","nationality":"German"},"Constructor":{"constructorId":"audi","name":"Audi"},"q1":"","q2":"","q3":"1:37.970","laps":"","note":""},
+    {"position":"16","number":"87","Driver":{"driverId":"bearman","givenName":"Oliver","familyName":"Bearman","nationality":"British"},"Constructor":{"constructorId":"haas","name":"Haas F1 Team"},"q1":"","q2":"","q3":"1:37.980","laps":"","note":""},
+    {"position":"17","number":"31","Driver":{"driverId":"ocon","givenName":"Esteban","familyName":"Ocon","nationality":"French"},"Constructor":{"constructorId":"haas","name":"Haas F1 Team"},"q1":"","q2":"","q3":"1:38.233","laps":"","note":""},
+    {"position":"18","number":"23","Driver":{"driverId":"albon","givenName":"Alexander","familyName":"Albon","nationality":"Thai"},"Constructor":{"constructorId":"williams","name":"Williams"},"q1":"","q2":"","q3":"1:38.600","laps":"","note":""},
+    {"position":"19","number":"77","Driver":{"driverId":"bottas","givenName":"Valtteri","familyName":"Bottas","nationality":"Finnish"},"Constructor":{"constructorId":"cadillac","name":"Cadillac"},"q1":"","q2":"","q3":"1:38.611","laps":"","note":""},
+    {"position":"20","number":"11","Driver":{"driverId":"perez","givenName":"Sergio","familyName":"Perez","nationality":"Mexican"},"Constructor":{"constructorId":"cadillac","name":"Cadillac"},"q1":"","q2":"","q3":"1:38.933","laps":"","note":""},
+    {"position":"21","number":"43","Driver":{"driverId":"colapinto","givenName":"Franco","familyName":"Colapinto","nationality":"Argentine"},"Constructor":{"constructorId":"alpine","name":"Alpine"},"q1":"","q2":"","q3":"","laps":"","note":"Five-place penalty for causing a collision at the previous round, plus 10 places for an additional power unit element."},
+    {"position":"22","number":"41","Driver":{"driverId":"arvid_lindblad","givenName":"Arvid","familyName":"Lindblad","nationality":"British"},"Constructor":{"constructorId":"rb","name":"Racing Bulls"},"q1":"","q2":"","q3":"","laps":"","note":"30-place penalty for additional power unit elements."}
+  ],
   "practiceSessions": [
     {
       "title": "Practice 1",

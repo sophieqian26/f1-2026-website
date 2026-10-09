@@ -5472,34 +5472,6 @@ function raceDetailHtml(round, options = {}) {
       </dl>
     </div>
 
-    ${practiceSessionsHtml(grid?.practiceSessions || [], idPrefix)}
-
-    <div class="race-detail-grid">
-      <section class="starting-grid-panel" aria-labelledby="${escapeHtml(qualifyingTitleId)}">
-        <div class="starting-grid-head">
-          <div>
-            <p class="eyebrow">Official table</p>
-            <h3 id="${escapeHtml(qualifyingTitleId)}">Qualifying results</h3>
-          </div>
-          <span>${escapeHtml(gridMeta)}</span>
-        </div>
-        <div class="starting-grid-list">${gridRowsHtml(grid?.rows || [])}</div>
-        <a class="starting-grid-source" href="${escapeHtml(qualifyingSourceUrl)}" target="_blank" rel="noreferrer">Official F1 qualifying table</a>
-      </section>
-
-      <section class="starting-grid-panel" aria-labelledby="${escapeHtml(startingGridTitleId)}">
-        <div class="starting-grid-head">
-          <div>
-            <p class="eyebrow">Race start</p>
-            <h3 id="${escapeHtml(startingGridTitleId)}">Starting grid</h3>
-          </div>
-          <span>${escapeHtml(startingGridMeta)}</span>
-        </div>
-        <div class="starting-grid-list">${startingGridRowsHtml(startingGridRows)}</div>
-        <a class="starting-grid-source" href="${escapeHtml(startingGridSourceUrl)}" target="_blank" rel="noreferrer">Official F1 starting-grid table</a>
-      </section>
-    </div>
-
     <section class="race-result-panel" aria-labelledby="${escapeHtml(resultTitleId)}">
       <div class="starting-grid-head">
         <div>
@@ -5529,6 +5501,33 @@ function raceDetailHtml(round, options = {}) {
       <a class="starting-grid-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noreferrer">Official F1 race result table</a>
     </section>
     ${result?.note ? `<p class="odds-source">${escapeHtml(result.note)}</p>` : ''}
+
+    <section class="starting-grid-panel" aria-labelledby="${escapeHtml(startingGridTitleId)}">
+      <div class="starting-grid-head">
+        <div>
+          <p class="eyebrow">Race start</p>
+          <h3 id="${escapeHtml(startingGridTitleId)}">Starting grid</h3>
+        </div>
+        <span>${escapeHtml(startingGridMeta)}</span>
+      </div>
+      <div class="starting-grid-list">${startingGridRowsHtml(startingGridRows)}</div>
+      <a class="starting-grid-source" href="${escapeHtml(startingGridSourceUrl)}" target="_blank" rel="noreferrer">Official F1 starting-grid table</a>
+    </section>
+
+    ${practiceSessionsHtml(grid?.practiceSessions || [], idPrefix)}
+
+    <section class="starting-grid-panel" aria-labelledby="${escapeHtml(qualifyingTitleId)}">
+      <div class="starting-grid-head">
+        <div>
+          <p class="eyebrow">Official table</p>
+          <h3 id="${escapeHtml(qualifyingTitleId)}">Qualifying results</h3>
+        </div>
+        <span>${escapeHtml(gridMeta)}</span>
+      </div>
+      <div class="starting-grid-list">${gridRowsHtml(grid?.rows || [])}</div>
+      <a class="starting-grid-source" href="${escapeHtml(qualifyingSourceUrl)}" target="_blank" rel="noreferrer">Official F1 qualifying table</a>
+    </section>
+
     ${(result?.supplementaryTables || []).map(table => `
       <section class="race-result-panel">
         <h3>${escapeHtml(table.title)}</h3>

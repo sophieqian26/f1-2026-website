@@ -2132,6 +2132,36 @@ RESULT_OVERRIDES['15'] = {
   ]
 };
 
+// Official F1 race classification, checked 2026-10-09.
+RESULT_OVERRIDES['16'] = {
+  raceName: 'Bahrain Grand Prix in Malaysia',
+  sourceUrl: 'https://www.formula1.com/en/results/2026/races/1308/bahrain/race-result',
+  Results: [
+    makeResult('1', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, 25, { number: '3', grid: '1', laps: '55', status: '1:47:14.808' }),
+    makeResult('2', { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, 18, { number: '12', grid: '3', laps: '55', status: '+2.307s' }),
+    makeResult('3', { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, 15, { number: '44', grid: '2', laps: '55', status: '+4.919s' }),
+    makeResult('4', { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, 12, { number: '16', grid: '4', laps: '55', status: '+7.258s' }),
+    makeResult('5', { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, 10, { number: '6', grid: '8', laps: '55', status: '+8.571s' }),
+    makeResult('6', { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, 8, { number: '81', grid: '6', laps: '55', status: '+9.454s' }),
+    makeResult('7', { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, 6, { number: '30', grid: '11', laps: '55', status: '+12.753s' }),
+    makeResult('8', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 4, { number: '14', grid: '12', laps: '55', status: '+13.372s' }),
+    makeResult('9', { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, 2, { number: '1', grid: '5', laps: '55', status: '+13.993s' }),
+    makeResult('10', { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, 1, { number: '41', grid: '22', laps: '55', status: '+15.928s' }),
+    makeResult('11', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, 0, { number: '27', grid: '15', laps: '55', status: '+17.404s' }),
+    makeResult('12', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { number: '18', grid: '14', laps: '55', status: '+18.052s' }),
+    makeResult('13', { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, 0, { number: '43', grid: '21', laps: '55', status: '+18.997s' }),
+    makeResult('14', { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { number: '87', grid: '16', laps: '55', status: '+22.305s' }),
+    makeResult('15', { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { number: '31', grid: '17', laps: '55', status: '+22.532s' }),
+    makeResult('16', { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, 0, { number: '10', grid: '9', laps: '55', status: '+23.315s' }),
+    makeResult('17', { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, 0, { number: '55', grid: '13', laps: '55', status: '+25.431s' }),
+    makeResult('18', { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, 0, { number: '5', grid: '10', laps: '55', status: '+28.233s' }),
+    makeResult('19', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { number: '11', grid: '20', laps: '55', status: '+29.310s' }),
+    makeResult('20', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, 0, { number: '63', grid: '7', laps: '49', status: 'DNF' }),
+    makeResult('NC', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, 0, { number: '23', grid: '18', laps: '41', status: 'DNF' }),
+    makeResult('NC', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { number: '77', grid: '19', laps: '7', status: 'DNF' })
+  ]
+};
+
 STARTING_GRID_OVERRIDES['16'] = {
   "raceName": "Bahrain Grand Prix in Malaysia",
   "sourceUrl": "https://www.formula1.com/en/results/2026/races/1308/bahrain/qualifying",

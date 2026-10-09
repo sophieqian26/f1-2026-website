@@ -40,7 +40,8 @@ const SCHEDULE_WINNER_STICKERS = {
   antonelli: 'assets/schedule-winners/kimi-antonelli.png',
   hamilton: 'assets/schedule-winners/lewis-hamilton.png',
   leclerc: 'assets/schedule-winners/charles-leclerc.png',
-  norris: 'assets/schedule-winners/lando-norris.png'
+  norris: 'assets/schedule-winners/lando-norris.png',
+  max_verstappen: 'assets/vote-drivers/max-verstappen.jpg'
 };
 const FIREBASE_SDK_VERSION = '10.12.5';
 const STARTING_F1_BUCKS = 50;
@@ -3238,8 +3239,9 @@ function nextRace() {
 }
 
 function previousRace() {
-  const latestResult = [...allResultRaces()].reverse().find(race => race.Results?.length);
-  return latestResult ? raceByRound(latestResult.round) : null;
+  return [...state.races]
+    .filter(race => raceStatus(race) === 'Completed')
+    .sort((a, b) => dateValue(b) - dateValue(a))[0] || null;
 }
 
 function activePredictionRace() {
@@ -5128,8 +5130,25 @@ function allResultRaces() {
   return [...byRound.values()].sort((a, b) => Number(a.round) - Number(b.round));
 }
 
+// Official podium for the Bahrain race card; full race classification remains separate.
+const RACE_CARD_PODIUM_OVERRIDES = {
+  '16': {
+    sourceUrl: 'https://www.formula1.com/en/results/2026/races/1308/bahrain/race-result',
+    numbers: ['3', '12', '44']
+  }
+};
+
+function raceCardPodiumResults(race) {
+  const podium = RACE_CARD_PODIUM_OVERRIDES[race.round];
+  if (podium) return podium.numbers.map((number, index) => ({
+    ...STARTING_GRID_OVERRIDES[race.round].rows.find(row => row.number === number),
+    position: String(index + 1)
+  }));
+  return raceResult(race.round)?.Results?.slice(0, 3) || [];
+}
+
 function raceStatus(race) {
-  if (raceResult(race.round)?.Results?.length) return 'Completed';
+  if (raceCardPodiumResults(race).length) return 'Completed';
   return dateValue(race) < new Date() ? 'Completed - results pending' : 'Upcoming';
 }
 
@@ -5138,8 +5157,7 @@ function raceBucket(race) {
 }
 
 function racePodium(race) {
-  const result = raceResult(race.round);
-  return result?.Results?.slice(0, 3).map(item => ({
+  return raceCardPodiumResults(race).map(item => ({
     position: item.positionText || item.position,
     driver: item.Driver,
     name: driverName(item.Driver),
@@ -5150,7 +5168,7 @@ function racePodium(race) {
 
 function scheduleWinnerSticker(race) {
   if (raceBucket(race) !== 'completed') return null;
-  const winnerId = raceResult(race.round)?.Results?.[0]?.Driver?.driverId;
+  const winnerId = raceCardPodiumResults(race)[0]?.Driver?.driverId;
   return winnerId ? SCHEDULE_WINNER_STICKERS[winnerId] || null : null;
 }
 
@@ -5332,7 +5350,7 @@ function raceCardHtml(race, options = {}) {
   const image = raceImage(race);
   const imageStyle = image ? ` style="--race-image: url('${escapeHtml(image)}')"` : '';
   const podium = racePodium(race);
-  const winnerId = raceResult(race.round)?.Results?.[0]?.Driver?.driverId || '';
+  const winnerId = raceCardPodiumResults(race)[0]?.Driver?.driverId || '';
   const winnerSticker = scheduleWinnerSticker(race);
   const winnerStickerModifier = winnerId ? ` is-${escapeHtml(winnerId)}` : '';
   const winnerStickerHtml = winnerSticker

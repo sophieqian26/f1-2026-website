@@ -41,7 +41,7 @@ const SCHEDULE_WINNER_STICKERS = {
   hamilton: 'assets/schedule-winners/lewis-hamilton.png',
   leclerc: 'assets/schedule-winners/charles-leclerc.png',
   norris: 'assets/schedule-winners/lando-norris.png',
-  max_verstappen: 'assets/vote-drivers/max-verstappen.jpg'
+  max_verstappen: 'assets/schedule-winners/max-verstappen.png'
 };
 const FIREBASE_SDK_VERSION = '10.12.5';
 const STARTING_F1_BUCKS = 50;

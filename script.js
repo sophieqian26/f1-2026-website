@@ -2162,11 +2162,11 @@ RESULT_OVERRIDES['16'] = {
   ]
 };
 
-// Official F1 Singapore race classification, finalized 2026-10-12.
+// Official F1 Singapore provisional race classification, checked 2026-10-12.
 RESULT_OVERRIDES['17'] = {
   raceName: 'Singapore Grand Prix',
   sourceUrl: 'https://www.formula1.com/en/results/2026/races/1296/singapore/race-result',
-  note: 'Official Formula 1 race classification.',
+  note: 'Official Formula 1 provisional race classification.',
   Results: [
     makeResult('1', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, 25, { number: '3', grid: '1', laps: '62', status: '1:42:00.785' }),
     makeResult('2', { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, 18, { number: '16', grid: '2', laps: '62', status: '+7.335s' }),

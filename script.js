@@ -2509,31 +2509,42 @@ STARTING_GRID_OVERRIDES['17'] = {
   }]
 };
 
-const CURRENT_DRIVER_POINTS = {
-  antonelli: { points: 340, wins: 8 },
-  russell: { points: 238, wins: 3 },
-  hamilton: { points: 229, wins: 1 },
-  max_verstappen: { points: 221, wins: 2 },
-  leclerc: { points: 215, wins: 1 },
-  norris: { points: 201, wins: 2 },
-  piastri: { points: 138, wins: 0 },
-  hadjar: { points: 97, wins: 0 },
-  lawson: { points: 75, wins: 0 },
-  gasly: { points: 41, wins: 0 },
-  arvid_lindblad: { points: 38, wins: 0 },
-  colapinto: { points: 27, wins: 0 },
-  bearman: { points: 23, wins: 0 },
-  bortoleto: { points: 10, wins: 0 },
-  hulkenberg: { points: 13, wins: 0 },
-  ocon: { points: 7, wins: 0 },
-  alonso: { points: 7, wins: 0 },
-  sainz: { points: 7, wins: 0 },
-  albon: { points: 5, wins: 0 },
-  tsunoda: { points: 1, wins: 0 },
-  stroll: { points: 0, wins: 0 },
-  bottas: { points: 0, wins: 0 },
-  perez: { points: 0, wins: 0 }
-};
+const CURRENT_DRIVER_STANDINGS = [
+  ['antonelli', 'Kimi', 'Antonelli', 'Italian', '12', 'mercedes', 'Mercedes', 340, 8],
+  ['russell', 'George', 'Russell', 'British', '63', 'mercedes', 'Mercedes', 238, 3],
+  ['hamilton', 'Lewis', 'Hamilton', 'British', '44', 'ferrari', 'Ferrari', 229, 1],
+  ['max_verstappen', 'Max', 'Verstappen', 'Dutch', '3', 'red_bull', 'Red Bull Racing', 221, 2],
+  ['leclerc', 'Charles', 'Leclerc', 'Monegasque', '16', 'ferrari', 'Ferrari', 215, 1],
+  ['norris', 'Lando', 'Norris', 'British', '1', 'mclaren', 'McLaren', 201, 2],
+  ['piastri', 'Oscar', 'Piastri', 'Australian', '81', 'mclaren', 'McLaren', 138, 0],
+  ['hadjar', 'Isack', 'Hadjar', 'French', '6', 'red_bull', 'Red Bull Racing', 97, 0],
+  ['lawson', 'Liam', 'Lawson', 'New Zealander', '30', 'rb', 'Racing Bulls', 75, 0],
+  ['gasly', 'Pierre', 'Gasly', 'French', '10', 'alpine', 'Alpine', 41, 0],
+  ['arvid_lindblad', 'Arvid', 'Lindblad', 'British', '41', 'rb', 'Racing Bulls', 38, 0],
+  ['colapinto', 'Franco', 'Colapinto', 'Argentine', '43', 'alpine', 'Alpine', 27, 0],
+  ['bearman', 'Oliver', 'Bearman', 'British', '87', 'haas', 'Haas F1 Team', 23, 0],
+  ['hulkenberg', 'Nico', 'Hulkenberg', 'German', '27', 'audi', 'Audi', 13, 0],
+  ['bortoleto', 'Gabriel', 'Bortoleto', 'Brazilian', '5', 'audi', 'Audi', 10, 0],
+  ['ocon', 'Esteban', 'Ocon', 'French', '31', 'haas', 'Haas F1 Team', 7, 0],
+  ['alonso', 'Fernando', 'Alonso', 'Spanish', '14', 'aston_martin', 'Aston Martin', 7, 0],
+  ['sainz', 'Carlos', 'Sainz', 'Spanish', '55', 'williams', 'Williams', 7, 0],
+  ['albon', 'Alexander', 'Albon', 'Thai', '23', 'williams', 'Williams', 5, 0],
+  ['tsunoda', 'Yuki', 'Tsunoda', 'Japanese', '22', 'rb', 'Racing Bulls', 1, 0],
+  ['stroll', 'Lance', 'Stroll', 'Canadian', '18', 'aston_martin', 'Aston Martin', 0, 0],
+  ['bottas', 'Valtteri', 'Bottas', 'Finnish', '77', 'cadillac', 'Cadillac', 0, 0],
+  ['perez', 'Sergio', 'Perez', 'Mexican', '11', 'cadillac', 'Cadillac', 0, 0]
+].map(([driverId, givenName, familyName, nationality, permanentNumber, constructorId, constructorName, points, wins], index) => ({
+  position: index + 1,
+  driverId,
+  givenName,
+  familyName,
+  nationality,
+  permanentNumber,
+  constructorId,
+  constructorName,
+  points,
+  wins
+}));
 
 const CURRENT_CONSTRUCTOR_POINTS = {
   mercedes: { points: 578, wins: 11 },
@@ -4821,21 +4832,31 @@ async function refreshLiveRaceResults() {
 }
 
 function applyCurrentPointTotals() {
-  state.drivers = state.drivers
-    .map(row => {
-      const override = CURRENT_DRIVER_POINTS[row.Driver?.driverId];
-      return override ? {
-        ...row,
-        points: String(override.points),
-        wins: String(override.wins)
-      } : row;
-    })
-    .sort((a, b) => Number(b.points) - Number(a.points) || Number(b.wins) - Number(a.wins))
-    .map((row, index) => ({
-      ...row,
-      position: String(index + 1),
-      positionText: String(index + 1)
-    }));
+  const liveDriversById = new Map(
+    state.drivers.map(row => [row.Driver?.driverId, row])
+  );
+
+  state.drivers = CURRENT_DRIVER_STANDINGS.map(standing => {
+    const liveRow = liveDriversById.get(standing.driverId) || {};
+    return {
+      ...liveRow,
+      position: String(standing.position),
+      positionText: String(standing.position),
+      points: String(standing.points),
+      wins: String(standing.wins),
+      Driver: liveRow.Driver || {
+        driverId: standing.driverId,
+        givenName: standing.givenName,
+        familyName: standing.familyName,
+        nationality: standing.nationality,
+        permanentNumber: standing.permanentNumber
+      },
+      Constructors: liveRow.Constructors?.length ? liveRow.Constructors : [{
+        constructorId: standing.constructorId,
+        name: standing.constructorName
+      }]
+    };
+  });
 
   state.constructors = state.constructors
     .map(row => {

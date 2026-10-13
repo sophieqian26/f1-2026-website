@@ -2162,7 +2162,7 @@ RESULT_OVERRIDES['16'] = {
   ]
 };
 
-// Official F1 Singapore provisional race classification, checked 2026-10-12.
+// Official F1 Singapore provisional race classification and Sprint result, checked 2026-10-13.
 RESULT_OVERRIDES['17'] = {
   raceName: 'Singapore Grand Prix',
   sourceUrl: 'https://www.formula1.com/en/results/2026/races/1296/singapore/race-result',
@@ -2176,20 +2176,80 @@ RESULT_OVERRIDES['17'] = {
     makeResult('6', { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, 8, { number: '44', grid: '3', laps: '62', status: '+53.188s' }),
     makeResult('7', { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, 6, { number: '30', grid: '8', laps: '62', status: '+81.666s' }),
     makeResult('8', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, 4, { number: '27', grid: '10', laps: '62', status: '+83.386s' }),
-    makeResult('9', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, 2, { number: '63', grid: '21', laps: '62', status: '+84.677s' }),
+    makeResult('9', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, 2, { number: '63', grid: '19', laps: '62', status: '+84.677s' }),
     makeResult('10', { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, 1, { number: '6', grid: '22', laps: '62', status: '+90.862s' }),
     makeResult('11', { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, 0, { number: '10', grid: '7', laps: '61', status: '+1 lap' }),
     makeResult('12', { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { number: '87', grid: '11', laps: '61', status: '+1 lap' }),
     makeResult('13', { driverId: 'ocon', givenName: 'Esteban', familyName: 'Ocon', nationality: 'French' }, { constructorId: 'haas', name: 'Haas F1 Team' }, 0, { number: '31', grid: '12', laps: '61', status: '+1 lap' }),
     makeResult('14', { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, 0, { number: '55', grid: '13', laps: '61', status: '+1 lap' }),
     makeResult('15', { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, 0, { number: '41', grid: '9', laps: '61', status: '+1 lap' }),
-    makeResult('16', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { number: '14', grid: '16', laps: '61', status: '+1 lap' }),
-    makeResult('17', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { number: '11', grid: '19', laps: '60', status: '+2 laps' }),
-    makeResult('18', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, 0, { number: '23', grid: '17', laps: '59', status: 'DNF' }),
-    makeResult('19', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { number: '77', grid: '20', laps: '59', status: '+3 laps' }),
-    makeResult('NC', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { number: '18', grid: '18', laps: '36', status: 'DNF' }),
+    makeResult('16', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { number: '14', grid: '20', laps: '61', status: '+1 lap' }),
+    makeResult('17', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { number: '11', grid: '17', laps: '60', status: '+2 laps' }),
+    makeResult('18', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, 0, { number: '23', grid: '16', laps: '59', status: 'DNF' }),
+    makeResult('19', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, 0, { number: '77', grid: '18', laps: '59', status: '+3 laps' }),
+    makeResult('NC', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, 0, { number: '18', grid: '21', laps: '36', status: 'DNF' }),
     makeResult('NC', { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, 0, { number: '43', grid: '15', laps: '29', status: 'DNF' }),
     makeResult('NC', { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, 0, { number: '5', grid: '14', laps: '7', status: 'DNF' })
+  ],
+  supplementaryTables: [
+    {
+      title: 'Sprint result',
+      url: 'https://www.formula1.com/en/results/2026/races/1296/singapore/sprint-results',
+      headers: ['Pos', 'No.', 'Driver', 'Team', 'Laps', 'Time / Retired', 'Pts.'],
+      rows: [
+        ['1', '3', 'Max Verstappen', 'Red Bull Racing', '20', '39:48.162', '8'],
+        ['2', '44', 'Lewis Hamilton', 'Ferrari', '20', '+2.591s', '7'],
+        ['3', '16', 'Charles Leclerc', 'Ferrari', '20', '+16.871s', '6'],
+        ['4', '12', 'Kimi Antonelli', 'Mercedes', '20', '+17.238s', '5'],
+        ['5', '30', 'Liam Lawson', 'Racing Bulls', '20', '+20.632s', '4'],
+        ['6', '87', 'Oliver Bearman', 'Haas F1 Team', '20', '+24.321s', '3'],
+        ['7', '27', 'Nico Hulkenberg', 'Audi', '20', '+27.525s', '2'],
+        ['8', '1', 'Lando Norris', 'McLaren', '20', '+28.272s', '1'],
+        ['9', '10', 'Pierre Gasly', 'Alpine', '20', '+36.220s', '0'],
+        ['10', '31', 'Esteban Ocon', 'Haas F1 Team', '20', '+37.640s', '0'],
+        ['11', '14', 'Fernando Alonso', 'Aston Martin', '20', '+50.464s', '0'],
+        ['12', '55', 'Carlos Sainz', 'Williams', '20', '+52.467s', '0'],
+        ['13', '41', 'Arvid Lindblad', 'Racing Bulls', '20', '+55.792s', '0'],
+        ['14', '81', 'Oscar Piastri', 'McLaren', '19', 'DNF', '0'],
+        ['NC', '23', 'Alexander Albon', 'Williams', '14', 'DNF', '0'],
+        ['NC', '5', 'Gabriel Bortoleto', 'Audi', '6', 'DNF', '0'],
+        ['NC', '77', 'Valtteri Bottas', 'Cadillac', '6', 'DNF', '0'],
+        ['NC', '6', 'Isack Hadjar', 'Red Bull Racing', '2', 'DNF', '0'],
+        ['NC', '43', 'Franco Colapinto', 'Alpine', '2', 'DNF', '0'],
+        ['NC', '63', 'George Russell', 'Mercedes', '1', 'DNF', '0'],
+        ['NC', '11', 'Sergio Perez', 'Cadillac', '1', 'DNF', '0'],
+        ['NC', '18', 'Lance Stroll', 'Aston Martin', '0', 'DNF', '0']
+      ]
+    },
+    {
+      title: 'Sprint grid',
+      url: 'https://www.formula1.com/en/results/2026/races/1296/singapore/sprint-grid',
+      headers: ['Pos', 'No.', 'Driver', 'Team', 'Time'],
+      rows: [
+        ['1', '3', 'Max Verstappen', 'Red Bull Racing', '1:31.156'],
+        ['2', '63', 'George Russell', 'Mercedes', '1:31.276'],
+        ['3', '16', 'Charles Leclerc', 'Ferrari', '1:31.399'],
+        ['4', '81', 'Oscar Piastri', 'McLaren', '1:31.454'],
+        ['5', '1', 'Lando Norris', 'McLaren', '1:31.587'],
+        ['6', '44', 'Lewis Hamilton', 'Ferrari', '1:31.702'],
+        ['7', '12', 'Kimi Antonelli', 'Mercedes', '1:31.849'],
+        ['8', '30', 'Liam Lawson', 'Racing Bulls', '1:32.341'],
+        ['9', '6', 'Isack Hadjar', 'Red Bull Racing', '—'],
+        ['10', '10', 'Pierre Gasly', 'Alpine', '—'],
+        ['11', '43', 'Franco Colapinto', 'Alpine', '1:33.249'],
+        ['12', '27', 'Nico Hulkenberg', 'Audi', '1:33.420'],
+        ['13', '87', 'Oliver Bearman', 'Haas F1 Team', '1:33.423'],
+        ['14', '5', 'Gabriel Bortoleto', 'Audi', '1:33.466'],
+        ['15', '14', 'Fernando Alonso', 'Aston Martin', '1:33.734'],
+        ['16', '31', 'Esteban Ocon', 'Haas F1 Team', '1:34.368'],
+        ['17', '41', 'Arvid Lindblad', 'Racing Bulls', '1:35.136'],
+        ['18', '18', 'Lance Stroll', 'Aston Martin', '1:35.662'],
+        ['19', '23', 'Alexander Albon', 'Williams', '1:36.130'],
+        ['20', '11', 'Sergio Perez', 'Cadillac', '1:36.760'],
+        ['21', '77', 'Valtteri Bottas', 'Cadillac', '1:36.868'],
+        ['22', '55', 'Carlos Sainz', 'Williams', '1:37.376 (pit lane)']
+      ]
+    }
   ]
 };
 
@@ -2336,11 +2396,11 @@ STARTING_GRID_OVERRIDES['16'] = {
   ]
 };
 
-// Official F1 Singapore FP1 and Sprint Qualifying classifications, checked 2026-10-10.
+// Official F1 Singapore FP1, Sprint Qualifying, Qualifying and grids, checked 2026-10-13.
 STARTING_GRID_OVERRIDES['17'] = {
   raceName: 'Singapore Grand Prix',
   sourceUrl: 'https://www.formula1.com/en/results/2026/races/1296/singapore/qualifying',
-  note: 'Official F1 qualifying results. Russell received a 40-place grid penalty for additional power-unit elements.',
+  note: 'Official F1 qualifying results. Russell received a 60-place grid penalty for additional power-unit elements.',
   rows: [
     makeGridResult('1', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '3', q1: '1:33.241', q2: '1:31.639', q3: '1:31.373', laps: '15' }),
     makeGridResult('2', { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '16', q1: '1:32.774', q2: '1:31.953', q3: '1:31.427', laps: '25' }),
@@ -2381,13 +2441,13 @@ STARTING_GRID_OVERRIDES['17'] = {
     makeGridResult('13', { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, { number: '55', q3: '1:33.526' }),
     makeGridResult('14', { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, { number: '5', q3: '1:33.658' }),
     makeGridResult('15', { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '43', q3: '1:33.787' }),
-    makeGridResult('16', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '14', q3: '1:34.223' }),
-    makeGridResult('17', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, { number: '23', q3: '1:34.289' }),
-    makeGridResult('18', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', q3: '1:34.946' }),
-    makeGridResult('19', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '11', q3: '1:35.123' }),
-    makeGridResult('20', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '77', q3: '1:35.984' }),
-    makeGridResult('21', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '63', q3: '1:31.747', note: '40-place power-unit penalty' }),
-    makeGridResult('22', { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '6' })
+    makeGridResult('16', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, { number: '23', q3: '1:34.289' }),
+    makeGridResult('17', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '11', q3: '1:35.123' }),
+    makeGridResult('18', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '77', q3: '1:35.984' }),
+    makeGridResult('19', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '63', q3: '1:31.747', note: '60-place power-unit penalty' }),
+    makeGridResult('20', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '14', q3: '1:34.223', note: 'Pit-lane start after Parc Ferme changes and additional power-unit elements' }),
+    makeGridResult('21', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', q3: '1:34.946', note: 'Pit-lane start after Parc Ferme changes' }),
+    makeGridResult('22', { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '6', note: 'Pit-lane start after Parc Ferme changes and additional power-unit elements' })
   ],
   practiceSessions: [{
     title: 'Practice 1',

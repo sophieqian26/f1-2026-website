@@ -4835,6 +4835,9 @@ function applyCurrentPointTotals() {
   const liveDriversById = new Map(
     state.drivers.map(row => [row.Driver?.driverId, row])
   );
+  const liveConstructorsById = new Map(
+    state.constructors.map(row => [row.Constructor?.constructorId, row])
+  );
 
   state.drivers = CURRENT_DRIVER_STANDINGS.map(standing => {
     const liveRow = liveDriversById.get(standing.driverId) || {};
@@ -4858,14 +4861,19 @@ function applyCurrentPointTotals() {
     };
   });
 
-  state.constructors = state.constructors
-    .map(row => {
-      const override = CURRENT_CONSTRUCTOR_POINTS[row.Constructor?.constructorId];
-      return override ? {
-        ...row,
+  state.constructors = Object.entries(CURRENT_CONSTRUCTOR_POINTS)
+    .map(([constructorId, override]) => {
+      const liveRow = liveConstructorsById.get(constructorId) || {};
+      const standing = CURRENT_DRIVER_STANDINGS.find(row => row.constructorId === constructorId);
+      return {
+        ...liveRow,
         points: String(override.points),
-        wins: String(override.wins)
-      } : row;
+        wins: String(override.wins),
+        Constructor: liveRow.Constructor || {
+          constructorId,
+          name: standing?.constructorName || constructorId
+        }
+      };
     })
     .sort((a, b) => Number(b.points) - Number(a.points) || Number(b.wins) - Number(a.wins))
     .map((row, index) => ({
@@ -6196,6 +6204,7 @@ function renderLeaderboard(title, rows) {
 function careerBackHtml(row) {
   const driver = row.Driver;
   const career = state.driverCareer[driver.driverId] || { status: 'idle' };
+  const seasonPoints = String(row.points ?? '0');
   const image = state.driverImages[driver.driverId];
   const imageHtml = image
     ? `<img class="profile-back-photo" src="${escapeHtml(image)}" alt="${escapeHtml(driverName(driver))}">`
@@ -6207,6 +6216,9 @@ function careerBackHtml(row) {
       <div class="profile-back-copy">
         <strong>${escapeHtml(driverName(driver))}</strong>
         <p class="profile-meta">Loading career card...</p>
+        <div class="career-stats">
+          <span>2026 points</span><b>${escapeHtml(seasonPoints)}</b>
+        </div>
       </div>
     `;
   }
@@ -6217,6 +6229,9 @@ function careerBackHtml(row) {
       <div class="profile-back-copy">
         <strong>${escapeHtml(driverName(driver))}</strong>
         <p class="profile-meta">Career stats unavailable from the live API right now.</p>
+        <div class="career-stats">
+          <span>2026 points</span><b>${escapeHtml(seasonPoints)}</b>
+        </div>
       </div>
     `;
   }
@@ -6226,6 +6241,7 @@ function careerBackHtml(row) {
     <div class="profile-back-copy">
       <strong>${escapeHtml(driverName(driver))}</strong>
       <div class="career-stats">
+        <span>2026 points</span><b>${escapeHtml(seasonPoints)}</b>
         <span>Age</span><b>${escapeHtml(driverAge(driver))}</b>
         <span>Nationality</span><b>${driverFlag(driver)} ${escapeHtml(driverNationality(driver))}</b>
         <span>Season</span><b>${escapeHtml(ordinal(career.seasons))}</b>

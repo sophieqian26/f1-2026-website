@@ -267,6 +267,7 @@ const GRAND_PRIX_TITLE_BY_COUNTRY = {
 
 const CITY_IMAGE_FALLBACKS = {
   'Baku|Azerbaijan': 'assets/race-cities/baku.jpg',
+  'Budapest|Hungary': 'assets/race-cities/budapest.jpg',
   'Silverstone|UK': 'https://commons.wikimedia.org/wiki/Special:FilePath/High_Street%2C_Silverstone_-_geograph.org.uk_-_5075390.jpg'
 };
 

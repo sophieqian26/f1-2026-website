@@ -2891,7 +2891,7 @@ const els = {
   lastUpdated: document.querySelector('#lastUpdated')
 };
 
-const PAGE_IDS = ['home', 'next-race', 'previous-race', 'schedule', 'race-detail', 'standings', 'account', 'profiles', 'games', 'news', 'chat', 'wisdom'];
+const PAGE_IDS = ['home', 'next-race', 'previous-race', 'schedule', 'race-detail', 'standings', 'account', 'profiles', 'games', 'news', 'chat', 'wisdom', 'credits'];
 const flappyImages = {};
 let nextRaceMascotTimer = null;
 let nextRaceMascotHideTimer = null;

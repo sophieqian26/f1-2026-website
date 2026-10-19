@@ -128,7 +128,8 @@ const POINT_PREDICTION_CATEGORIES = [
   { id: 'pole_position', title: 'Pole position' },
   { id: 'p3', title: 'P3' },
   { id: 'p2', title: 'P2' },
-  { id: 'race_winner', title: 'Race winner' }
+  { id: 'race_winner', title: 'Race winner' },
+  { id: 'driver_of_the_day', title: 'Driver of the Day' }
 ];
 
 const TEAM_COLORS = {

@@ -5264,6 +5264,19 @@ async function loadWikipediaCareer(driver, currentTeamIds) {
   };
 }
 
+function withVerifiedCareerTotals(driverId, career) {
+  const verified = PADDOCKDLE_DRIVER_BASE.find(driver => driver.id === driverId);
+  if (!verified || !career) return career;
+  return {
+    ...career,
+    wins: verified.wins,
+    podiums: verified.podiums,
+    source: career.source.includes('Official Formula 1')
+      ? career.source
+      : `Official Formula 1 career totals + ${career.source}`
+  };
+}
+
 async function loadDriverCareer(driverId) {
   if (!driverId || state.driverCareer[driverId]?.status === 'ready') return state.driverCareer[driverId];
   state.driverCareer[driverId] = { status: 'loading' };
@@ -5274,9 +5287,9 @@ async function loadDriverCareer(driverId) {
     const currentTeamIds = new Set(standingsRow?.Constructors?.map(constructor => constructor.constructorId) || []);
     const wikiCareer = standingsRow?.Driver ? await loadWikipediaCareer(standingsRow.Driver, currentTeamIds) : null;
     if (wikiCareer) {
-      state.driverCareer[driverId] = wikiCareer;
+      state.driverCareer[driverId] = withVerifiedCareerTotals(driverId, wikiCareer);
       updateProfileBack(driverId);
-      return wikiCareer;
+      return state.driverCareer[driverId];
     }
 
     const data = await fetchJson(`https://api.jolpi.ca/ergast/f1/drivers/${driverId}/results/?limit=2000`);
@@ -5324,7 +5337,7 @@ async function loadDriverCareer(driverId) {
       .filter(([id]) => !currentTeamIds.has(id))
       .map(([, name]) => name);
 
-    state.driverCareer[driverId] = {
+    state.driverCareer[driverId] = withVerifiedCareerTotals(driverId, {
       status: 'ready',
       seasons: seasons.size,
       wins,
@@ -5333,7 +5346,7 @@ async function loadDriverCareer(driverId) {
       debut: debut ? `${displayRaceName(debut)} ${debut.season}` : 'TBC',
       previousTeams: previousTeams.length ? previousTeams : ['None'],
       source: 'Jolpica career results + verified 2026 Monaco/Barcelona overrides'
-    };
+    });
   } catch (error) {
     state.driverCareer[driverId] = { status: 'error' };
   }

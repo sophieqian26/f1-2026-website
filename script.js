@@ -2813,8 +2813,29 @@ STARTING_GRID_OVERRIDES['20'] = {
   raceName: 'São Paulo Grand Prix',
   sourceUrl: 'https://www.formula1.com/en/results/2026/races/1299/brazil/qualifying',
   startingGridSourceUrl: 'https://www.formula1.com/en/results/2026/races/1299/brazil/starting-grid',
-  note: 'Official qualifying results will appear after the session.',
-  rows: [],
+  note: 'Official Formula 1 qualifying classification. The official race starting grid is still pending.',
+  rows: [
+    makeGridResult('1', { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '1', q1: '1:30.939', q2: '1:29.207', q3: '1:27.470', laps: '24' }),
+    makeGridResult('2', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '63', q1: '1:31.206', q2: '1:26.745', q3: '1:27.674', laps: '23' }),
+    makeGridResult('3', { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '12', q1: '1:32.229', q2: '1:29.302', q3: '1:28.095', laps: '23' }),
+    makeGridResult('4', { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '16', q1: '1:32.121', q2: '1:28.082', q3: '1:28.289', laps: '22' }),
+    makeGridResult('5', { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '30', q1: '1:32.085', q2: '1:27.049', q3: '1:28.321', laps: '24' }),
+    makeGridResult('6', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, { number: '27', q1: '1:31.693', q2: '1:28.361', q3: '1:28.668', laps: '23' }),
+    makeGridResult('7', { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '6', q1: '1:32.059', q2: '1:27.218', q3: '1:28.763', laps: '24' }),
+    makeGridResult('8', { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '87', q1: '1:33.030', q2: '1:29.130', q3: '1:29.831', laps: '22' }),
+    makeGridResult('9', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '14', q1: '1:32.092', q2: '1:29.072', q3: '1:30.311', laps: '23' }),
+    makeGridResult('10', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, { number: '23', q1: '1:33.150', q2: '1:28.918', q3: '1:30.456', laps: '24' }),
+    makeGridResult('11', { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '44', q1: '1:31.666', q2: '1:30.001', laps: '13' }),
+    makeGridResult('12', { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '81', q1: '1:32.251', q2: '1:30.369', laps: '20' }),
+    makeGridResult('13', { driverId: 'camara', givenName: 'Rafael', familyName: 'Câmara', nationality: 'Brazilian' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '51', q1: '1:32.809', q2: '1:31.515', laps: '18' }),
+    makeGridResult('14', { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '41', q1: '1:32.306', q2: '1:31.687', laps: '16' }),
+    makeGridResult('15', { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, { number: '55', q1: '1:32.959', q2: '1:31.785', laps: '19' }),
+    makeGridResult('16', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '3', q1: '1:31.238', laps: '9' }),
+    makeGridResult('17', { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '43', q1: '1:33.327', laps: '12' }),
+    makeGridResult('18', { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '10', q1: '1:33.449', laps: '12' }),
+    makeGridResult('19', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', q1: '1:33.653', laps: '11' }),
+    makeGridResult('20', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '77', q1: '1:33.774', laps: '12' })
+  ],
   startingGridRows: [],
   practiceSessions: [
     {
@@ -2872,6 +2893,35 @@ STARTING_GRID_OVERRIDES['20'] = {
         makePracticeResult('19', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, { number: '23', gap: '+2.190s', laps: '37' }),
         makePracticeResult('20', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '11', gap: '+2.553s', laps: '34' }),
         makePracticeResult('21', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '77', gap: '+2.620s', laps: '33' })
+      ]
+    },
+    {
+      title: 'Practice 3',
+      raceName: 'São Paulo Grand Prix',
+      sourceUrl: 'https://www.formula1.com/en/results/2026/races/1299/brazil/practice/3',
+      rows: [
+        makePracticeResult('1', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '3', time: '1:11.622', laps: '19' }),
+        makePracticeResult('2', { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '12', gap: '+0.025s', laps: '21' }),
+        makePracticeResult('3', { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '1', gap: '+0.131s', laps: '22' }),
+        makePracticeResult('4', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '63', gap: '+0.184s', laps: '22' }),
+        makePracticeResult('5', { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '16', gap: '+0.274s', laps: '30' }),
+        makePracticeResult('6', { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '81', gap: '+0.313s', laps: '20' }),
+        makePracticeResult('7', { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '41', gap: '+0.438s', laps: '25' }),
+        makePracticeResult('8', { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '30', gap: '+0.549s', laps: '20' }),
+        makePracticeResult('9', { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '6', gap: '+0.591s', laps: '24' }),
+        makePracticeResult('10', { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, { number: '5', gap: '+1.022s', laps: '24' }),
+        makePracticeResult('11', { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '10', gap: '+1.022s', laps: '26' }),
+        makePracticeResult('12', { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '44', gap: '+1.211s', laps: '7' }),
+        makePracticeResult('13', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, { number: '27', gap: '+1.243s', laps: '27' }),
+        makePracticeResult('14', { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '43', gap: '+1.303s', laps: '25' }),
+        makePracticeResult('15', { driverId: 'camara', givenName: 'Rafael', familyName: 'Câmara', nationality: 'Brazilian' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '51', gap: '+1.359s', laps: '19' }),
+        makePracticeResult('16', { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '87', gap: '+1.487s', laps: '20' }),
+        makePracticeResult('17', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, { number: '23', gap: '+1.525s', laps: '25' }),
+        makePracticeResult('18', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '14', gap: '+1.549s', laps: '23' }),
+        makePracticeResult('19', { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, { number: '55', gap: '+1.681s', laps: '21' }),
+        makePracticeResult('20', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '11', gap: '+1.951s', laps: '32' }),
+        makePracticeResult('21', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '77', gap: '+2.100s', laps: '19' }),
+        makePracticeResult('22', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', gap: '+3.144s', laps: '7' })
       ]
     }
   ]

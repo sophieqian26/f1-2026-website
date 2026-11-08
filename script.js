@@ -2813,7 +2813,7 @@ STARTING_GRID_OVERRIDES['20'] = {
   raceName: 'São Paulo Grand Prix',
   sourceUrl: 'https://www.formula1.com/en/results/2026/races/1299/brazil/qualifying',
   startingGridSourceUrl: 'https://www.formula1.com/en/results/2026/races/1299/brazil/starting-grid',
-  note: 'Official Formula 1 qualifying classification. The official race starting grid is still pending.',
+  note: 'Official Formula 1 qualifying classification.',
   rows: [
     makeGridResult('1', { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '1', q1: '1:30.939', q2: '1:29.207', q3: '1:27.470', laps: '24' }),
     makeGridResult('2', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '63', q1: '1:31.206', q2: '1:26.745', q3: '1:27.674', laps: '23' }),
@@ -2836,7 +2836,30 @@ STARTING_GRID_OVERRIDES['20'] = {
     makeGridResult('19', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', q1: '1:33.653', laps: '11' }),
     makeGridResult('20', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '77', q1: '1:33.774', laps: '12' })
   ],
-  startingGridRows: [],
+  startingGridRows: [
+    makeGridResult('1', { driverId: 'norris', givenName: 'Lando', familyName: 'Norris', nationality: 'British' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '1', q3: '1:27.470' }),
+    makeGridResult('2', { driverId: 'antonelli', givenName: 'Kimi', familyName: 'Antonelli', nationality: 'Italian' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '12', q3: '1:28.095' }),
+    makeGridResult('3', { driverId: 'lawson', givenName: 'Liam', familyName: 'Lawson', nationality: 'New Zealander' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '30', q3: '1:28.321' }),
+    makeGridResult('4', { driverId: 'hulkenberg', givenName: 'Nico', familyName: 'Hulkenberg', nationality: 'German' }, { constructorId: 'audi', name: 'Audi' }, { number: '27', q3: '1:28.668' }),
+    makeGridResult('5', { driverId: 'hadjar', givenName: 'Isack', familyName: 'Hadjar', nationality: 'French' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '6', q3: '1:28.763' }),
+    makeGridResult('6', { driverId: 'bearman', givenName: 'Oliver', familyName: 'Bearman', nationality: 'British' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '87', q3: '1:29.831' }),
+    makeGridResult('7', { driverId: 'russell', givenName: 'George', familyName: 'Russell', nationality: 'British' }, { constructorId: 'mercedes', name: 'Mercedes' }, { number: '63', q3: '1:27.674', note: 'Five-place grid penalty for taking a new internal combustion engine.' }),
+    makeGridResult('8', { driverId: 'alonso', givenName: 'Fernando', familyName: 'Alonso', nationality: 'Spanish' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '14', q3: '1:30.311' }),
+    makeGridResult('9', { driverId: 'albon', givenName: 'Alexander', familyName: 'Albon', nationality: 'Thai' }, { constructorId: 'williams', name: 'Williams' }, { number: '23', q3: '1:30.456' }),
+    makeGridResult('10', { driverId: 'piastri', givenName: 'Oscar', familyName: 'Piastri', nationality: 'Australian' }, { constructorId: 'mclaren', name: 'McLaren' }, { number: '81', q3: '1:30.369' }),
+    makeGridResult('11', { driverId: 'camara', givenName: 'Rafael', familyName: 'Câmara', nationality: 'Brazilian' }, { constructorId: 'haas', name: 'Haas F1 Team' }, { number: '51', q3: '1:31.515' }),
+    makeGridResult('12', { driverId: 'arvid_lindblad', givenName: 'Arvid', familyName: 'Lindblad', nationality: 'British' }, { constructorId: 'rb', name: 'Racing Bulls' }, { number: '41', q3: '1:31.687' }),
+    makeGridResult('13', { driverId: 'sainz', givenName: 'Carlos', familyName: 'Sainz', nationality: 'Spanish' }, { constructorId: 'williams', name: 'Williams' }, { number: '55', q3: '1:31.785' }),
+    makeGridResult('14', { driverId: 'leclerc', givenName: 'Charles', familyName: 'Leclerc', nationality: 'Monegasque' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '16', q3: '1:28.289', note: 'Ten-place grid penalty for taking a new internal combustion engine.' }),
+    makeGridResult('15', { driverId: 'colapinto', givenName: 'Franco', familyName: 'Colapinto', nationality: 'Argentine' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '43', q3: '1:33.327' }),
+    makeGridResult('16', { driverId: 'gasly', givenName: 'Pierre', familyName: 'Gasly', nationality: 'French' }, { constructorId: 'alpine', name: 'Alpine' }, { number: '10', q3: '1:33.449' }),
+    makeGridResult('17', { driverId: 'stroll', givenName: 'Lance', familyName: 'Stroll', nationality: 'Canadian' }, { constructorId: 'aston_martin', name: 'Aston Martin' }, { number: '18', q3: '1:33.653' }),
+    makeGridResult('18', { driverId: 'bottas', givenName: 'Valtteri', familyName: 'Bottas', nationality: 'Finnish' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '77', q3: '1:33.774' }),
+    makeGridResult('19', { driverId: 'bortoleto', givenName: 'Gabriel', familyName: 'Bortoleto', nationality: 'Brazilian' }, { constructorId: 'audi', name: 'Audi' }, { number: '5', q3: '1:41.564' }),
+    makeGridResult('20', { driverId: 'hamilton', givenName: 'Lewis', familyName: 'Hamilton', nationality: 'British' }, { constructorId: 'ferrari', name: 'Ferrari' }, { number: '44', q3: '1:30.001', note: 'Required to start from the back after taking new power-unit components.' }),
+    makeGridResult('21', { driverId: 'max_verstappen', givenName: 'Max', familyName: 'Verstappen', nationality: 'Dutch' }, { constructorId: 'red_bull', name: 'Red Bull Racing' }, { number: '3', note: 'Required to start from the back after taking new power-unit components.' }),
+    makeGridResult('22', { driverId: 'perez', givenName: 'Sergio', familyName: 'Perez', nationality: 'Mexican' }, { constructorId: 'cadillac', name: 'Cadillac' }, { number: '11', q3: '1:34.509', note: 'Required to start from the back after taking new power-unit components.' })
+  ],
   practiceSessions: [
     {
       title: 'Practice 1',

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8f5"><meta name="description" content="Ask anything. Somehow, it's always about Kimi Antonelli. Your delightfully biased, fan-made racing chatbot.">
+  <title>KimiGPT — A little biased. A lot of Kimi.</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2325d3b0'/%3E%3Ctext x='14' y='45' font-size='40' font-family='Arial' font-weight='bold'%3EK%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg class="svg-library" xmlns="http://www.w3.org/2000/svg"><symbol id="spark" viewBox="0 0 24 24"><path d="m12 2 2.8 7.2L22 12l-7.2 2.8L12 22l-2.8-7.2L2 12l7.2-2.8Z"/></symbol><symbol id="arrow" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></symbol><symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="chat" viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-8 8H5l-3 2v-10a9 9 0 0 1 18 0Z"/></symbol><symbol id="flag" viewBox="0 0 24 24"><path d="M4 21V4m0 0c6-5 10 5 16 0v11c-6 5-10-5-16 0"/></symbol><symbol id="chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol></svg>
+<button id="mobile-menu" class="mobile-menu icon-button" aria-label="Toggle sidebar" aria-expanded="false">☰</button>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="./" aria-label="KimiGPT home"><span class="brand-icon"><svg><use href="#spark"/></svg></span>Kimi<span class="brand-light">GPT</span><span class="beta">BETA</span></a>
+  <button class="new-chat" id="new-chat"><svg><use href="#plus"/></svg>New chat<span>↗</span></button>
+  <div class="history-label">YOUR PADDOCK <span id="chat-count">0</span></div>
+  <nav id="history" class="history" aria-label="Saved conversations"></nav>
+  <div class="sidebar-bottom">
+    <div class="loyalty"><div class="loyalty-head"><span class="tiny-dot"></span>LOYALTY STATUS</div><strong>Day one. Every day.</strong><p>Unconditionally in Kimi’s corner.</p><div class="loyalty-bar"><span></span></div><div class="loyalty-caption"><span>Bias level</span><span>100% ↗</span></div></div>
+    <button id="about-button" class="about-button"><span class="round-icon">i</span>About KimiGPT<svg><use href="#chevron"/></svg></button>
+    <div class="profile"><div class="profile-avatar">KF</div><div><strong>Kimi fan</strong><span>Excellent taste, by the way.</span></div><span class="online-dot"></span></div>
+  </div>
+</aside>
+<main>
+  <header class="topbar"><div class="model-name">KimiGPT <span>Fan edition</span></div><div class="top-status"><span class="tiny-dot"></span>ALL SYSTEMS KIMI</div></header>
+  <div class="workspace">
+    <section class="chat-column">
+      <div class="welcome" id="welcome">
+        <div class="eyebrow"><span class="little-line"></span> INTELLIGENCE, WITH A FAVORITE DRIVER.</div>
+        <h1>Ask anything.<br>Get <span>Kimi.</span><svg class="heading-spark"><use href="#spark"/></svg></h1>
+        <p class="intro">Life’s big questions. Racing’s hot takes.<br>Somehow, the answer is always Kimi Antonelli.</p>
+        <div class="welcome-note"><span class="note-avatar">K</span><span>A little biased. A lot of Kimi.</span><span class="italian-flag"><i></i><i></i><i></i></span></div>
+        <div class="prompt-label">NEED A STARTING GRID?</div>
+        <div class="suggestions">
+          <button data-prompt="Why is Kimi Antonelli so good?"><span class="prompt-icon">✦</span><strong>Let’s talk talent</strong><span>Why is Kimi so good?</span><svg><use href="#chevron"/></svg></button>
+          <button data-prompt="Who should I support in F1?"><span class="prompt-icon">⚑</span><strong>Pick my driver</strong><span>Who should I support in F1?</span><svg><use href="#chevron"/></svg></button>
+          <button data-prompt="I’ve had a bad day. Cheer me up."><span class="prompt-icon">☀</span><strong>A little pick-me-up</strong><span>Having a day. Send good vibes.</span><svg><use href="#chevron"/></svg></button>
+          <button data-prompt="What should I have for dinner?"><span class="prompt-icon pasta">♧</span><strong>Go off-topic. Try me.</strong><span>What should I have for dinner?</span><svg><use href="#chevron"/></svg></button>
+        </div>
+      </div>
+      <div id="messages" class="messages" role="log" aria-live="polite" aria-label="Conversation"></div>
+      <div class="composer-wrap">
+        <form id="chat-form" class="composer"><label class="sr-only" for="question">Ask KimiGPT a question</label><textarea id="question" rows="1" maxlength="2000" placeholder="Ask anything. We’ll make it about Kimi."></textarea><div class="composer-bottom"><span><span class="composer-spark">✦</span> Powered by pure admiration</span><button id="send-button" class="send-button" type="submit" aria-label="Send question"><svg><use href="#arrow"/></svg></button></div></form>
+        <p class="disclaimer">100% fan-made. 0% neutral. <span>Not affiliated with Kimi Antonelli or Mercedes.</span></p>
+      </div>
+    </section>
+    <aside class="kimi-column">
+      <div class="driver-card"><img src="assets/kimi.png" alt="Kimi Antonelli smiling and holding a racing trophy"><div class="photo-grain"></div><span class="driver-label"><span class="tiny-dot"></span> THE REASON WE’RE HERE</span><span class="driver-number">12</span><div class="driver-name"><span>ANDREA KIMI</span><strong>ANTONELLI<span>↗</span></strong><div><span class="italian-flag"><i></i><i></i><i></i></span> ITALIAN SOUL. RACER’S HEART.</div></div></div>
+      <div class="hype-card"><div class="hype-title"><span>Set the hype level</span><span class="hype-icon">↗</span></div><p>How much Kimi is too much Kimi?</p><div class="hype-options" role="group" aria-label="Hype level"><button data-level="fan">Fan</button><button data-level="superfan" class="selected" aria-pressed="true">Superfan</button><button data-level="unhinged">Unhinged</button></div><div class="hype-note" id="hype-note">A healthy, completely unreasonable amount.</div></div>
+      <div class="quote-card"><span class="quote-mark">“</span><p>Other chatbots have answers.<br>We have a favorite driver.</p><span>THE KIMIGPT PHILOSOPHY</span><svg><use href="#flag"/></svg></div>
+    </aside>
+  </div>
+  <footer><span>BUILT DIFFERENT. BIASED BY DESIGN.</span><span>FOR THE LOVE OF <b>12.</b> <span class="footer-spark">✦</span></span></footer>
+</main>
+<dialog id="about-dialog"><button id="close-about" class="dialog-close" aria-label="Close about">×</button><div class="brand-icon"><svg><use href="#spark"/></svg></div><h2>One driver. Endless admiration.</h2><p>KimiGPT is a playful fan project dedicated to Kimi Antonelli. Ask it anything and it will find a way to celebrate him.</p><p>Replies use a varied local collection of fan-written comebacks, recent chat context, and a small arithmetic helper. This is entertainment, with a gloriously obvious bias—not a source for live racing facts.</p><p>Your chats stay in this browser. No account, no API key, just Kimi.</p><button id="clear-chats" class="clear-chats">Clear saved chats</button><span id="clear-status" role="status"></span></dialog>
+<script src="replies.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

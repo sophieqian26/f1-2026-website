@@ -3427,7 +3427,7 @@ const els = {
   lastUpdated: document.querySelector('#lastUpdated')
 };
 
-const PAGE_IDS = ['home', 'next-race', 'previous-race', 'schedule', 'race-detail', 'standings', 'account', 'profiles', 'games', 'news', 'chat', 'wisdom', 'credits'];
+const PAGE_IDS = ['home', 'next-race', 'previous-race', 'schedule', 'race-detail', 'standings', 'account', 'profiles', 'games', 'kimigpt', 'news', 'chat', 'wisdom', 'credits'];
 const flappyImages = {};
 let nextRaceMascotTimer = null;
 let nextRaceMascotHideTimer = null;
@@ -3459,6 +3459,7 @@ function setActivePage(pageId = pageFromHash()) {
   const activePage = PAGE_IDS.includes(pageId) ? pageId : 'home';
 
   document.body.dataset.gameView = activePage === 'games' ? gameViewFromHash() : '';
+  document.body.dataset.page = activePage;
   document.body.classList.toggle('page-mode', activePage !== 'home');
   document.querySelectorAll('.page-section').forEach(section => {
     const isActive = section.id === activePage;

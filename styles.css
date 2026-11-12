@@ -1186,6 +1186,28 @@ body.page-mode .dashboard-grid {
   display: block;
 }
 
+.kimigpt-page {
+  width: 100%;
+  min-height: calc(100svh - 72px);
+  padding: 0;
+  overflow: hidden;
+  background: #f7f8f5;
+}
+
+.kimigpt-frame {
+  display: block;
+  width: 100%;
+  height: calc(100svh - 72px);
+  min-height: 620px;
+  border: 0;
+  background: #f7f8f5;
+}
+
+body[data-page="kimigpt"] .footer,
+body[data-page="kimigpt"] .next-race-mascot {
+  display: none !important;
+}
+
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

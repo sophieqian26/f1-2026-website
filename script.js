@@ -1213,6 +1213,29 @@ const WISDOM_QUOTES = [
     imagePosition: 'center'
   },
   {
+    driver: 'George Russell',
+    driverId: 'russell',
+    teamColor: TEAM_COLORS.mercedes,
+    quote: 'Yabba dabba doo!',
+    context: 'Celebrating his victory at the 2024 Austrian Grand Prix.',
+    source: 'BBC Sport',
+    sourceUrl: 'https://www.bbc.co.uk/sport/formula1/live/c999yyewdjpt?page=2',
+    wikiTitle: 'George_Russell_(racing_driver)',
+    imageUrl: 'assets/quote-drivers/george-russell.png',
+    imagePosition: 'center'
+  },
+  {
+    driver: 'Max Verstappen',
+    driverId: 'max_verstappen',
+    teamColor: TEAM_COLORS.red_bull,
+    quote: 'This is really boring, I should have brought my pillow.',
+    context: 'On the radio during the 2024 Monaco Grand Prix.',
+    source: 'Red Bull',
+    sourceUrl: 'https://www.redbull.com/mea-en/monaco-f1-grand-prix-2024-race-report',
+    wikiTitle: 'Max_Verstappen',
+    imagePosition: 'center'
+  },
+  {
     driver: 'Kimi Raikkonen',
     teamColor: TEAM_COLORS.ferrari,
     quote: 'Just leave me alone, I know what to do.',

@@ -1233,6 +1233,7 @@ const WISDOM_QUOTES = [
     source: 'Red Bull',
     sourceUrl: 'https://www.redbull.com/mea-en/monaco-f1-grand-prix-2024-race-report',
     wikiTitle: 'Max_Verstappen',
+    imageUrl: 'assets/quote-drivers/kimi-raikkonen.png',
     imagePosition: 'center'
   },
   {
@@ -1293,15 +1294,15 @@ const WISDOM_QUOTES = [
     imagePosition: 'center'
   },
   {
-    driver: 'Lando Norris',
-    driverId: 'norris',
-    teamColor: TEAM_COLORS.mclaren,
+    driver: 'Max Verstappen',
+    driverId: 'max_verstappen',
+    teamColor: TEAM_COLORS.red_bull,
     quote: 'Simply lovely, huh?',
-    context: 'A cheeky nod after winning in Australia.',
-    source: 'news.com.au',
-    sourceUrl: 'https://www.news.com.au/sport/motorsport/formula-one/lando-norris-famous-words-come-back-to-haunt-max-verstappen-after-australian-grand-prix/news-story/2beac94a302aa47462d3e2a54b557d1c',
-    wikiTitle: 'Lando_Norris',
-    imageUrl: 'assets/quote-drivers/lando-norris.png',
+    context: 'Max’s trademark radio celebration after poles and victories.',
+    source: 'Formula 1',
+    sourceUrl: 'https://www.formula1.com/en/latest/article/norris-explains-why-he-used-verstappens-simply-lovely-catchphrase-after.6JxjswjSlIWGeJC2KY6pCH',
+    wikiTitle: 'Max_Verstappen',
+    imageUrl: 'assets/quote-drivers/kimi-raikkonen.png',
     imagePosition: 'center'
   }
 ];
@@ -7465,7 +7466,7 @@ function renderNews() {
 
 function renderQuotes() {
   els.quoteGrid.innerHTML = WISDOM_QUOTES.map(item => {
-    const image = (item.driverId && state.driverImages[item.driverId]) || state.quoteImages[item.driver];
+    const image = state.quoteImages[item.driver] || (item.driverId && state.driverImages[item.driverId]);
     const imageStyle = image ? `--quote-image: url('${escapeHtml(image)}');` : '';
     const positionStyle = item.imagePosition ? `--quote-position: ${escapeHtml(item.imagePosition)};` : '';
     const cardStyle = `--quote-color: ${escapeHtml(item.teamColor || TEAM_COLORS.red_bull)}; ${imageStyle} ${positionStyle}`;

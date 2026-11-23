@@ -3406,6 +3406,8 @@ const FLAPPY_JUMP = -7.8;
 const FLAPPY_OBSTACLE_SPEED = 3.4;
 const FLAPPY_OBSTACLE_GAP = 168;
 const FLAPPY_OBSTACLE_WIDTH = 78;
+const FLAPPY_TRACK_HEIGHT = 42;
+const FLAPPY_MIN_STACK_HEIGHT = 38;
 const FLAPPY_RACER_WIDTH = 118;
 
 const state = {
@@ -7313,7 +7315,9 @@ function resetFlappyGame() {
 function makeFlappyObstacle(x) {
   const canvas = els.flappyCanvas;
   const height = canvas?.height || 540;
-  const gapY = 128 + Math.random() * (height - 284);
+  const minGapY = 128;
+  const maxGapY = height - FLAPPY_TRACK_HEIGHT - FLAPPY_OBSTACLE_GAP - FLAPPY_MIN_STACK_HEIGHT;
+  const gapY = minGapY + Math.random() * Math.max(0, maxGapY - minGapY);
   return {
     x,
     gapY,
